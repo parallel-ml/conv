@@ -1,0 +1,14 @@
+{
+  "protocol" : "image",
+  "namespace" : null,
+  "types" : [ ],
+  "messages" : {
+    "procimage" : {
+      "request" : [ {
+        "name" : "image",
+        "type" : "bytes"
+      } ],
+      "response" : "string"
+    }
+  }
+}
