@@ -5,15 +5,19 @@ import avro.ipc as ipc
 import avro.protocol as protocol
 import avro.schema as schema
 import keras
+from keras.applications.resnet50 import decode_predictions
+import tensorflow as tf
 import matplotlib
 
 matplotlib.use('Agg')
 import numpy as np
 import cv2
-from skimage import img_as_float
 
 NN = keras.applications.resnet50.ResNet50(include_top=True, weights='imagenet', input_tensor=None,
                                           input_shape=(224, 224, 3), pooling=None, classes=1000)
+# when use multithreading, tensorflow backend seems to use mulitple graph and yields
+# erros. hence, declare here by using a global variable
+graph = tf.get_default_graph()
 
 PROTOCOL = protocol.parse(open('image.avpr').read())
 
@@ -29,7 +33,6 @@ class ImageResponder(ipc.Responder):
         :param req: request sent by client
         :return:
         """
-        print req
         if msg.name == 'procimage':
             bytestr = req['image']
             return self.process(bytestr)
@@ -37,12 +40,14 @@ class ImageResponder(ipc.Responder):
             raise schema.AvroException('unexpected message:', msg.getname())
 
     def process(self, bytestr):
-        nparr = np.fromstring(bytestr, np.uint8)
-        image = img_as_float(cv2.imdecode(nparr, cv2.IMREAD_COLOR))
-        resized_image = cv2.resize(image, (224, 224))
-        test_x = np.array([resized_image])
-        test_y = NN.predict(test_x)
-        return test_y
+        global graph
+        with graph.as_default():
+            nparr = np.fromstring(bytestr, np.uint8)
+            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            test_x = np.array([image])
+            test_y = NN.predict(test_x)
+        label = decode_predictions(test_y, top=3)[0][0][1]
+        return label
 
 
 class ImageHandler(BaseHTTPRequestHandler):

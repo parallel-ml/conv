@@ -23,7 +23,8 @@ def main():
         camera.capture(rawCapture, format='rgb')
         # opencv won't display the rgb format correctly but it's just for transimtting the image
         im = rawCapture.array
-        bytestr = cv2.imencode('.jpg', im)[1].tostring()
+        resized_image = cv2.resize(im, (224, 224))
+        bytestr = cv2.imencode('.jpg', resized_image)[1].tostring()
         (threading.Thread(target=send_request, args=(bytestr,))).start()
 
         rawCapture.truncate(0)  # this is important
