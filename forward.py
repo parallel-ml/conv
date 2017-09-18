@@ -12,8 +12,8 @@ import numpy as np
 import cv2
 from skimage import img_as_float
 
-NN = keras.applications.resnet50.ResNet50(include_top=True, weights='imagenet', input_tensor=None, input_shape=None,
-                                          pooling=None, classes=1000)
+NN = keras.applications.resnet50.ResNet50(include_top=True, weights='imagenet', input_tensor=None,
+                                          input_shape=(224, 224, 3), pooling=None, classes=1000)
 
 PROTOCOL = protocol.parse(open('image.avpr').read())
 
@@ -39,7 +39,10 @@ class ImageResponder(ipc.Responder):
     def process(self, bytestr):
         nparr = np.fromstring(bytestr, np.uint8)
         image = img_as_float(cv2.imdecode(nparr, cv2.IMREAD_COLOR))
-        return NN.predict(image)
+        resized_image = cv2.resize(image, (224, 224))
+        test_x = np.array([resized_image])
+        test_y = NN.predict(test_x)
+        return test_y
 
 
 class ImageHandler(BaseHTTPRequestHandler):
