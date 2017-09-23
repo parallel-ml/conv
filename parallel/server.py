@@ -5,12 +5,9 @@ import avro.ipc as ipc
 import avro.protocol as protocol
 import avro.schema as schema
 import matplotlib
-import tensorflow as tf
 
 matplotlib.use('Agg')
 import time
-global variable
-graph = tf.get_default_graph()
 
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
@@ -27,8 +24,6 @@ class ImageResponder(ipc.Responder):
         :return:
         """
         if msg.name == 'procimage':
-            start = req['time']
-            print 'server gets request {:.3f}'.format(time.time() - start)
             return 'GET'
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
