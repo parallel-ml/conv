@@ -7,6 +7,9 @@
       "request" : [ {
         "name" : "image",
         "type" : "bytes"
+      }, {
+        "name" : "time",
+        "type" : "float"
       } ],
       "response" : "string"
     }

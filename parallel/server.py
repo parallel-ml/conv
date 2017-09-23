@@ -4,19 +4,12 @@ from SocketServer import ThreadingMixIn
 import avro.ipc as ipc
 import avro.protocol as protocol
 import avro.schema as schema
-import keras
-from keras.applications.resnet50 import decode_predictions
-import tensorflow as tf
 import matplotlib
+import tensorflow as tf
 
 matplotlib.use('Agg')
-import numpy as np
-import cv2
-
-NN = keras.applications.resnet50.ResNet50(include_top=True, weights='imagenet', input_tensor=None,
-                                          input_shape=(224, 224, 3), pooling=None, classes=1000)
-# when use multithreading, tensorflow backend seems to use mulitple graph and yields
-# erros. hence, declare here by using a global variable
+import time
+global variable
 graph = tf.get_default_graph()
 
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
@@ -34,20 +27,11 @@ class ImageResponder(ipc.Responder):
         :return:
         """
         if msg.name == 'procimage':
-            bytestr = req['image']
-            return self.process(bytestr)
+            start = req['time']
+            print 'server gets request {:.3f}'.format(time.time() - start)
+            return 'GET'
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
-
-    def process(self, bytestr):
-        global graph
-        with graph.as_default():
-            nparr = np.fromstring(bytestr, np.uint8)
-            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            test_x = np.array([image])
-            test_y = NN.predict(test_x)
-        label = decode_predictions(test_y, top=3)[0][0][1]
-        return label
 
 
 class ImageHandler(BaseHTTPRequestHandler):

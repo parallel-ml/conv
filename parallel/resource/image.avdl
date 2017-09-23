@@ -1,0 +1,3 @@
+protocol image {
+    string procimage(bytes image, float time);
+}
