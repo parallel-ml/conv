@@ -8,7 +8,7 @@ import time
 
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
-server_addr = ('128.61.18.28', 12345)
+server_addr = ('128.61.26.145', 12345)
 
 image = cv2.imread('data/tiger.jpg')
 resized_image = cv2.resize(image, (224, 224))
@@ -52,7 +52,8 @@ def main():
     start = time.time()
     for _ in range(10):
         send_request(bytestr, start)
-    print 'client gets data back {:.3f}s'.format((time.time() - start) / 10)_
+    avg = (time.time() - start) / 10.0
+    print 'client gets data back ', avg
 
 
 if __name__ == '__main__':
