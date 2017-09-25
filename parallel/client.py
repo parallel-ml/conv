@@ -52,7 +52,7 @@ def main():
     start = time.time()
     for _ in range(10):
         send_request(bytestr, start)
-    print 'client gets data back {:.3f}s'.format((time.time() - start) / 10)_
+    print 'client gets data back {:.3f}s'.format(((time.time() - start) / 10.0))
 
 
 if __name__ == '__main__':
