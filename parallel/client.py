@@ -8,7 +8,7 @@ import time
 
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
-server_addr = ('128.61.18.28', 12345)
+server_addr = ('128.61.22.121', 12345)
 
 image = cv2.imread('data/tiger.jpg')
 resized_image = cv2.resize(image, (224, 224))
@@ -42,7 +42,7 @@ def send_request(bytestr, time=None):
     data['image'] = bytestr
     data['time'] = time
 
-    print 'image label', requestor.request('procimage', data)
+    requestor.request('procimage', data)
 
     client.close()
 
@@ -50,9 +50,10 @@ def send_request(bytestr, time=None):
 def main():
     bytestr = cv2.imencode('.jpg', resized_image)[1].tostring()
     start = time.time()
-    for _ in range(10):
+    for _ in range(100):
         send_request(bytestr, start)
-    print 'client gets data back {:.3f}s'.format(((time.time() - start) / 10.0))
+    avg = (time.time() - start) / 100.0
+    print 'client gets data back ', avg
 
 
 if __name__ == '__main__':
