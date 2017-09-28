@@ -40,7 +40,10 @@ Line #    Mem usage    Increment   Line Contents
     19    307.4 MiB      0.0 MiB       print 'image {:.3f}s'.format(time.time() - start)
 
 
-simaese fc layer inference 9.273
+
+++++++++++++++++++++++++FC layer(4096 nodes per layer)+++++++++++++++++
+
+simaese fc layer inference 9.273s
 Filename: siamese_fc_layer.py
 
 Line #    Mem usage    Increment   Line Contents
