@@ -1,0 +1,77 @@
++++++++++++++++++++++++++++FC layer (with 4096 nodes per layer)++++++++++++++++++++++++++++++++++
+
+
+simaese fc layer inference 0.540
+Filename: siamese_fc_layer.py
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+     8    190.6 MiB      0.0 MiB   @profile
+     9                             def main():
+    10    190.6 MiB      0.0 MiB       model = Sequential()
+    11    191.2 MiB      0.6 MiB       model.add(Dense(4096, input_shape=(7680,)))
+    12    192.1 MiB      0.9 MiB       model.add(BatchNormalization(input_shape=(4096,)))
+    13    192.1 MiB      0.0 MiB       model.add(Activation('relu', input_shape=(4096,)))
+    14                                 
+    15    192.1 MiB      0.0 MiB       model.add(Dense(4096, input_shape=(4096,)))
+    16    192.9 MiB      0.8 MiB       model.add(BatchNormalization(input_shape=(4096,)))
+    17    192.9 MiB      0.0 MiB       model.add(Activation('relu', input_shape=(4096,)))
+    18                                 
+    19    193.2 MiB      0.3 MiB       model.add(Dense(51, input_shape=(4096,)))
+    20    193.5 MiB      0.4 MiB       model.add(BatchNormalization(input_shape=(51,)))
+    21    193.8 MiB      0.2 MiB       model.add(Activation('softmax', input_shape=(51,)))
+    22                                 
+    23    193.8 MiB      0.0 MiB       test_x = np.random.rand((7680))
+    24                                 
+    25    193.8 MiB      0.0 MiB       start = time.time() 
+    26    511.4 MiB    317.6 MiB       model.predict(np.array([test_x]))
+    27    511.4 MiB      0.0 MiB       print 'simaese fc layer inference {:.3f}'.format(time.time() - start)
+
+
++++++++++++++++++++++image++++++++++++++++++++++++++++
+
+
+image 0.466s
+Filename: keras_quick_start.py
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+     7    190.4 MiB      0.0 MiB   @profile
+     8                             def main():
+     9    557.9 MiB    367.6 MiB       model = load_model('/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
+    10                             
+    11    557.9 MiB      0.0 MiB       test_x = np.random.rand(12, 16, 3)
+    12                             
+    13                                 # pop the last three layers from training 
+    14    557.9 MiB      0.0 MiB       for _ in range(3):
+    15    557.9 MiB      0.0 MiB           model.pop()
+    16                             
+    17    557.9 MiB      0.0 MiB       start = time.time()
+    18    803.6 MiB    245.7 MiB       model.predict(np.array([test_x]))
+    19    803.6 MiB      0.0 MiB       print 'image {:.3f}s'.format(time.time() - start)
+
+
+
++++++++++++++++++++++++++++++++++++++optical flow++++++++++++++++++++++++++++++++++++
+
+
+optical flow 0.476s
+Filename: keras_quick_start.py
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+     7    189.1 MiB      0.0 MiB   @profile
+     8                             def main():
+     9    542.4 MiB    353.3 MiB       model = load_model('/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
+    10                             
+    11    542.4 MiB      0.0 MiB       test_x = np.random.rand(12, 16, 20)
+    12                             
+    13                                 # pop the last three layers from training 
+    14    542.4 MiB      0.0 MiB       for _ in range(3):
+    15    542.4 MiB      0.0 MiB           model.pop()
+    16                             
+    17    542.4 MiB      0.0 MiB       start = time.time()
+    18    792.3 MiB    249.9 MiB       model.predict(np.array([test_x]))
+    19    792.3 MiB      0.0 MiB       print 'image {:.3f}s'.format(time.time() - start)
+
+

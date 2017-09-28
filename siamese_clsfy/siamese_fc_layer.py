@@ -26,7 +26,6 @@ def main():
     model.predict(np.array([test_x]))
     print 'simaese fc layer inference {:.3f}'.format(time.time() - start)
 
-    print model.summary()
 
 
 if __name__ == '__main__':
