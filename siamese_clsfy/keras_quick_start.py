@@ -2,6 +2,7 @@ import numpy as np
 from keras.models import load_model
 from output import title, timer
 
+
 def main():
     optical_flow()
     image()
@@ -18,7 +19,7 @@ def optical_flow():
     model = load(
         '/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
 
-    test_x = np.random.rand(12, 16, 20)
+    test_x = np.random.rand(12, 16, 3)
 
     # pop the last three layers from training
     for _ in range(3):
