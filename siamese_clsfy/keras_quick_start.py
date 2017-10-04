@@ -24,7 +24,7 @@ def forward(*args, **kwargs):
 @title('optical flow (temporal)')
 def optical_flow():
     model = load(
-        path='/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
+        path='/home/pi/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
 
     test_x = np.random.rand(12, 16, 20)
 
@@ -40,7 +40,7 @@ def optical_flow():
 @title('single frame (spatial)')
 def image():
     model = load(
-        path='/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
+        path='/home/pi/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
 
     test_x = np.random.rand(12, 16, 3)
 
