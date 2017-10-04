@@ -1,7 +1,7 @@
 import numpy as np
 from keras.models import load_model
 
-from util.output import title, timer
+from util.output import title, timer,avg_timer
 
 
 def main():
@@ -14,7 +14,7 @@ def load(*args, **kwargs):
     return load_model(kwargs['path'])
 
 
-@timer('inference')
+@avg_timer('inference')
 def forward(*args, **kwargs):
     model = kwargs['model']
     test_x = kwargs['test_x']
@@ -32,6 +32,8 @@ def optical_flow():
     for _ in range(3):
         model.pop()
 
+    model.predict(np.array([test_x]))
+
     forward(model=model, test_x=test_x)
 
 
@@ -45,6 +47,8 @@ def image():
     # pop the last three layers from training
     for _ in range(3):
         model.pop()
+
+    model.predict(np.array([test_x]))
 
     forward(model=model, test_x=test_x)
 

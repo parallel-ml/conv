@@ -3,7 +3,7 @@ from keras.layers import Dense, Activation
 from keras.layers.normalization import BatchNormalization
 from keras.models import Sequential
 
-from util.output import title, timer
+from util.output import title, timer, avg_timer
 
 
 @title("4 FC layers (4096 nodes per layer)")
@@ -26,8 +26,9 @@ def main():
 
     model = load()
     test_x = np.random.rand(7680)
+    model.predict(np.array([test_x]))
 
-    @timer('inference')
+    @avg_timer('inference')
     def forward(*args, **kwargs):
         model.predict(np.array([test_x]))
 
