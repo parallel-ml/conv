@@ -9,7 +9,8 @@ from util.output import title, timer, avg_timer, subtitle
 TIMING = False
 
 
-@title('maxpooling layer')
+@title('maxpooling layers')
+@profile
 def main():
     # load model
     model = load_helper('maxpool')
@@ -18,10 +19,10 @@ def main():
 def load_helper(mode):
     if mode == 'optical flow':
         return load(
-            path='/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
+            path='/home/pi/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
     elif mode == 'image':
         return load(
-            path='/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
+            path='/home/pi/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
     elif mode == 'maxpool':
         N = 100
         while N <= 2000:
