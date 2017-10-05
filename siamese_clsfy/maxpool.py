@@ -6,8 +6,6 @@ from keras.models import Model
 
 from util.output import timer, title, subtitle, avg_timer
 
-fp = open('memory_profiler.log', 'w+')
-
 
 @title('max pooling layers')
 def main():
