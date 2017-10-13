@@ -8,7 +8,7 @@ from util.output import title, timer, avg_timer
 
 @title("4 FC layers (4096 nodes per layer)")
 def main():
-    @timer('load model')
+    # @timer('load model')
     def load(*args, **kwargs):
         model = Sequential()
         model.add(Dense(4096, input_shape=(7680,)))
@@ -26,9 +26,10 @@ def main():
 
     model = load()
     test_x = np.random.rand(7680)
-    model.predict(np.array([test_x]))
+    output = model.predict(np.array([test_x]))
+    print output.shape
 
-    @avg_timer('inference')
+    # @avg_timer('inference')
     def forward(*args, **kwargs):
         model.predict(np.array([test_x]))
 
