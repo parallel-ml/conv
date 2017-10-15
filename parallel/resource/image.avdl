@@ -1,3 +1,3 @@
 protocol image {
-    bytes procimage(bytes image);
+    bytes forward(bytes input, string name);
 }

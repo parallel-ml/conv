@@ -3,10 +3,13 @@
   "namespace" : null,
   "types" : [ ],
   "messages" : {
-    "procimage" : {
+    "forward" : {
       "request" : [ {
-        "name" : "image",
+        "name" : "input",
         "type" : "bytes"
+      }, {
+        "name" : "name",
+        "type" : "string"
       } ],
       "response" : "bytes"
     }
