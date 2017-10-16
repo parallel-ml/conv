@@ -66,7 +66,7 @@ class Responder(ipc.Responder):
                         return self.send(output, 'fc')
 
                     elif req['name'] == 'fc':
-                        X = np.fromstring(bytestr, np.uint8)
+                        X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
 
                         global fc_input
