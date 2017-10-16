@@ -21,6 +21,8 @@ PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 # global variable declaration
 address, model, graph, dim, debug = ('0.0.0.0', 12345), 'spatial', None, 7680, False
 
+fc_input = np.array([])
+
 
 class Responder(ipc.Responder):
     def __init__(self):
@@ -45,7 +47,7 @@ class Responder(ipc.Responder):
                         if debug:
                             util.step('spatial, gets input', X.shape)
 
-                        model = ml.load_spatial()
+                        model = ml.load_spatial() if model is None else model
                         output = model.predict(np.array([X]))
                         if debug:
                             util.step('spatial, forward', output.shape)
@@ -57,19 +59,29 @@ class Responder(ipc.Responder):
                         if debug:
                             util.step('temporal, gets input', X.shape)
 
-                        model = ml.load_spatial()
+                        model = ml.load_temporal() if model is None else model
                         output = model.predict(np.array([X]))
                         if debug:
                             util.step('temporal, forward', output.shape)
                         return self.send(output, 'fc')
 
                     elif req['name'] == 'fc':
-                        X = np.fromstring(bytestr, np.uint8).reshape(dim)
+                        X = np.fromstring(bytestr, np.uint8)
+                        X = X.reshape(X.size)
+
+                        global fc_input
+
+                        fc_input = np.concatenate((fc_input, X))
+
                         if debug:
                             util.step('fc, gets input', X.shape)
 
-                        model = ml.load_fc(dim)
-                        output = model.predict(np.array([X]))
+                        if fc_input.size < dim:
+                            return
+
+                        model = ml.load_fc(dim) if model is None else model
+                        output = model.predict(np.array([fc_input]))
+                        fc_input = np.array([])
                         if debug:
                             util.step('fc, forward', output.shape)
                         return output.tostring()

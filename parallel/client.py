@@ -16,8 +16,9 @@ def send_request(bytestr):
     data['name'] = 'spatial'
 
     output = requestor.request('forward', data)
-    output = np.fromstring(output, dtype=np.float32)
-    output = output.reshape(1, 256)
+    if output is not None:
+        output = np.fromstring(output, dtype=np.float32)
+        output = output.reshape(1, 256)
 
     print output
 
