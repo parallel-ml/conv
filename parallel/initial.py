@@ -13,12 +13,12 @@ def send_request(bytestr):
 
     data = dict()
     data['input'] = bytestr
-    data['name'] = 'spatial'
+    data['name'] = 'fc'
 
     output = requestor.request('forward', data)
-    if output is not None:
+    if output is not None and len(output) > 1:
         output = np.fromstring(output, dtype=np.float32)
-        output = output.reshape(1, 256)
+        output = output.reshape(1, 51)
 
     print output
 
@@ -26,8 +26,9 @@ def send_request(bytestr):
 
 
 def main():
-    data = np.random.rand(12, 16, 3).astype(dtype=np.uint8)
-    data *= 255
+    # data = np.random.rand(12, 16, 3).astype(dtype=np.uint8)
+    # data *= 255
+    data = np.random.rand(512).astype(dtype=np.float32)
     bytestr = data.tostring()
     send_request(bytestr)
 

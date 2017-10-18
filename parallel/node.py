@@ -19,9 +19,11 @@ matplotlib.use('Agg')
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
 # global variable declaration
-address, model, graph, dim, debug = ('0.0.0.0', 12345), 'spatial', None, 7680, False
+address, model, graph, fc_dim, max_dim, debug = ('0.0.0.0', 12345), 'spatial', None, 7680, 16, False
 
 fc_input = np.array([])
+
+max_input = None
 
 
 class Responder(ipc.Responder):
@@ -65,6 +67,28 @@ class Responder(ipc.Responder):
                             util.step('temporal, forward', output.shape)
                         return self.send(output, 'fc')
 
+                    elif req['name'] == 'maxpool':
+                        X = np.fromstring(bytestr, np.uint8)
+                        X = X.reshape(1, X.size)
+
+                        global max_input
+
+                        max_input = X if max_input is None else np.concatenate((max_input, X), axis=0)
+
+                        if debug:
+                            util.step('maxpool, gets input', X.shape)
+
+                        if max_input.shape[0] < max_dim:
+                            return ' '
+
+                        model = ml.load_maxpool(N=max_dim) if model is None else model
+                        output = model.predict(np.array([max_input]))
+                        max_input = None
+                        if debug:
+                            util.step('maxpool, forward', output.shape)
+
+                        return output.tobytes()
+
                     elif req['name'] == 'fc':
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
@@ -76,15 +100,16 @@ class Responder(ipc.Responder):
                         if debug:
                             util.step('fc, gets input', X.shape)
 
-                        if fc_input.size < dim:
-                            return
+                        if fc_input.size < fc_dim:
+                            return ' '
 
-                        model = ml.load_fc(dim) if model is None else model
+                        model = ml.load_fc(fc_dim) if model is None else model
                         output = model.predict(np.array([fc_input]))
                         fc_input = np.array([])
                         if debug:
                             util.step('fc, forward', output.shape)
-                        return output.tostring()
+
+                        return output.tobytes()
 
             except Exception, e:
                 if debug:
@@ -136,10 +161,11 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main(cmd):
-    global address, graph, dim, debug
+    global address, graph, fc_dim, max_dim, debug
 
     address = (cmd.address, cmd.port)
-    dim = cmd.dim
+    fc_dim = cmd.fc_dim
+    max_dim = cmd.max_dim
     debug = cmd.debug
 
     graph = tf.get_default_graph()
@@ -155,8 +181,10 @@ if __name__ == '__main__':
                         help='Set request ip address binds')
     parser.add_argument('-p', '--port', action='store', default=12345, type=int, metavar='\b',
                         help='Set request server port number')
-    parser.add_argument('--dim', metavar='\b', action='store', default=7680, type=int,
+    parser.add_argument('--fc_dim', metavar='\b', action='store', default=7680, type=int,
                         help='Choose fc layer input dimension')
+    parser.add_argument('--max_dim', metavar='\b', action='store', default=16, type=int,
+                        help='Choose maxpooling layer input dimension')
     parser.add_argument('-d', '--debug', action='store_true', default=False,
                         help='Set to debug mode')
     cmd = parser.parse_args()

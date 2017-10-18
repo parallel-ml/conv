@@ -1,5 +1,5 @@
 import numpy as np
-from keras.layers import Input
+from keras.layers import Input, Flatten
 from keras.layers.merge import Concatenate
 from keras.layers.pooling import MaxPooling1D
 from keras.models import Model
@@ -10,7 +10,7 @@ from util.output import timer, title, subtitle, avg_timer
 @title('max pooling layers')
 def main():
     k = 100
-    while k <= 2000:
+    while k <= 100:
         @subtitle('{:d} frames'.format(k))
         def finetune(n):
             test_x = np.random.rand(n, 256)
@@ -28,7 +28,11 @@ def main():
 
                 mrg = Concatenate(axis=1)([max1, max2, max3, max4])
 
-                model = Model(input=input, outputs=mrg)
+                flat = Flatten()(mrg)
+
+                model = Model(input=input, outputs=flat)
+
+                print model.summary()
 
                 return model
 
