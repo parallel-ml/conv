@@ -13,6 +13,8 @@ global spatial_q, temporal_q
 
 
 def send_request(bytestr, mode='spatial'):
+    global spatial_q, temporal_q
+
     queue = None
     if mode == 'spatial':
         queue = spatial_q
@@ -20,17 +22,18 @@ def send_request(bytestr, mode='spatial'):
         queue = temporal_q
 
     addr = queue.get()
-    client = ipc.HTTPTransceiver(addr[0], addr[1])
+    client = ipc.HTTPTransceiver(addr, 12345)
     requestor = ipc.Requestor(PROTOCOL, client)
 
     data = dict()
     data['input'] = bytestr
-    data['name'] = 'fc'
+    data['name'] = mode
 
     output = requestor.request('forward', data)
     if output is not None and len(output) > 1:
         output = np.fromstring(output, dtype=np.float32)
         output = output.reshape(1, 51)
+        print output
 
     client.close()
     queue.put(addr)

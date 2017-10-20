@@ -2,6 +2,9 @@ import argparse
 import os
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
+import yaml
+from multiprocessing import Queue
+from threading import Thread
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -19,11 +22,11 @@ matplotlib.use('Agg')
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
 # global variable declaration
-address, model, graph, fc_dim, max_dim, debug = ('0.0.0.0', 12345), 'spatial', None, 7680, 16, False
+ip, model, graph, fc_dim, max_dim, debug = dict(), None, None, 7680, 16, False
 
-fc_input = np.array([])
+fc_input, max_input = None, None
 
-max_input = None
+result_q = Queue()
 
 
 class Responder(ipc.Responder):
@@ -36,7 +39,7 @@ class Responder(ipc.Responder):
 
         if msg.name == 'forward':
             try:
-                global graph, model, dim
+                global graph, model, fc_dim, max_dim, result_q, fc_input, max_input
                 with graph.as_default():
                     bytestr = req['input']
 
@@ -54,10 +57,12 @@ class Responder(ipc.Responder):
                         if debug:
                             util.step('spatial, forward', output.shape)
 
-                        return self.send(output, 'fc')
+                        Thread(target=self.send, args=(output, 'fc')).start()
+
+                        return result_q.get()
 
                     elif req['name'] == 'temporal':
-                        X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 20)
+                        X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
                         if debug:
                             util.step('temporal, gets input', X.shape)
 
@@ -65,13 +70,14 @@ class Responder(ipc.Responder):
                         output = model.predict(np.array([X]))
                         if debug:
                             util.step('temporal, forward', output.shape)
-                        return self.send(output, 'fc')
+
+                        Thread(target=self.send, args=(output, 'fc')).start()
+
+                        return result_q.get()
 
                     elif req['name'] == 'maxpool':
                         X = np.fromstring(bytestr, np.uint8)
                         X = X.reshape(1, X.size)
-
-                        global max_input
 
                         max_input = X if max_input is None else np.concatenate((max_input, X), axis=0)
 
@@ -87,18 +93,20 @@ class Responder(ipc.Responder):
                         if debug:
                             util.step('maxpool, forward', output.shape)
 
-                        return output.tobytes()
+                        Thread(target=self.send, args=(output, 'fc')).start()
+
+                        return result_q.get()
 
                     elif req['name'] == 'fc':
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
 
-                        global fc_input
-
-                        fc_input = np.concatenate((fc_input, X))
+                        fc_input = X if fc_input is None else np.concatenate((fc_input, X))
 
                         if debug:
                             util.step('fc, gets input', X.shape)
+
+                        print fc_input.size
 
                         if fc_input.size < fc_dim:
                             return ' '
@@ -108,6 +116,8 @@ class Responder(ipc.Responder):
                         fc_input = np.array([])
                         if debug:
                             util.step('fc, forward', output.shape)
+
+                        print output
 
                         return output.tobytes()
 
@@ -123,8 +133,16 @@ class Responder(ipc.Responder):
                 raise schema.AvroException('unexpected message:', msg.getname())
 
     def send(self, X, name):
-        global address, debug
-        client = ipc.HTTPTransceiver(address[0], address[1])
+        global ip, debug, result_q
+
+        queue = None
+        if name == 'maxpool':
+            queue = ip['maxpool']
+        else:
+            queue = ip['fc']
+
+        address = queue.get()
+        client = ipc.HTTPTransceiver(address, 12345)
         requestor = ipc.Requestor(PROTOCOL, client)
 
         data = dict()
@@ -135,12 +153,13 @@ class Responder(ipc.Responder):
             util.step('finish assembly request', name)
 
         output = requestor.request('forward', data)
+        result_q.put(output)
 
         if debug:
             util.step('get output back', name)
 
         client.close()
-        return output
+        queue.put(address)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -161,12 +180,20 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main(cmd):
-    global address, graph, fc_dim, max_dim, debug
+    global ip, graph, fc_dim, max_dim, debug
 
-    address = (cmd.address, cmd.port)
     fc_dim = cmd.fc_dim
     max_dim = cmd.max_dim
     debug = cmd.debug
+
+    with open('resource/ip') as file:
+        address = yaml.safe_load(file)
+        ip['fc'] = Queue()
+        ip['maxpool'] = Queue()
+        for addr in address['fc']:
+            ip['fc'].put(addr)
+        for addr in address['maxpool']:
+            ip['maxpool'].put(addr)
 
     graph = tf.get_default_graph()
 
@@ -177,10 +204,6 @@ def main(cmd):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--address', action='store', default='0.0.0.0', metavar='\b',
-                        help='Set request ip address binds')
-    parser.add_argument('-p', '--port', action='store', default=12345, type=int, metavar='\b',
-                        help='Set request server port number')
     parser.add_argument('--fc_dim', metavar='\b', action='store', default=7680, type=int,
                         help='Choose fc layer input dimension')
     parser.add_argument('--max_dim', metavar='\b', action='store', default=16, type=int,

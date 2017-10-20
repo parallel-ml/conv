@@ -11,7 +11,7 @@ def load_spatial():
 
 
 def load_temporal():
-    return load_cnn(nb_channel=20)
+    return load_cnn(nb_channel=6)
 
 
 def load_cnn(nb_class=1000, bias=True, act='relu', bn=True, dropout=False, moredense=False, nb_filter=256,
@@ -57,3 +57,7 @@ def load_fc(input_shape=7680):
     model.add(BatchNormalization(input_shape=(51,)))
     model.add(Activation('softmax', input_shape=(51,)))
     return model
+
+
+if __name__ == '__main__':
+    print load_temporal().summary()
