@@ -44,6 +44,8 @@ def master():
     frame_width = 16
     frame_height = 12
 
+    image = None
+
     frame0 = None
     flows = np.zeros((frame_height, frame_width, (frame_count - 1) * 2), dtype='float32')
 
@@ -52,7 +54,7 @@ def master():
         ret, frame = 'unknown', np.random.rand(12, 16, 3) * 255
         frame = frame.astype(dtype=np.uint8)
 
-        Thread(target=send_request, args=(frame.tobytes(), 'spatial')).start()
+        image = frame
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -63,7 +65,8 @@ def master():
         frame0 = frame
         index += 1
 
-    Thread(target=send_request, args=(flows.tobytes(), 'temporal')).start()
+    Thread(target=send_request, args=(image.tobytes(), 'spatial')).start()
+    # Thread(target=send_request, args=(flows.tobytes(), 'temporal')).start()
 
 
 def main():

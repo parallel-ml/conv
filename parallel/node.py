@@ -2,7 +2,6 @@ import argparse
 import os
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
-import yaml
 from multiprocessing import Queue
 from threading import Thread
 
@@ -12,8 +11,10 @@ import avro.schema as schema
 import matplotlib
 import numpy as np
 import tensorflow as tf
-import util
+import yaml
+
 import model as ml
+import util
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -21,126 +22,104 @@ matplotlib.use('Agg')
 
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
-# global variable declaration
-ip, model, graph, fc_dim, max_dim, debug = dict(), None, None, 7680, 16, False
 
-fc_input, max_input = None, None
+class Singleton(object):
+    """ implementation of singleton design, idea is always return a same class at module level """
 
-result_q = Queue()
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not isinstance(cls._instance, cls):
+            cls._instance = object.__new__(cls, *args, **kwargs)
+        return cls._instance
+
+
+class Node(Singleton):
+    """ class wraps all data used by a node on 1 device """
+
+    def __init__(self):
+        self.ip = dict()
+        self.model = None
+        self.graph = tf.get_default_graph()
+        self.fc_layer_dim = 7680
+        self.max_layer_dim = 16
+        self.debug = False
+        self.fc_input = None
+        self.max_input = None
+        self.result_q = Queue()
+
+    def log(self, step, data=''):
+        if self.debug:
+            util.step(step, data)
 
 
 class Responder(ipc.Responder):
+    """ responder called by handler when got request """
+
     def __init__(self):
         ipc.Responder.__init__(self, PROTOCOL)
 
     def invoke(self, msg, req):
-        if debug:
-            util.step('gets message', req['name'])
+        node = Node()
 
         if msg.name == 'forward':
             try:
-                global graph, model, fc_dim, max_dim, result_q, fc_input, max_input
-                with graph.as_default():
+                with node.graph.as_default():
                     bytestr = req['input']
 
-                    if debug:
-                        util.step('data', np.fromstring(bytestr))
-
-                    model = None
                     if req['name'] == 'spatial':
+                        node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        if debug:
-                            util.step('spatial, gets input', X.shape)
-
-                        model = ml.load_spatial() if model is None else model
-                        output = model.predict(np.array([X]))
-                        if debug:
-                            util.step('spatial, forward', output.shape)
-
+                        node.model = ml.load_spatial() if node.model is None else node.model
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-
-                        return result_q.get()
+                        return node.result_q.get()
 
                     elif req['name'] == 'temporal':
+                        node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
-                        if debug:
-                            util.step('temporal, gets input', X.shape)
-
-                        model = ml.load_temporal() if model is None else model
-                        output = model.predict(np.array([X]))
-                        if debug:
-                            util.step('temporal, forward', output.shape)
-
+                        node.model = ml.load_temporal() if node.model is None else node.model
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-
-                        return result_q.get()
+                        return node.result_q.get()
 
                     elif req['name'] == 'maxpool':
+                        node.log('get max pool request')
                         X = np.fromstring(bytestr, np.uint8)
                         X = X.reshape(1, X.size)
-
-                        max_input = X if max_input is None else np.concatenate((max_input, X), axis=0)
-
-                        if debug:
-                            util.step('maxpool, gets input', X.shape)
-
-                        if max_input.shape[0] < max_dim:
+                        node.max_input = X if node.max_input is None else np.concatenate((node.max_input, X), axis=0)
+                        if node.max_input.shape[0] < node.max_layer_dim:
                             return ' '
-
-                        model = ml.load_maxpool(N=max_dim) if model is None else model
-                        output = model.predict(np.array([max_input]))
-                        max_input = None
-                        if debug:
-                            util.step('maxpool, forward', output.shape)
-
+                        node.model = ml.load_maxpool(N=node.max_layer_dim) if node.model is None else node.model
+                        output = node.model.predict(np.array([node.max_input]))
+                        node.max_input = None
+                        node.log('max pool forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-
-                        return result_q.get()
+                        return node.result_q.get()
 
                     elif req['name'] == 'fc':
+                        node.log('get FC request')
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
-
-                        fc_input = X if fc_input is None else np.concatenate((fc_input, X))
-
-                        if debug:
-                            util.step('fc, gets input', X.shape)
-
-                        print fc_input.size
-
-                        if fc_input.size < fc_dim:
+                        node.fc_input = X if node.fc_input is None else np.concatenate((node.fc_input, X))
+                        if node.fc_input.size < node.fc_layer_dim:
                             return ' '
-
-                        model = ml.load_fc(fc_dim) if model is None else model
-                        output = model.predict(np.array([fc_input]))
-                        fc_input = np.array([])
-                        if debug:
-                            util.step('fc, forward', output.shape)
-
-                        print output
-
+                        node.model = ml.load_fc(node.fc_layer_dim) if node.model is None else node.model
+                        output = node.model.predict(np.array([node.fc_input]))
+                        node.fc_input = None
+                        node.log('finish FC forward')
                         return output.tobytes()
 
             except Exception, e:
-                if debug:
-                    print e
+                node.log('Error', str(e))
         else:
-            if debug:
-                print '+++++++++++++++++ message ++++++++++++++++++'
-                print msg
-                print '+++++++++++++++++ request ++++++++++++++++++'
-                print req
-                raise schema.AvroException('unexpected message:', msg.getname())
+            raise schema.AvroException('unexpected message:', msg.getname())
 
     def send(self, X, name):
-        global ip, debug, result_q
-
-        queue = None
-        if name == 'maxpool':
-            queue = ip['maxpool']
-        else:
-            queue = ip['fc']
-
+        node = Node()
+        queue = node.ip[name]
         address = queue.get()
         client = ipc.HTTPTransceiver(address, 12345)
         requestor = ipc.Requestor(PROTOCOL, client)
@@ -148,16 +127,10 @@ class Responder(ipc.Responder):
         data = dict()
         data['input'] = X.tostring()
         data['name'] = name
-
-        if debug:
-            util.step('finish assembly request', name)
-
+        node.log('finish assembly')
         output = requestor.request('forward', data)
-        result_q.put(output)
-
-        if debug:
-            util.step('get output back', name)
-
+        node.result_q.put(output)
+        node.log('node gets request back')
         client.close()
         queue.put(address)
 
@@ -180,22 +153,20 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main(cmd):
-    global ip, graph, fc_dim, max_dim, debug
+    node = Node()
 
-    fc_dim = cmd.fc_dim
-    max_dim = cmd.max_dim
-    debug = cmd.debug
+    node.fc_layer_dim = cmd.fc_dim
+    node.max_layer_dim = cmd.max_dim
+    node.debug = cmd.debug
 
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        ip['fc'] = Queue()
-        ip['maxpool'] = Queue()
+        node.ip['fc'] = Queue()
+        node.ip['maxpool'] = Queue()
         for addr in address['fc']:
-            ip['fc'].put(addr)
+            node.ip['fc'].put(addr)
         for addr in address['maxpool']:
-            ip['maxpool'].put(addr)
-
-    graph = tf.get_default_graph()
+            node.ip['maxpool'].put(addr)
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True
