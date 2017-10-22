@@ -24,7 +24,21 @@ PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
 
 class Node(object):
-    """ singleton factory with threading safe lock """
+    """ singleton factory with threading safe lock.
+
+    Attributes:
+        ip: A dictionary contains Queue of ip addresses for different model type.
+        model: loaded model associated to a node.
+        graph: default graph used by Tensorflow
+        fc_layer_dim: dimension of fully connected layer
+        max_layer_dim: dimension of max pooling layer
+        debug: flag for debugging
+        fc_input: input for fully connected layer
+        max_input: input for max pooling layer
+        result_q: Queue for put result
+        lock: threading lock for safe usage of this class
+
+    """
 
     instance = None
 
@@ -64,6 +78,22 @@ class Responder(ipc.Responder):
         ipc.Responder.__init__(self, PROTOCOL)
 
     def invoke(self, msg, req):
+        """ process response
+
+        invoke handles the request and get response for the request. This is the key
+        of each node. All model forwarding and output redirect are done here.
+
+        Args:
+            msg: meta data
+            req: contains data packet
+
+        Returns:
+            a string of data
+
+        Raises:
+            AvroException: if the data does not have correct syntac defined in Schema
+
+        """
         node = Node.create()
 
         if msg.name == 'forward':
@@ -134,6 +164,16 @@ class Responder(ipc.Responder):
             raise schema.AvroException('unexpected message:', msg.getname())
 
     def send(self, X, name):
+        """ send data to other devices
+
+        Send data to other devices. The data packet contains data and model name.
+        Ip address of next device pop from Queue of a ip list.
+
+        Args:
+             X: numpy array
+             name: next device model name
+
+        """
         node = Node.create()
         queue = node.ip[name]
         address = queue.get()
@@ -153,6 +193,13 @@ class Responder(ipc.Responder):
 
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
+        """ handle request from other devices.
+
+        do_POST is automatically called by ThreadedHTTPServer. It creates a new
+        responder for each request. The responder generates response and write
+        response to data sent back.
+
+        """
         self.responder = Responder()
         call_request_reader = ipc.FramedReader(self.rfile)
         call_request = call_request_reader.read_framed_message()
