@@ -66,7 +66,7 @@ def master():
         index += 1
 
     Thread(target=send_request, args=(image.tobytes(), 'spatial')).start()
-    # Thread(target=send_request, args=(flows.tobytes(), 'temporal')).start()
+    Thread(target=send_request, args=(flows.tobytes(), 'temporal')).start()
 
 
 def main():

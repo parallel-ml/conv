@@ -3,7 +3,7 @@ import os
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from multiprocessing import Queue
-from threading import Thread
+from threading import Thread, Lock
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -23,19 +23,10 @@ matplotlib.use('Agg')
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
 
-class Singleton(object):
-    """ implementation of singleton design, idea is always return a same class at module level """
+class Node(object):
+    """ singleton factory with threading safe lock """
 
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not isinstance(cls._instance, cls):
-            cls._instance = object.__new__(cls, *args, **kwargs)
-        return cls._instance
-
-
-class Node(Singleton):
-    """ class wraps all data used by a node on 1 device """
+    instance = None
 
     def __init__(self):
         self.ip = dict()
@@ -47,10 +38,23 @@ class Node(Singleton):
         self.fc_input = None
         self.max_input = None
         self.result_q = Queue()
+        self.lock = Lock()
 
     def log(self, step, data=''):
         if self.debug:
             util.step(step, data)
+
+    def acquire_lock(self):
+        self.lock.acquire()
+
+    def release_lock(self):
+        self.lock.release()
+
+    @classmethod
+    def create(cls):
+        if cls.instance is None:
+            cls.instance = cls()
+        return cls.instance
 
 
 class Responder(ipc.Responder):
@@ -60,7 +64,7 @@ class Responder(ipc.Responder):
         ipc.Responder.__init__(self, PROTOCOL)
 
     def invoke(self, msg, req):
-        node = Node()
+        node = Node.create()
 
         if msg.name == 'forward':
             try:
@@ -68,24 +72,31 @@ class Responder(ipc.Responder):
                     bytestr = req['input']
 
                     if req['name'] == 'spatial':
+                        node.acquire_lock()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial() if node.model is None else node.model
+                        node.model = ml.load_spatial()  # if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
+                        node.release_lock()
                         node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-                        return node.result_q.get()
+                        result = node.result_q.get()
+                        return result
 
                     elif req['name'] == 'temporal':
+                        node.acquire_lock()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
-                        node.model = ml.load_temporal() if node.model is None else node.model
+                        node.model = ml.load_temporal()  # if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
+                        node.release_lock()
                         node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-                        return node.result_q.get()
+                        result = node.result_q.get()
+                        return result
 
                     elif req['name'] == 'maxpool':
+                        node.acquire_lock()
                         node.log('get max pool request')
                         X = np.fromstring(bytestr, np.uint8)
                         X = X.reshape(1, X.size)
@@ -94,31 +105,36 @@ class Responder(ipc.Responder):
                             return ' '
                         node.model = ml.load_maxpool(N=node.max_layer_dim) if node.model is None else node.model
                         output = node.model.predict(np.array([node.max_input]))
+                        node.release_lock()
                         node.max_input = None
                         node.log('max pool forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-                        return node.result_q.get()
+                        result = node.result_q.get()
+                        return result
 
                     elif req['name'] == 'fc':
-                        node.log('get FC request')
+                        node.acquire_lock()
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
                         node.fc_input = X if node.fc_input is None else np.concatenate((node.fc_input, X))
+                        node.log('get FC request', node.fc_input.shape)
                         if node.fc_input.size < node.fc_layer_dim:
+                            node.release_lock()
                             return ' '
-                        node.model = ml.load_fc(node.fc_layer_dim) if node.model is None else node.model
+                        node.model = ml.load_fc(node.fc_layer_dim)  # if node.model is None else node.model
                         output = node.model.predict(np.array([node.fc_input]))
                         node.fc_input = None
                         node.log('finish FC forward')
+                        node.release_lock()
                         return output.tobytes()
 
             except Exception, e:
-                node.log('Error', str(e))
+                node.log('Error', e.message)
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
 
     def send(self, X, name):
-        node = Node()
+        node = Node.create()
         queue = node.ip[name]
         address = queue.get()
         client = ipc.HTTPTransceiver(address, 12345)
@@ -153,7 +169,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main(cmd):
-    node = Node()
+    node = Node.create()
 
     node.fc_layer_dim = cmd.fc_dim
     node.max_layer_dim = cmd.max_dim
