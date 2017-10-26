@@ -105,7 +105,7 @@ class Responder(ipc.Responder):
                         node.acquire_lock()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial()  # if node.model is None else node.model
+                        node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish spatial forward')
@@ -117,7 +117,7 @@ class Responder(ipc.Responder):
                         node.acquire_lock()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
-                        node.model = ml.load_temporal()  # if node.model is None else node.model
+                        node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish temporal forward')
@@ -151,7 +151,7 @@ class Responder(ipc.Responder):
                         if node.fc_input.size < node.fc_layer_dim:
                             node.release_lock()
                             return ' '
-                        node.model = ml.load_fc(node.fc_layer_dim)  # if node.model is None else node.model
+                        node.model = ml.load_fc(node.fc_layer_dim) if node.model is None else node.model
                         output = node.model.predict(np.array([node.fc_input]))
                         node.fc_input = None
                         node.log('finish FC forward')
