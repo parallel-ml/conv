@@ -227,8 +227,12 @@ def main(cmd):
         node.ip['fc'] = Queue()
         node.ip['maxpool'] = Queue()
         for addr in address['fc']:
+            if addr == '#':
+                break
             node.ip['fc'].put(addr)
         for addr in address['maxpool']:
+            if addr == '#':
+                break
             node.ip['maxpool'].put(addr)
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
