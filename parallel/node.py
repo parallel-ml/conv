@@ -105,25 +105,23 @@ class Responder(ipc.Responder):
                         node.acquire_lock()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial() if node.model is None else node.model
+                        node.model = ml.load_spatial() # if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-                        result = node.result_q.get()
-                        return result
+                        return
 
                     elif req['name'] == 'temporal':
                         node.acquire_lock()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
-                        node.model = ml.load_temporal() if node.model is None else node.model
+                        node.model = ml.load_temporal() # if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-                        result = node.result_q.get()
-                        return result
+                        return
 
                     elif req['name'] == 'maxpool':
                         node.acquire_lock()
@@ -133,14 +131,13 @@ class Responder(ipc.Responder):
                         node.max_input = X if node.max_input is None else np.concatenate((node.max_input, X), axis=0)
                         if node.max_input.shape[0] < node.max_layer_dim:
                             return ' '
-                        node.model = ml.load_maxpool(N=node.max_layer_dim) if node.model is None else node.model
+                        node.model = ml.load_maxpool(N=node.max_layer_dim) # if node.model is None else node.model
                         output = node.model.predict(np.array([node.max_input]))
                         node.release_lock()
                         node.max_input = None
                         node.log('max pool forward')
                         Thread(target=self.send, args=(output, 'fc')).start()
-                        result = node.result_q.get()
-                        return result
+                        return
 
                     elif req['name'] == 'fc':
                         node.acquire_lock()
@@ -151,12 +148,13 @@ class Responder(ipc.Responder):
                         if node.fc_input.size < node.fc_layer_dim:
                             node.release_lock()
                             return ' '
-                        node.model = ml.load_fc(node.fc_layer_dim) if node.model is None else node.model
+                        node.model = ml.load_fc(node.fc_layer_dim) # if node.model is None else node.model
                         output = node.model.predict(np.array([node.fc_input]))
                         node.fc_input = None
                         node.log('finish FC forward')
                         node.release_lock()
-                        return output.tobytes()
+                        Thread(target=self.send, args=(output, 'initial')).start()
+                        return
 
             except Exception, e:
                 node.log('Error', e.message)
@@ -177,7 +175,11 @@ class Responder(ipc.Responder):
         node = Node.create()
         queue = node.ip[name]
         address = queue.get()
-        client = ipc.HTTPTransceiver(address, 12345)
+
+        port = 12345
+        if node.debug:
+            port = 9999 if name == 'initial' else 12345
+        client = ipc.HTTPTransceiver(address, port)
         requestor = ipc.Requestor(PROTOCOL, client)
 
         data = dict()
@@ -226,6 +228,7 @@ def main(cmd):
         address = yaml.safe_load(file)
         node.ip['fc'] = Queue()
         node.ip['maxpool'] = Queue()
+        node.ip['initial'] = Queue()
         for addr in address['fc']:
             if addr == '#':
                 break
@@ -234,6 +237,10 @@ def main(cmd):
             if addr == '#':
                 break
             node.ip['maxpool'].put(addr)
+        for addr in address['initial']:
+            if addr == '#':
+                break
+            node.ip['initial'].put(addr)
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True

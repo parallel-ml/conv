@@ -11,7 +11,7 @@
         "name" : "name",
         "type" : "string"
       } ],
-      "response" : "bytes"
+      "response" : "null"
     }
   }
 }

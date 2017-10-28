@@ -2,9 +2,12 @@ from collections import deque
 from multiprocessing import Queue
 from threading import Thread
 import time
+from SocketServer import ThreadingMixIn
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 import avro.ipc as ipc
 import avro.protocol as protocol
+import avro.schema as schema
 import cv2
 import numpy as np
 import yaml
@@ -51,18 +54,54 @@ def master():
     while True:
         ret, frame = 'unknown', np.random.rand(12, 16, 3) * 255
         frame = frame.astype(dtype=np.uint8)
+        image = frame
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         if frame0 is not None:
-            init.flow.appendleft(cv2.calcOpticalFlowFarneback(frame0, frame, None, 0.5, 3, 4, 3, 5, 1.1, 0))
-            if init.flow.count() == 6:
-                Thread(target=send_request, args=(frame.tobytes(), 'spatial')).start()
-                optical_flow = np.concatenate(init.flow, axis=2)
+            init.flows.appendleft(cv2.calcOpticalFlowFarneback(frame0, frame, None, 0.5, 3, 4, 3, 5, 1.1, 0))
+            if len(init.flows) == 3:
+                Thread(target=send_request, args=(image.tobytes(), 'spatial')).start()
+                optical_flow = np.concatenate(init.flows, axis=2)
                 Thread(target=send_request, args=(optical_flow.tobytes(), 'temporal')).start()
-                init.flow.pop()
+                init.flows.pop()
 
         frame0 = frame
         time.sleep(1)
+
+
+class Responder(ipc.Responder):
+    def __init__(self):
+        ipc.Responder.__init__(self, PROTOCOL)
+
+    def invoke(self, msg, req):
+        if msg.name == 'forward':
+            print 'gets response'
+            try:
+                bytestr = req['input']
+                X = np.fromstring(bytestr, np.float32).reshape(1, 51)
+                print X
+                return
+            except Exception, e:
+                print 'Error', e.message
+        else:
+            raise schema.AvroException('unexpected message:', msg.getname())
+
+
+class Handler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        self.responder = Responder()
+        call_request_reader = ipc.FramedReader(self.rfile)
+        call_request = call_request_reader.read_framed_message()
+        resp_body = self.responder.respond(call_request)
+        self.send_response(200)
+        self.send_header('Content-Type', 'avro/binary')
+        self.end_headers()
+        resp_writer = ipc.FramedWriter(self.wfile)
+        resp_writer.write_framed_message(resp_body)
+
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """handle requests in separate thread"""
 
 
 def main():
@@ -77,6 +116,11 @@ def main():
             if addr == '#':
                 break
             init.temporal_q.put(addr)
+
+    server = ThreadedHTTPServer(('0.0.0.0', 9999), Handler)
+    server.allow_reuse_address = True
+    Thread(target=server.serve_forever, args=()).start()
+
     master()
 
 
