@@ -16,6 +16,14 @@ PROTOCOL = protocol.parse(open('resource/image.avpr').read())
 
 
 class Initializer:
+    """ singleton factory for initializer node
+
+    Attributes:
+        spatial_q: Queue for storing spatial model devices
+        temporal_q: Queue for storing temporal model devices
+        flows: deque for storing fixed size frames
+
+    """
     instance = None
 
     def __init__(self):
@@ -49,18 +57,28 @@ def send_request(bytestr, mode='spatial'):
 
 
 def master():
+    """ master function for real time video.
+
+    A basic while loop gets one frame at each time. It appends a frame to deque
+    every time and pop the least recent one if the length > maximum.
+    """
     init = Initializer.create_init()
+    # for previous frame used
     frame0 = None
     while True:
+        # current frame
         ret, frame = 'unknown', np.random.rand(12, 16, 3) * 255
         frame = frame.astype(dtype=np.uint8)
         image = frame
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         if frame0 is not None:
+            # append new 1-1 optical frame into deque
             init.flows.appendleft(cv2.calcOpticalFlowFarneback(frame0, frame, None, 0.5, 3, 4, 3, 5, 1.1, 0))
             if len(init.flows) == 3:
                 Thread(target=send_request, args=(image.tobytes(), 'spatial')).start()
+                # concatenate at axis 2
+                # ex: (3, 2, 1) + (3, 2, 1) = (3, 2, 2)
                 optical_flow = np.concatenate(init.flows, axis=2)
                 Thread(target=send_request, args=(optical_flow.tobytes(), 'temporal')).start()
                 init.flows.pop()
@@ -74,6 +92,22 @@ class Responder(ipc.Responder):
         ipc.Responder.__init__(self, PROTOCOL)
 
     def invoke(self, msg, req):
+        """ process response
+
+        invoke handles the request and get response for the request. This is the key
+        of each node. All model forwarding and output redirect are done here.
+
+        Args:
+            msg: meta data
+            req: contains data packet
+
+        Returns:
+            a string of data
+
+        Raises:
+            AvroException: if the data does not have correct syntac defined in Schema
+
+        """
         if msg.name == 'forward':
             print 'gets response'
             try:
@@ -89,6 +123,13 @@ class Responder(ipc.Responder):
 
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
+        """ handle request from other devices.
+
+        do_POST is automatically called by ThreadedHTTPServer. It creates a new
+        responder for each request. The responder generates response and write
+        response to data sent back.
+
+        """
         self.responder = Responder()
         call_request_reader = ipc.FramedReader(self.rfile)
         call_request = call_request_reader.read_framed_message()
@@ -106,6 +147,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 def main():
     init = Initializer.create_init()
+    # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
         for addr in address['spatial']:

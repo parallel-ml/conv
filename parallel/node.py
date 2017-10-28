@@ -36,7 +36,10 @@ class Node(object):
         fc_input: input for fully connected layer
         max_input: input for max pooling layer
         result_q: Queue for put result
-        lock: threading lock for safe usage of this class
+        lock: threading lock for safe usage of this class. The lock is used
+                for safe model forwarding. If the model is processing input and
+                it gets request from other devices, the new request will wait
+                until the previous model forwarding finishes.
 
     """
 
@@ -143,6 +146,8 @@ class Responder(ipc.Responder):
                         node.acquire_lock()
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
+                        # concatenate inputs from spatial and temporal
+                        # ex: (1, 256) + (1, 256) = (1, 512)
                         node.fc_input = X if node.fc_input is None else np.concatenate((node.fc_input, X))
                         node.log('get FC request', node.fc_input.shape)
                         if node.fc_input.size < node.fc_layer_dim:
@@ -224,6 +229,7 @@ def main(cmd):
     node.max_layer_dim = cmd.max_dim
     node.debug = cmd.debug
 
+    # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
         node.ip['fc'] = Queue()
