@@ -66,7 +66,7 @@ def load_fc(input_shape=7680):
     return model
 
 
-def load_maxpool(input_shape=256, N=16):
+def load_maxpool(input_shape=(16, 256), N=16):
     input = Input(shape=input_shape, name='input')
 
     max1 = MaxPooling1D(pool_size=N, strides=N)(input)

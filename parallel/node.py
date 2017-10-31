@@ -4,6 +4,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from multiprocessing import Queue
 from threading import Thread, Lock
+from collections import deque
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -52,8 +53,7 @@ class Node(object):
         self.fc_layer_dim = 7680
         self.max_layer_dim = 16
         self.debug = False
-        self.fc_input = None
-        self.max_input = None
+        self.fc_input = deque()
         self.result_q = Queue()
         self.lock = Lock()
 
@@ -126,36 +126,25 @@ class Responder(ipc.Responder):
                         Thread(target=self.send, args=(output, 'fc')).start()
                         return
 
-                    elif req['name'] == 'maxpool':
-                        node.acquire_lock()
-                        node.log('get max pool request')
-                        X = np.fromstring(bytestr, np.uint8)
-                        X = X.reshape(1, X.size)
-                        node.max_input = X if node.max_input is None else np.concatenate((node.max_input, X), axis=0)
-                        if node.max_input.shape[0] < node.max_layer_dim:
-                            return ' '
-                        node.model = ml.load_maxpool(N=node.max_layer_dim) # if node.model is None else node.model
-                        output = node.model.predict(np.array([node.max_input]))
-                        node.release_lock()
-                        node.max_input = None
-                        node.log('max pool forward')
-                        Thread(target=self.send, args=(output, 'fc')).start()
-                        return
-
                     elif req['name'] == 'fc':
                         node.acquire_lock()
                         X = np.fromstring(bytestr, np.float32)
-                        X = X.reshape(X.size)
-                        # concatenate inputs from spatial and temporal
-                        # ex: (1, 256) + (1, 256) = (1, 512)
-                        node.fc_input = X if node.fc_input is None else np.concatenate((node.fc_input, X))
-                        node.log('get FC request', node.fc_input.shape)
-                        if node.fc_input.size < node.fc_layer_dim:
+                        X = X.reshape(1, X.size)
+                        node.fc_input.append(X)
+                        node.log('get FC request', str(len(node.fc_input)))
+                        if len(node.fc_input) < node.max_layer_dim * 2:
                             node.release_lock()
                             return ' '
+
+                        node.model = ml.load_maxpool(input_shape=(node.max_layer_dim * 2, 256), N=node.max_layer_dim)  # if node.model is None else node.model
+                        # concatenate inputs from spatial and temporal
+                        # ex: (1, 256) + (1, 256) = (2, 256)
+                        input = np.concatenate(node.fc_input)
+                        output = node.model.predict(np.array([input]))
+                        output = output.reshape(output.size)
                         node.model = ml.load_fc(node.fc_layer_dim) # if node.model is None else node.model
-                        output = node.model.predict(np.array([node.fc_input]))
-                        node.fc_input = None
+                        output = node.model.predict(np.array([output]))
+                        node.fc_input.popleft()
                         node.log('finish FC forward')
                         node.release_lock()
                         Thread(target=self.send, args=(output, 'initial')).start()
