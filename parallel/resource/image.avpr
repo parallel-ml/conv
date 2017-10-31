@@ -8,7 +8,10 @@
         "name" : "input",
         "type" : "bytes"
       }, {
-        "name" : "name",
+        "name" : "next",
+        "type" : "string"
+      }, {
+        "name" : "tag",
         "type" : "string"
       } ],
       "response" : "null"

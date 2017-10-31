@@ -48,7 +48,8 @@ def send_request(bytestr, mode='spatial'):
 
     data = dict()
     data['input'] = bytestr
-    data['name'] = mode
+    data['next'] = mode
+    data['tag'] = ''
 
     requestor.request('forward', data)
 

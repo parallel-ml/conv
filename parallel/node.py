@@ -1,18 +1,17 @@
 import argparse
-import os
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-from SocketServer import ThreadingMixIn
-from multiprocessing import Queue
-from threading import Thread, Lock
-from collections import deque
-
 import avro.ipc as ipc
 import avro.protocol as protocol
 import avro.schema as schema
 import matplotlib
 import numpy as np
+import os
 import tensorflow as tf
 import yaml
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from SocketServer import ThreadingMixIn
+from collections import deque
+from multiprocessing import Queue
+from threading import Thread, Lock
 
 import model as ml
 import util
@@ -35,8 +34,8 @@ class Node(object):
         max_layer_dim: dimension of max pooling layer
         debug: flag for debugging
         fc_input: input for fully connected layer
-        max_input: input for max pooling layer
-        result_q: Queue for put result
+        fc_spatial_input: input at fc layer from spatial CNN
+        fc_temporal_input: input at fc layer from temporal CNN
         lock: threading lock for safe usage of this class. The lock is used
                 for safe model forwarding. If the model is processing input and
                 it gets request from other devices, the new request will wait
@@ -53,8 +52,8 @@ class Node(object):
         self.fc_layer_dim = 7680
         self.max_layer_dim = 16
         self.debug = False
-        self.fc_input = deque()
-        self.result_q = Queue()
+        self.fc_spatial_input = deque()
+        self.fc_temporal_input = deque()
         self.lock = Lock()
 
     def log(self, step, data=''):
@@ -104,50 +103,60 @@ class Responder(ipc.Responder):
                 with node.graph.as_default():
                     bytestr = req['input']
 
-                    if req['name'] == 'spatial':
+                    if req['next'] == 'spatial':
                         node.acquire_lock()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial() # if node.model is None else node.model
+                        node.model = ml.load_spatial()  # if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish spatial forward')
-                        Thread(target=self.send, args=(output, 'fc')).start()
+                        Thread(target=self.send, args=(output, 'fc', 'spatial')).start()
                         return
 
-                    elif req['name'] == 'temporal':
+                    elif req['next'] == 'temporal':
                         node.acquire_lock()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
-                        node.model = ml.load_temporal() # if node.model is None else node.model
+                        node.model = ml.load_temporal()  # if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish temporal forward')
-                        Thread(target=self.send, args=(output, 'fc')).start()
+                        Thread(target=self.send, args=(output, 'fc', 'temporal')).start()
                         return
 
-                    elif req['name'] == 'fc':
+                    elif req['next'] == 'fc':
+                        tag = req['tag']
                         node.acquire_lock()
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(1, X.size)
-                        node.fc_input.append(X)
-                        node.log('get FC request', str(len(node.fc_input)))
-                        if len(node.fc_input) < node.max_layer_dim * 2:
+                        if tag == 'spatial':
+                            node.fc_spatial_input.append(X)
+                        else:
+                            node.fc_temporal_input.append(X)
+                        node.log('get FC request',
+                                 'spatial: %d temporal: %d' % (len(node.fc_spatial_input), len(node.fc_temporal_input)))
+                        if len(node.fc_spatial_input) != len(node.fc_temporal_input) or len(
+                                node.fc_spatial_input) + len(node.fc_temporal_input) < node.max_layer_dim * 2:
                             node.release_lock()
                             return ' '
 
-                        node.model = ml.load_maxpool(input_shape=(node.max_layer_dim * 2, 256), N=node.max_layer_dim)  # if node.model is None else node.model
+                        node.model = ml.load_maxpool(input_shape=(node.max_layer_dim * 2, 256),
+                                                     N=node.max_layer_dim)  # if node.model is None else node.model
                         # concatenate inputs from spatial and temporal
                         # ex: (1, 256) + (1, 256) = (2, 256)
-                        input = np.concatenate(node.fc_input)
+                        s_input = np.concatenate(node.fc_spatial_input)
+                        t_input = np.concatenate(node.fc_temporal_input)
+                        input = np.concatenate([s_input, t_input])
                         output = node.model.predict(np.array([input]))
                         output = output.reshape(output.size)
-                        node.model = ml.load_fc(node.fc_layer_dim) # if node.model is None else node.model
+                        node.model = ml.load_fc(node.fc_layer_dim)  # if node.model is None else node.model
                         output = node.model.predict(np.array([output]))
-                        node.fc_input.popleft()
+                        node.fc_spatial_input.popleft()
+                        node.fc_temporal_input.popleft()
                         node.log('finish FC forward')
                         node.release_lock()
-                        Thread(target=self.send, args=(output, 'initial')).start()
+                        Thread(target=self.send, args=(output, 'initial', '')).start()
                         return
 
             except Exception, e:
@@ -155,7 +164,7 @@ class Responder(ipc.Responder):
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
 
-    def send(self, X, name):
+    def send(self, X, name, tag):
         """ send data to other devices
 
         Send data to other devices. The data packet contains data and model name.
@@ -164,6 +173,7 @@ class Responder(ipc.Responder):
         Args:
              X: numpy array
              name: next device model name
+             tag: mark the current layer label
 
         """
         node = Node.create()
@@ -178,10 +188,10 @@ class Responder(ipc.Responder):
 
         data = dict()
         data['input'] = X.tostring()
-        data['name'] = name
+        data['next'] = name
+        data['tag'] = tag
         node.log('finish assembly')
-        output = requestor.request('forward', data)
-        node.result_q.put(output)
+        requestor.request('forward', data)
         node.log('node gets request back')
         client.close()
         queue.put(address)
