@@ -37,7 +37,7 @@ class Initializer:
         if start:
             self.timestamp = time.time()
         else:
-            print '{.2f}'.format(time.time() - self.timestamp)
+            print '{:.2f}'.format(time.time() - self.timestamp)
 
     @classmethod
     def create_init(cls):

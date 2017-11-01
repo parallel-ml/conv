@@ -73,7 +73,7 @@ class Node(object):
         if start:
             self.timestamp = time.time()
         else:
-            print '{.2f}'.format(time.time() - self.timestamp)
+            print '{:.2f}'.format(time.time() - self.timestamp)
 
 
     @classmethod
@@ -107,6 +107,7 @@ class Responder(ipc.Responder):
 
         """
         node = Node.create()
+        node.acquire_lock()
 
         if msg.name == 'forward':
             try:
@@ -114,26 +115,20 @@ class Responder(ipc.Responder):
                     bytestr = req['input']
 
                     if req['next'] == 'spatial':
-                        node.acquire_lock()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
                         node.model = ml.load_spatial()  if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
-                        node.release_lock()
                         node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'fc', 'spatial')).start()
-                        return
 
                     elif req['next'] == 'temporal':
-                        node.acquire_lock()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
                         node.model = ml.load_temporal()  if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
-                        node.release_lock()
                         node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'fc', 'temporal')).start()
-                        return
 
                     elif req['next'] == 'fc':
                         tag = req['tag']
@@ -165,9 +160,10 @@ class Responder(ipc.Responder):
                         node.fc_spatial_input.popleft()
                         node.fc_temporal_input.popleft()
                         node.log('finish FC forward')
-                        node.release_lock()
                         Thread(target=self.send, args=(output, 'initial', '')).start()
-                        return
+
+                node.release()
+                return
 
             except Exception, e:
                 node.log('Error', e.message)
