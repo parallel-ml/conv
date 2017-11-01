@@ -143,7 +143,7 @@ class Responder(ipc.Responder):
                         if len(node.fc_spatial_input) != len(node.fc_temporal_input) or len(
                                 node.fc_spatial_input) + len(node.fc_temporal_input) < node.max_layer_dim * 2:
                             node.release_lock()
-                            return ' '
+                            return
 
                         node.model = ml.load_maxpool(input_shape=(node.max_layer_dim * 2, 256),
                                                      N=node.max_layer_dim) if node.model is None else node.model
@@ -161,7 +161,7 @@ class Responder(ipc.Responder):
                         node.log('finish FC forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
 
-                node.release()
+                node.release_lock()
                 return
 
             except Exception, e:
