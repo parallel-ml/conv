@@ -4,6 +4,7 @@ from threading import Thread
 import time
 from SocketServer import ThreadingMixIn
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+import time
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -30,6 +31,13 @@ class Initializer:
         self.spatial_q = Queue()
         self.temporal_q = Queue()
         self.flows = deque()
+        self.timestamp = time.time()
+
+    def timer(self, start=True):
+        if start:
+            self.timestamp = time.time()
+        else:
+            print '{.2f}'.format(time.time() - self.timestamp)
 
     @classmethod
     def create_init(cls):
@@ -131,6 +139,9 @@ class Handler(BaseHTTPRequestHandler):
         response to data sent back.
 
         """
+        init = Initializer.create_init()
+        init.timer(start=False)
+        init.timer()
         self.responder = Responder()
         call_request_reader = ipc.FramedReader(self.rfile)
         call_request = call_request_reader.read_framed_message()

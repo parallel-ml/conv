@@ -12,6 +12,7 @@ from SocketServer import ThreadingMixIn
 from collections import deque
 from multiprocessing import Queue
 from threading import Thread, Lock
+import time
 
 import model as ml
 import util
@@ -48,12 +49,14 @@ class Node(object):
     def __init__(self):
         self.ip = dict()
         self.model = None
+        self.n_model = None
         self.graph = tf.get_default_graph()
         self.fc_layer_dim = 7680
         self.max_layer_dim = 16
         self.debug = False
         self.fc_spatial_input = deque()
         self.fc_temporal_input = deque()
+        self.timestamp = time.time()
         self.lock = Lock()
 
     def log(self, step, data=''):
@@ -65,6 +68,13 @@ class Node(object):
 
     def release_lock(self):
         self.lock.release()
+
+    def timer(self, start=True):
+        if start:
+            self.timestamp = time.time()
+        else:
+            print '{.2f}'.format(time.time() - self.timestamp)
+
 
     @classmethod
     def create(cls):
@@ -107,7 +117,7 @@ class Responder(ipc.Responder):
                         node.acquire_lock()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial()  # if node.model is None else node.model
+                        node.model = ml.load_spatial()  if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish spatial forward')
@@ -118,7 +128,7 @@ class Responder(ipc.Responder):
                         node.acquire_lock()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
-                        node.model = ml.load_temporal()  # if node.model is None else node.model
+                        node.model = ml.load_temporal()  if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.release_lock()
                         node.log('finish temporal forward')
@@ -142,7 +152,7 @@ class Responder(ipc.Responder):
                             return ' '
 
                         node.model = ml.load_maxpool(input_shape=(node.max_layer_dim * 2, 256),
-                                                     N=node.max_layer_dim)  # if node.model is None else node.model
+                                                     N=node.max_layer_dim) if node.model is None else node.model
                         # concatenate inputs from spatial and temporal
                         # ex: (1, 256) + (1, 256) = (2, 256)
                         s_input = np.concatenate(node.fc_spatial_input)
@@ -150,8 +160,8 @@ class Responder(ipc.Responder):
                         input = np.concatenate([s_input, t_input])
                         output = node.model.predict(np.array([input]))
                         output = output.reshape(output.size)
-                        node.model = ml.load_fc(node.fc_layer_dim)  # if node.model is None else node.model
-                        output = node.model.predict(np.array([output]))
+                        node.n_model = ml.load_fc(node.fc_layer_dim) if node.n_model is None else node.n_model
+                        output = node.n_model.predict(np.array([output]))
                         node.fc_spatial_input.popleft()
                         node.fc_temporal_input.popleft()
                         node.log('finish FC forward')
