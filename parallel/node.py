@@ -132,7 +132,6 @@ class Responder(ipc.Responder):
 
                     elif req['next'] == 'fc':
                         tag = req['tag']
-                        node.acquire_lock()
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(1, X.size)
                         if tag == 'spatial':
