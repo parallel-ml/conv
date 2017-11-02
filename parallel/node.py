@@ -6,13 +6,13 @@ import matplotlib
 import numpy as np
 import os
 import tensorflow as tf
+import time
 import yaml
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from collections import deque
 from multiprocessing import Queue
 from threading import Thread, Lock
-import time
 
 import model as ml
 import util
@@ -75,7 +75,6 @@ class Node(object):
         else:
             print '{:.2f}'.format(time.time() - self.timestamp)
 
-
     @classmethod
     def create(cls):
         if cls.instance is None:
@@ -117,7 +116,7 @@ class Responder(ipc.Responder):
                     if req['next'] == 'spatial':
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial()  if node.model is None else node.model
+                        node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'fc', 'spatial')).start()
@@ -125,7 +124,7 @@ class Responder(ipc.Responder):
                     elif req['next'] == 'temporal':
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
-                        node.model = ml.load_temporal()  if node.model is None else node.model
+                        node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'fc', 'temporal')).start()
@@ -140,22 +139,29 @@ class Responder(ipc.Responder):
                             node.fc_temporal_input.append(X)
                         node.log('get FC request',
                                  'spatial: %d temporal: %d' % (len(node.fc_spatial_input), len(node.fc_temporal_input)))
-                        if len(node.fc_spatial_input) != len(node.fc_temporal_input) or len(
-                                node.fc_spatial_input) + len(node.fc_temporal_input) < node.max_layer_dim * 2:
+                        if len(node.fc_spatial_input) < node.max_layer_dim or len(
+                                node.fc_temporal_input) < node.max_layer_dim:
                             node.release_lock()
                             return
 
-                        node.model = ml.load_maxpool(input_shape=(node.max_layer_dim * 2, 256),
+                        # pop extra frame due to transmitting delay
+                        while len(node.fc_spatial_input) > node.max_layer_dim:
+                            node.fc_spatial_input.popleft()
+                        while len(node.fc_temporal_input) > node.max_layer_dim:
+                            node.fc_temporal_input.popleft()
+                        node.model = ml.load_maxpool(input_shape=(node.max_layer_dim, 256),
                                                      N=node.max_layer_dim) if node.model is None else node.model
                         # concatenate inputs from spatial and temporal
                         # ex: (1, 256) + (1, 256) = (2, 256)
                         s_input = np.concatenate(node.fc_spatial_input)
                         t_input = np.concatenate(node.fc_temporal_input)
-                        input = np.concatenate([s_input, t_input])
-                        output = node.model.predict(np.array([input]))
+                        s_output = node.model.predict(np.array([s_input]))
+                        t_output = node.model.predict(np.array([t_input]))
+                        output = np.concatenate([s_output, t_output])
                         output = output.reshape(output.size)
                         node.n_model = ml.load_fc(node.fc_layer_dim) if node.n_model is None else node.n_model
                         output = node.n_model.predict(np.array([output]))
+                        # pop least recent frame from deque
                         node.fc_spatial_input.popleft()
                         node.fc_temporal_input.popleft()
                         node.log('finish FC forward')
