@@ -118,11 +118,9 @@ class Responder(ipc.Responder):
 
         """
         if msg.name == 'forward':
-            print 'gets response'
             try:
                 bytestr = req['input']
                 X = np.fromstring(bytestr, np.float32).reshape(1, 51)
-                print X
                 return
             except Exception, e:
                 print 'Error', e.message
