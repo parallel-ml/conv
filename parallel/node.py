@@ -1,18 +1,19 @@
 import argparse
-import avro.ipc as ipc
-import avro.protocol as protocol
-import avro.schema as schema
-import matplotlib
-import numpy as np
 import os
-import tensorflow as tf
 import time
-import yaml
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from collections import deque
 from multiprocessing import Queue
 from threading import Thread, Lock
+
+import avro.ipc as ipc
+import avro.protocol as protocol
+import avro.schema as schema
+import matplotlib
+import numpy as np
+import tensorflow as tf
+import yaml
 
 import model as ml
 import util
@@ -31,12 +32,10 @@ class Node(object):
         ip: A dictionary contains Queue of ip addresses for different model type.
         model: loaded model associated to a node.
         graph: default graph used by Tensorflow
-        fc_layer_dim: dimension of fully connected layer
         max_layer_dim: dimension of max pooling layer
         debug: flag for debugging
-        fc_input: input for fully connected layer
-        fc_spatial_input: input at fc layer from spatial CNN
-        fc_temporal_input: input at fc layer from temporal CNN
+        max_spatial_input: input at fc layer from spatial CNN
+        max_temporal_input: input at fc layer from temporal CNN
         lock: threading lock for safe usage of this class. The lock is used
                 for safe model forwarding. If the model is processing input and
                 it gets request from other devices, the new request will wait
@@ -49,13 +48,12 @@ class Node(object):
     def __init__(self):
         self.ip = dict()
         self.model = None
-        self.n_model = None
         self.graph = tf.get_default_graph()
-        self.fc_layer_dim = 7680
+        self.split = 1
         self.max_layer_dim = 16
         self.debug = False
-        self.fc_spatial_input = deque()
-        self.fc_temporal_input = deque()
+        self.max_spatial_input = deque()
+        self.max_temporal_input = deque()
         self.timestamp = time.time()
         self.lock = Lock()
 
@@ -119,7 +117,7 @@ class Responder(ipc.Responder):
                         node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
-                        Thread(target=self.send, args=(output, 'fc', 'spatial')).start()
+                        Thread(target=self.send, args=(output, 'head', 'spatial')).start()
 
                     elif req['next'] == 'temporal':
                         node.log('get temporal request')
@@ -127,44 +125,51 @@ class Responder(ipc.Responder):
                         node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
-                        Thread(target=self.send, args=(output, 'fc', 'temporal')).start()
+                        Thread(target=self.send, args=(output, 'head', 'temporal')).start()
 
-                    elif req['next'] == 'fc':
+                    elif req['next'] == 'head':
                         tag = req['tag']
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(1, X.size)
                         if tag == 'spatial':
-                            node.fc_spatial_input.append(X)
+                            node.max_spatial_input.append(X)
                         else:
-                            node.fc_temporal_input.append(X)
-                        node.log('get FC request',
-                                 'spatial: %d temporal: %d' % (len(node.fc_spatial_input), len(node.fc_temporal_input)))
-                        if len(node.fc_spatial_input) < node.max_layer_dim or len(
-                                node.fc_temporal_input) < node.max_layer_dim:
+                            node.max_temporal_input.append(X)
+                        node.log('get head request', 'spatial: %d temporal: %d' % (
+                            len(node.max_spatial_input), len(node.max_temporal_input)))
+                        if len(node.max_spatial_input) < node.max_layer_dim or len(
+                                node.max_temporal_input) < node.max_layer_dim:
                             node.release_lock()
                             return
 
                         # pop extra frame due to transmitting delay
-                        while len(node.fc_spatial_input) > node.max_layer_dim:
-                            node.fc_spatial_input.popleft()
-                        while len(node.fc_temporal_input) > node.max_layer_dim:
-                            node.fc_temporal_input.popleft()
+                        while len(node.max_spatial_input) > node.max_layer_dim:
+                            node.max_spatial_input.popleft()
+                        while len(node.max_temporal_input) > node.max_layer_dim:
+                            node.max_temporal_input.popleft()
                         node.model = ml.load_maxpool(input_shape=(node.max_layer_dim, 256),
                                                      N=node.max_layer_dim) if node.model is None else node.model
                         # concatenate inputs from spatial and temporal
                         # ex: (1, 256) + (1, 256) = (2, 256)
-                        s_input = np.concatenate(node.fc_spatial_input)
-                        t_input = np.concatenate(node.fc_temporal_input)
+                        s_input = np.concatenate(node.max_spatial_input)
+                        t_input = np.concatenate(node.max_temporal_input)
                         s_output = node.model.predict(np.array([s_input]))
                         t_output = node.model.predict(np.array([t_input]))
                         output = np.concatenate([s_output, t_output])
-                        output = output.reshape(output.size)
-                        node.n_model = ml.load_fc(node.fc_layer_dim) if node.n_model is None else node.n_model
-                        output = node.n_model.predict(np.array([output]))
                         # pop least recent frame from deque
-                        node.fc_spatial_input.popleft()
-                        node.fc_temporal_input.popleft()
+                        node.max_spatial_input.popleft()
+                        node.max_temporal_input.popleft()
                         node.log('finish FC forward')
+                        for split in np.split(output, node.split):
+                            Thread(target=self.send, args=(split, 'fc', '')).start()
+
+                    else:
+                        X = np.fromstring(bytestr, np.float32)
+                        X = X.reshape(1, X.size)
+                        node.log('get fc layer request', X.shape)
+                        node.model = ml.load_fc(split=node.split) if node.model is None else node.model
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish fc forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
 
                 node.release_lock()
@@ -235,7 +240,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 def main(cmd):
     node = Node.create()
 
-    node.fc_layer_dim = cmd.fc_dim
+    node.split = cmd.split
     node.max_layer_dim = cmd.max_dim
     node.debug = cmd.debug
 
@@ -253,6 +258,10 @@ def main(cmd):
             if addr == '#':
                 break
             node.ip['maxpool'].put(addr)
+        for addr in address['head']:
+            if addr == '#':
+                break
+            node.ip['head'].put(addr)
         for addr in address['initial']:
             if addr == '#':
                 break
@@ -265,8 +274,8 @@ def main(cmd):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fc_dim', metavar='\b', action='store', default=7680, type=int,
-                        help='Choose fc layer input dimension')
+    parser.add_argument('--split', metavar='\b', action='store', default=1, type=int,
+                        help='Choose split for fc layer')
     parser.add_argument('--max_dim', metavar='\b', action='store', default=16, type=int,
                         help='Choose maxpooling layer input dimension')
     parser.add_argument('-d', '--debug', action='store_true', default=False,

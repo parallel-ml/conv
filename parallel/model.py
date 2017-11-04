@@ -50,17 +50,19 @@ def load_cnn(nb_class=1000, bias=True, act='relu', bn=True, dropout=False, mored
     return model
 
 
-def load_fc(input_shape=7680):
+def load_fc(split=1):
+    input_shape = 7680 / split
+    layer_shape = 4096 / split
     model = Sequential()
-    model.add(Dense(4096, input_shape=(input_shape,)))
-    model.add(BatchNormalization(input_shape=(4096,)))
-    model.add(Activation('relu', input_shape=(4096,)))
+    model.add(Dense(layer_shape, input_shape=(input_shape,)))
+    model.add(BatchNormalization(input_shape=(layer_shape,)))
+    model.add(Activation('relu', input_shape=(layer_shape,)))
 
-    model.add(Dense(4096, input_shape=(4096,)))
-    model.add(BatchNormalization(input_shape=(4096,)))
-    model.add(Activation('relu', input_shape=(4096,)))
+    model.add(Dense(layer_shape, input_shape=(layer_shape,)))
+    model.add(BatchNormalization(input_shape=(layer_shape,)))
+    model.add(Activation('relu', input_shape=(layer_shape,)))
 
-    model.add(Dense(51, input_shape=(4096,)))
+    model.add(Dense(51, input_shape=(layer_shape,)))
     model.add(BatchNormalization(input_shape=(51,)))
     model.add(Activation('softmax', input_shape=(51,)))
     return model
