@@ -9,8 +9,11 @@ from util.output import title, timer, avg_timer, subtitle
 
 
 def main():
+    raw_input("Start Spatial")
     run_spatial()
+    raw_input("Start Temporal")
     run_temporal()
+    raw_input("Start Maxpool")
     run_maxpool()
 
 
