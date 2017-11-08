@@ -9,11 +9,9 @@ from util.output import title, timer, avg_timer, subtitle
 
 
 def main():
-    run_spatial()
-    run_temporal()
-    run_maxpool()
+    run_fc()
 
-
+@profile
 def run_fc():
     model = Sequential()
     model.add(Dense(4096, input_shape=(7680,)))
@@ -27,7 +25,8 @@ def run_fc():
     model.add(Dense(51, input_shape=(4096,)))
     model.add(BatchNormalization(input_shape=(51,)))
     model.add(Activation('softmax', input_shape=(51,)))
-    return model
+    test_x = np.random.rand(7680)
+    output = model.predict(np.array([test_x]))
 
 
 def run_maxpool():

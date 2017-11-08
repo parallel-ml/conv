@@ -1,11 +1,11 @@
 import os
-
+from sys import argv
 import numpy as np
 from keras.layers import MaxPooling1D, Dense, Activation, BatchNormalization, Input, Flatten
 from keras.layers.convolutional import Conv2D
 from keras.layers.merge import Concatenate
 from keras.models import Model, Sequential, load_model
-
+from memory_profiler import profile
 from util.output import title, timer, avg_timer
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -15,17 +15,23 @@ WEIGHT = False
 
 def main():
     global WEIGHT
-    WEIGHT = True
-    run_fc()
-    if not WEIGHT:
-        run_maxpool()
-    run_temporal()
-    run_spatial()
+    WEIGHT = False
+    mode = argv[1]
+    if mode == 'fc':
+        run_fc()
+    elif mode == 'maxpool':
+        if not WEIGHT:
+            run_maxpool()
+    elif mode == 'temporal':
+        run_temporal()
+    else:
+        run_spatial()
 
 
 @title('fc layer')
+@profile
 def run_fc():
-    @timer('load')
+    @profile
     def load():
         model = Sequential()
         model.add(Dense(8192, input_shape=(7680,)))
@@ -41,7 +47,7 @@ def run_fc():
         model.add(Activation('softmax', input_shape=(51,)))
         return model
 
-    @timer('load')
+    @profile
     def load_weights():
         return load_model(
             '/home/jiashen/weights/clsfybatch_4/0000_epoch-4.0079_loss-0.0253_acc-4.1435_val_loss-0.0266_val_acc.hdf5')
@@ -49,7 +55,7 @@ def run_fc():
     test_x = np.random.rand(7680)
     model = load() if not WEIGHT else load_weights()
 
-    @avg_timer('inference')
+    @profile
     def predict():
         model.predict(np.array([test_x]))
 
@@ -57,10 +63,11 @@ def run_fc():
 
 
 @title('maxpooling layer')
+@profile
 def run_maxpool():
     test_x = np.random.rand(100, 256)
 
-    @timer('load')
+    @profile
     def load():
         N = 100
         input = Input(shape=(N, 256), name='input')
@@ -77,7 +84,7 @@ def run_maxpool():
 
     model = load()
 
-    @avg_timer('inference')
+    @profile
     def predict():
         model.predict(np.array([test_x]))
 
@@ -85,12 +92,13 @@ def run_maxpool():
 
 
 @title('temporal')
+@profile
 def run_temporal():
-    @timer('load')
+    @profile
     def load():
         return load_temporal()
 
-    @timer('load')
+    @profile
     def load_weights():
         return load_model(
             '/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
@@ -101,7 +109,7 @@ def run_temporal():
     for _ in range(3):
         model.pop()
 
-    @avg_timer('inference')
+    @profile
     def predict():
         model.predict(np.array([test_x]))
 
@@ -109,12 +117,13 @@ def run_temporal():
 
 
 @title('spatial')
+@profile
 def run_spatial():
-    @timer('load')
+    @profile
     def load():
         return load_spatial()
 
-    @timer('load')
+    @profile
     def load_weights():
         return load_model(
             '/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
@@ -125,7 +134,7 @@ def run_spatial():
     for _ in range(3):
         model.pop()
 
-    @avg_timer('inference')
+    @profile
     def predict():
         model.predict(np.array([test_x]))
 
