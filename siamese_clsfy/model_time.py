@@ -4,16 +4,20 @@ import numpy as np
 from keras.layers import MaxPooling1D, Dense, Activation, BatchNormalization, Input, Flatten
 from keras.layers.convolutional import Conv2D
 from keras.layers.merge import Concatenate
-from keras.models import Model, Sequential
+from keras.models import Model, Sequential, load_model
 
 from util.output import title, timer, avg_timer
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+WEIGHT = False
+
 
 def main():
+    WEIGHT = True
     run_fc()
-    run_maxpool()
+    if not WEIGHT:
+        run_maxpool()
     run_temporal()
     run_spatial()
 
@@ -23,21 +27,26 @@ def run_fc():
     @timer('load')
     def load():
         model = Sequential()
-        model.add(Dense(4096, input_shape=(7680,)))
-        model.add(BatchNormalization(input_shape=(4096,)))
-        model.add(Activation('relu', input_shape=(4096,)))
+        model.add(Dense(8192, input_shape=(7680,)))
+        model.add(BatchNormalization(input_shape=(8192,)))
+        model.add(Activation('relu', input_shape=(8192,)))
 
-        model.add(Dense(4096, input_shape=(4096,)))
-        model.add(BatchNormalization(input_shape=(4096,)))
-        model.add(Activation('relu', input_shape=(4096,)))
+        model.add(Dense(8192, input_shape=(8192,)))
+        model.add(BatchNormalization(input_shape=(8192,)))
+        model.add(Activation('relu', input_shape=(8192,)))
 
-        model.add(Dense(51, input_shape=(4096,)))
+        model.add(Dense(51, input_shape=(8192,)))
         model.add(BatchNormalization(input_shape=(51,)))
         model.add(Activation('softmax', input_shape=(51,)))
         return model
 
+    @timer('load')
+    def load_weights():
+        return load_model(
+            '/home/jiashen/weights/clsfybatch_4/0000_epoch-4.0079_loss-0.0253_acc-4.1435_val_loss-0.0266_val_acc.hdf5')
+
     test_x = np.random.rand(7680)
-    model = load()
+    model = load() if not WEIGHT else load_weights()
 
     @avg_timer('inference')
     def predict():
@@ -80,7 +89,12 @@ def run_temporal():
     def load():
         return load_temporal()
 
-    model = load()
+    @timer('load')
+    def load_weights():
+        return load_model(
+            '/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
+
+    model = load() if not WEIGHT else load_weights()
     test_x = np.random.rand(12, 16, 20)
     # pop the last three layers used by training
     for _ in range(3):
@@ -99,7 +113,12 @@ def run_spatial():
     def load():
         return load_spatial()
 
-    model = load()
+    @timer('load')
+    def load_weights():
+        return load_model(
+            '/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
+
+    model = load() if not WEIGHT else load_weights()
     test_x = np.random.rand(12, 16, 3)
     # pop the last three layers used by training
     for _ in range(3):
