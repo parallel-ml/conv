@@ -47,11 +47,11 @@ def avg_timer(name, timing=True):
             start = time.time()
             # if forward is timed, run it multiple times
             if timing:
-                for _ in range(0, 20):
+                for _ in range(0, 100):
                     re = func(*args, **kwargs)
             else:
                 func(*args, **kwargs)
-            timestamp = (time.time() - start) * 1.0 / 20
+            timestamp = (time.time() - start) * 1.0 / 100
             if timing:
                 print '++++++++++++++++++++++++++++++++++++++++++++++++++'
                 print name, ': {:.3f} sec'.format(timestamp)
