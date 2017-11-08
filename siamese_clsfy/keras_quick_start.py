@@ -6,15 +6,25 @@ from keras.models import load_model, Model, Sequential
 from memory_profiler import profile
 
 from util.output import title, timer, avg_timer, subtitle
-
+import time
 
 def main():
-    raw_input("Start Spatial")
-    run_spatial()
-    raw_input("Start Temporal")
-    run_temporal()
-    raw_input("Start Maxpool")
-    run_maxpool()
+    inp =  raw_input("S for Spatial, T for Temporal, M for Maxpool: ")
+    while inp.lower() != "q":
+        
+        if inp.lower() == "s":
+            print "Spatial: "
+            run_spatial()
+        
+        if inp.lower() == "t":
+            print "Temporal: "
+            run_temporal()
+        
+        if inp.lower() == "m":
+            print "Maxpool: "
+            run_maxpool()
+
+        inp =  raw_input("S for Spatial, T for Temporal, M for Maxpool: ")
 
 
 def run_fc():
@@ -47,8 +57,11 @@ def run_maxpool():
     mrg = Concatenate(axis=1)([max1, max2, max3, max4])
     flat = Flatten()(mrg)
     model = Model(input=input, outputs=flat)
-    output = model.predict(np.array([test_x]))
+    start = time.time()
+    for _ in range(200):
+        output = model.predict(np.array([test_x]))
     print output
+    print "Time: " , time.time()- start
 
 
 def run_temporal():
@@ -57,8 +70,11 @@ def run_temporal():
     # pop the last three layers used by training
     for _ in range(3):
         model.pop()
-    output = model.predict(np.array([test_x]))
+    start = time.time()
+    for _ in range(200):
+        output = model.predict(np.array([test_x]))
     print output
+    print "Time: " , time.time()- start
 
 
 def run_spatial():
@@ -67,8 +83,11 @@ def run_spatial():
     # pop the last three layers from training
     for _ in range(3):
         model.pop()
-    output = model.predict(np.array([test_x]))
+    start = time.time()
+    for _ in range(200):
+        output = model.predict(np.array([test_x]))
     print output
+    print "Time: " , time.time()- start
 
 
 def load_spatial():
