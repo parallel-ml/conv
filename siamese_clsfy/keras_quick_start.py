@@ -9,7 +9,8 @@ from util.output import title, timer, avg_timer, subtitle
 import time
 
 def main():
-    inp =  raw_input("S for Spatial, T for Temporal, M for Maxpool: ")
+    #Be careful running lots of tests with this, after maybe 20 tests it sometimes runs out of ram or something
+    inp =  raw_input("Input S, T, M, f4, f8, f851: ")
     while inp.lower() != "q":
         
         if inp.lower() == "s":
@@ -24,10 +25,28 @@ def main():
             print "Maxpool: "
             run_maxpool()
 
-        inp =  raw_input("S for Spatial, T for Temporal, M for Maxpool: ")
+        if inp.lower() =="f4":
+            start = time.time()
+            for _ in range(10):
+                run_fc4()
+            print "Time: " , time.time()- start
+
+        if inp.lower() =="f8":
+            start = time.time()
+            for _ in range(30):
+                run_fc8()
+            print "Time: " , time.time()- start
+
+        if inp.lower() =="f851":
+            start = time.time()
+            for _ in range(20):
+                run_fc851()
+            print "Time: " , time.time()- start
+
+        inp =  raw_input("Input S, T, M, f4, f8, f851: ")
 
 
-def run_fc():
+def run_fc4():
     model = Sequential()
     model.add(Dense(4096, input_shape=(7680,)))
     model.add(BatchNormalization(input_shape=(4096,)))
@@ -38,6 +57,26 @@ def run_fc():
     model.add(Activation('relu', input_shape=(4096,)))
 
     model.add(Dense(51, input_shape=(4096,)))
+    model.add(BatchNormalization(input_shape=(51,)))
+    model.add(Activation('softmax', input_shape=(51,)))
+    return model
+
+
+def run_fc8():
+    model = Sequential()
+    model.add(Dense(8192, input_shape=(7680,)))
+    model.add(BatchNormalization(input_shape=(8192,)))
+    model.add(Activation('relu', input_shape=(8192,)))
+    return model
+
+
+def run_fc851():
+    model = Sequential()
+    model.add(Dense(8192, input_shape=(7680,)))
+    model.add(BatchNormalization(input_shape=(8192,)))
+    model.add(Activation('relu', input_shape=(8192,)))
+
+    model.add(Dense(51, input_shape=(8192,)))
     model.add(BatchNormalization(input_shape=(51,)))
     model.add(Activation('softmax', input_shape=(51,)))
     return model
