@@ -64,7 +64,7 @@ def run_maxpool():
     test_x = np.random.rand(100, 256)
 
     def load():
-        N = 10083
+        N = 100
         input = Input(shape=(N, 256), name='input')
 
         max1 = MaxPooling1D(pool_size=N, strides=N)(input)

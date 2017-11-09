@@ -11,12 +11,12 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def main():
-    run_fc_first()
-    run_fc_second()
+    run_fc_8k1()
+    run_fc_8k2()
 
 
 @title('fc layer first')
-def run_fc_first():
+def run_fc_8k1():
     @timer('load')
     def load():
         model = Sequential()
@@ -37,7 +37,7 @@ def run_fc_first():
 
 
 @title('fc layer second')
-def run_fc_second():
+def run_fc_8k2():
     @timer('load')
     def load():
         model = Sequential()
