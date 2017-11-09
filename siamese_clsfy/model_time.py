@@ -15,7 +15,6 @@ WEIGHT = False
 
 def main():
     global WEIGHT
-    WEIGHT = True
     run_fc()
     if not WEIGHT:
         run_maxpool()
@@ -29,14 +28,14 @@ def run_fc():
     def load():
         model = Sequential()
         model.add(Dense(8192, input_shape=(7680,)))
-        model.add(BatchNormalization(input_shape=(8192,)))
-        model.add(Activation('relu', input_shape=(8192,)))
+        model.add(BatchNormalization(input_shape=(4096,)))
+        model.add(Activation('relu', input_shape=(4096,)))
 
-        model.add(Dense(8192, input_shape=(8192,)))
-        model.add(BatchNormalization(input_shape=(8192,)))
-        model.add(Activation('relu', input_shape=(8192,)))
+        model.add(Dense(4096, input_shape=(4096,)))
+        model.add(BatchNormalization(input_shape=(4096,)))
+        model.add(Activation('relu', input_shape=(4096,)))
 
-        model.add(Dense(51, input_shape=(8192,)))
+        model.add(Dense(51, input_shape=(4096,)))
         model.add(BatchNormalization(input_shape=(51,)))
         model.add(Activation('softmax', input_shape=(51,)))
         return model

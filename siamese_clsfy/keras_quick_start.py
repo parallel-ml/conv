@@ -9,9 +9,9 @@ from util.output import title, timer, avg_timer, subtitle
 
 
 def main():
-    run_fc()
+    pass
 
-@profile
+
 def run_fc():
     model = Sequential()
     model.add(Dense(4096, input_shape=(7680,)))

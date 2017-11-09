@@ -15,7 +15,6 @@ WEIGHT = False
 
 def main():
     global WEIGHT
-    WEIGHT = False
     mode = argv[1]
     if mode == 'fc':
         run_fc()
@@ -31,23 +30,21 @@ def main():
 @title('fc layer')
 @profile
 def run_fc():
-    @profile
     def load():
         model = Sequential()
-        model.add(Dense(8192, input_shape=(7680,)))
-        model.add(BatchNormalization(input_shape=(8192,)))
-        model.add(Activation('relu', input_shape=(8192,)))
+        model.add(Dense(4096, input_shape=(7680,)))
+        model.add(BatchNormalization(input_shape=(4096,)))
+        model.add(Activation('relu', input_shape=(4096,)))
 
-        model.add(Dense(8192, input_shape=(8192,)))
-        model.add(BatchNormalization(input_shape=(8192,)))
-        model.add(Activation('relu', input_shape=(8192,)))
+        model.add(Dense(4096, input_shape=(4096,)))
+        model.add(BatchNormalization(input_shape=(4096,)))
+        model.add(Activation('relu', input_shape=(4096,)))
 
-        model.add(Dense(51, input_shape=(8192,)))
+        model.add(Dense(51, input_shape=(4096,)))
         model.add(BatchNormalization(input_shape=(51,)))
         model.add(Activation('softmax', input_shape=(51,)))
         return model
 
-    @profile
     def load_weights():
         return load_model(
             '/home/jiashen/weights/clsfybatch_4/0000_epoch-4.0079_loss-0.0253_acc-4.1435_val_loss-0.0266_val_acc.hdf5')
@@ -55,7 +52,6 @@ def run_fc():
     test_x = np.random.rand(7680)
     model = load() if not WEIGHT else load_weights()
 
-    @profile
     def predict():
         model.predict(np.array([test_x]))
 
@@ -67,9 +63,8 @@ def run_fc():
 def run_maxpool():
     test_x = np.random.rand(100, 256)
 
-    @profile
     def load():
-        N = 100
+        N = 10083
         input = Input(shape=(N, 256), name='input')
 
         max1 = MaxPooling1D(pool_size=N, strides=N)(input)
@@ -84,7 +79,6 @@ def run_maxpool():
 
     model = load()
 
-    @profile
     def predict():
         model.predict(np.array([test_x]))
 
@@ -94,11 +88,9 @@ def run_maxpool():
 @title('temporal')
 @profile
 def run_temporal():
-    @profile
     def load():
         return load_temporal()
 
-    @profile
     def load_weights():
         return load_model(
             '/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
@@ -109,7 +101,6 @@ def run_temporal():
     for _ in range(3):
         model.pop()
 
-    @profile
     def predict():
         model.predict(np.array([test_x]))
 
@@ -119,11 +110,9 @@ def run_temporal():
 @title('spatial')
 @profile
 def run_spatial():
-    @profile
     def load():
         return load_spatial()
 
-    @profile
     def load_weights():
         return load_model(
             '/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
@@ -134,7 +123,6 @@ def run_spatial():
     for _ in range(3):
         model.pop()
 
-    @profile
     def predict():
         model.predict(np.array([test_x]))
 
