@@ -13,13 +13,13 @@ N = 4096
 
 
 def main():
-    run_fc_8k1()
-    run_fc_8k2()
-    run_fc_8k3()
+    run_fc_1()
+    run_fc_2()
+    run_fc_3()
 
 
 @title('fc layer first')
-def run_fc_8k1():
+def run_fc_1():
     @timer('load')
     def load():
         model = Sequential()
@@ -40,7 +40,7 @@ def run_fc_8k1():
 
 
 @title('fc layer second')
-def run_fc_8k2():
+def run_fc_2():
     @timer('load')
     def load():
         model = Sequential()
@@ -62,7 +62,7 @@ def run_fc_8k2():
 
 
 @title('fc layer third')
-def run_fc_8k3():
+def run_fc_3():
     @timer('load')
     def load():
         model = Sequential()
