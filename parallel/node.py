@@ -113,22 +113,26 @@ class Responder(ipc.Responder):
                     bytestr = req['input']
 
                     if req['next'] == 'spatial':
+                        node.timer()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
                         node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'head', 'spatial')).start()
+                        node.timer(False)
 
                     elif req['next'] == 'temporal':
+                        node.timer()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
                         node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'head', 'temporal')).start()
+                        node.timer(False)
 
-                    elif req['next'] == 'head':
+                    elif req['next'] == 'fc1':
                         node.timer()
                         tag = req['tag']
                         X = np.fromstring(bytestr, np.float32)
@@ -169,7 +173,7 @@ class Responder(ipc.Responder):
                         node.max_temporal_input.popleft()
                         node.log('finish fc_1 forward')
                         for split in np.split(output, node.split):
-                            Thread(target=self.send, args=(split, 'fc', '')).start()
+                            Thread(target=self.send, args=(split, 'fc_2', '')).start()
                         node.timer(False)
 
                     else:
@@ -259,15 +263,16 @@ def main(cmd):
         node.ip['fc'] = Queue()
         node.ip['maxpool'] = Queue()
         node.ip['initial'] = Queue()
-        node.ip['head'] = Queue()
-        for addr in address['fc']:
+        node.ip['fc_1'] = Queue()
+        node.ip['fc_2'] = Queue()
+        for addr in address['fc_1']:
             if addr == '#':
                 break
-            node.ip['fc'].put(addr)
-        for addr in address['head']:
+            node.ip['fc_1'].put(addr)
+        for addr in address['fc_2']:
             if addr == '#':
                 break
-            node.ip['head'].put(addr)
+            node.ip['fc_2'].put(addr)
         for addr in address['initial']:
             if addr == '#':
                 break
