@@ -119,7 +119,7 @@ class Responder(ipc.Responder):
                         node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
-                        Thread(target=self.send, args=(output, 'head', 'spatial')).start()
+                        Thread(target=self.send, args=(output, 'fc_1', 'spatial')).start()
                         node.timer(False)
 
                     elif req['next'] == 'temporal':
@@ -129,10 +129,10 @@ class Responder(ipc.Responder):
                         node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
-                        Thread(target=self.send, args=(output, 'head', 'temporal')).start()
+                        Thread(target=self.send, args=(output, 'fc_1', 'temporal')).start()
                         node.timer(False)
 
-                    elif req['next'] == 'fc1':
+                    elif req['next'] == 'fc_1':
                         node.timer()
                         tag = req['tag']
                         X = np.fromstring(bytestr, np.float32)
