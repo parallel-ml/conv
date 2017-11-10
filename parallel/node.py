@@ -57,6 +57,7 @@ class Node(object):
         self.max_temporal_input = deque()
         self.timestamp = time.time()
         self.lock = Lock()
+        self.count = 1
 
     def log(self, step, data=''):
         if self.debug:
@@ -68,11 +69,12 @@ class Node(object):
     def release_lock(self):
         self.lock.release()
 
-    def timer(self, start=True):
-        if start:
+    def timer(self):
+        if self.count == 1:
             self.timestamp = time.time()
         else:
-            print '{:.2f}'.format(time.time() - self.timestamp)
+            print '{:.2f}'.format((time.time() - self.timestamp) / self.count)
+        self.count += 1
 
     @classmethod
     def create(cls):
@@ -120,7 +122,7 @@ class Responder(ipc.Responder):
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'fc_1', 'spatial')).start()
-                        node.timer(False)
+                        node.timer()
 
                     elif req['next'] == 'temporal':
                         node.timer()
@@ -130,7 +132,7 @@ class Responder(ipc.Responder):
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'fc_1', 'temporal')).start()
-                        node.timer(False)
+                        node.timer()
 
                     elif req['next'] == 'fc_1':
                         node.timer()
@@ -174,7 +176,7 @@ class Responder(ipc.Responder):
                         node.log('finish fc_1 forward')
                         for split in np.split(output, node.split):
                             Thread(target=self.send, args=(split, 'fc_2', '')).start()
-                        node.timer(False)
+                        node.timer()
 
                     else:
                         node.timer()
@@ -185,7 +187,7 @@ class Responder(ipc.Responder):
                         output = node.model.predict(np.array([X]))
                         node.log('finish fc_2 forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
-                        node.timer(False)
+                        node.timer()
 
                 node.release_lock()
                 return

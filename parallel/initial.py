@@ -34,12 +34,12 @@ class Initializer:
         self.timestamp = time.time()
         self.count = 1
 
-    def timer(self, start=True):
-        if start:
+    def timer(self):
+        if self.count == 1:
             self.timestamp = time.time()
         else:
             print '{:.2f}'.format(self.count / (time.time() - self.timestamp))
-            self.count += 1
+        self.count += 1
 
     @classmethod
     def create_init(cls):
@@ -74,7 +74,6 @@ def master():
     every time and pop the least recent one if the length > maximum.
     """
     init = Initializer.create_init()
-    init.timer()
     # for previous frame used
     frame0 = None
     while True:
@@ -141,7 +140,7 @@ class Handler(BaseHTTPRequestHandler):
 
         """
         init = Initializer.create_init()
-        init.timer(start=False)
+        init.timer()
         self.responder = Responder()
         call_request_reader = ipc.FramedReader(self.rfile)
         call_request = call_request_reader.read_framed_message()
