@@ -48,6 +48,7 @@ class Node(object):
     def __init__(self):
         self.ip = dict()
         self.model = None
+        self.extra_model = None
         self.graph = tf.get_default_graph()
         self.split = 1
         self.max_layer_dim = 16
@@ -155,21 +156,27 @@ class Responder(ipc.Responder):
                         t_input = np.concatenate(node.max_temporal_input)
                         s_output = node.model.predict(np.array([s_input]))
                         t_output = node.model.predict(np.array([t_input]))
-                        output = np.concatenate([s_output, t_output])
+                        output = np.concatenate([s_output, t_output], axis=1)
+                        output = output.reshape(output.size)
+
+                        # start forward at head node
+                        node.extra_model = ml.load_fc_1(node.split) if node.extra_model is None else node.extra_model
+                        output = node.extra_model.predict(np.array([output]))
+
                         # pop least recent frame from deque
                         node.max_spatial_input.popleft()
                         node.max_temporal_input.popleft()
-                        node.log('finish FC forward')
+                        node.log('finish fc_1 forward')
                         for split in np.split(output, node.split):
                             Thread(target=self.send, args=(split, 'fc', '')).start()
 
                     else:
                         X = np.fromstring(bytestr, np.float32)
-                        X = X.reshape(1, X.size)
-                        node.log('get fc layer request', X.shape)
-                        node.model = ml.load_fc(split=node.split) if node.model is None else node.model
+                        X = X.reshape(X.size)
+                        node.log('get fc_2 layer request', X.shape)
+                        node.model = ml.load_fc_2(split=node.split) if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
-                        node.log('finish fc forward')
+                        node.log('finish fc_2 forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
 
                 node.release_lock()
@@ -250,6 +257,7 @@ def main(cmd):
         node.ip['fc'] = Queue()
         node.ip['maxpool'] = Queue()
         node.ip['initial'] = Queue()
+        node.ip['head'] = Queue()
         for addr in address['fc']:
             if addr == '#':
                 break

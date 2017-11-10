@@ -83,3 +83,27 @@ def load_maxpool(input_shape=(16, 256), N=16):
     model = Model(input=input, outputs=flat)
 
     return model
+
+
+def load_fc_1(split=1):
+    input_shape = 7680 / split
+    layer_shape = 8192 / split
+    model = Sequential()
+    model.add(Dense(layer_shape, input_shape=(input_shape,)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    return model
+
+
+def load_fc_2(split=1):
+    layer_shape = 8192 / split
+    model = Sequential()
+
+    model.add(Dense(layer_shape, input_shape=(layer_shape,)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+
+    model.add(Dense(51))
+    model.add(BatchNormalization())
+    model.add(Activation('softmax'))
+    return model
