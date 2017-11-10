@@ -212,8 +212,6 @@ class Responder(ipc.Responder):
         data['input'] = X.tostring()
         data['next'] = name
         data['tag'] = tag
-        print t
-        print type(t)
         data['time'] = t
         node.log('finish assembly')
         start = time.time()
