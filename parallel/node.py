@@ -262,10 +262,6 @@ def main(cmd):
             if addr == '#':
                 break
             node.ip['fc'].put(addr)
-        for addr in address['maxpool']:
-            if addr == '#':
-                break
-            node.ip['maxpool'].put(addr)
         for addr in address['head']:
             if addr == '#':
                 break
