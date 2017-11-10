@@ -188,7 +188,7 @@ class Responder(ipc.Responder):
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
 
-    def send(self, X, name, tag, time):
+    def send(self, X, name, tag, t):
         """ send data to other devices
 
         Send data to other devices. The data packet contains data and model name.
@@ -212,7 +212,7 @@ class Responder(ipc.Responder):
         data['input'] = X.tostring()
         data['next'] = name
         data['tag'] = tag
-        data['time'] = time
+        data['time'] = t
         node.log('finish assembly')
         start = time.time()
         requestor.request('forward', data)
