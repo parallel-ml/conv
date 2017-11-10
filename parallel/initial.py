@@ -32,13 +32,13 @@ class Initializer:
         self.temporal_q = Queue()
         self.flows = deque()
         self.timestamp = time.time()
-        self.count = 0
+        self.count = 1
 
     def timer(self, start=True):
         if start:
             self.timestamp = time.time()
         else:
-            print '{:.2f}'.format((time.time() - self.timestamp) / self.count)
+            print '{:.2f}'.format(self.count / (time.time() - self.timestamp))
             self.count += 1
 
     @classmethod
