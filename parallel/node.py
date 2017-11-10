@@ -129,6 +129,7 @@ class Responder(ipc.Responder):
                         Thread(target=self.send, args=(output, 'head', 'temporal')).start()
 
                     elif req['next'] == 'head':
+                        node.timer()
                         tag = req['tag']
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(1, X.size)
@@ -169,8 +170,10 @@ class Responder(ipc.Responder):
                         node.log('finish fc_1 forward')
                         for split in np.split(output, node.split):
                             Thread(target=self.send, args=(split, 'fc', '')).start()
+                        node.timer(False)
 
                     else:
+                        node.timer()
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
                         node.log('get fc_2 layer request', X.shape)
@@ -178,6 +181,7 @@ class Responder(ipc.Responder):
                         output = node.model.predict(np.array([X]))
                         node.log('finish fc_2 forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
+                        node.timer(False)
 
                 node.release_lock()
                 return

@@ -32,12 +32,14 @@ class Initializer:
         self.temporal_q = Queue()
         self.flows = deque()
         self.timestamp = time.time()
+        self.count = 0
 
     def timer(self, start=True):
         if start:
             self.timestamp = time.time()
         else:
-            print '{:.2f}'.format(time.time() - self.timestamp)
+            print '{:.2f}'.format((time.time() - self.timestamp) / self.count)
+            self.count += 1
 
     @classmethod
     def create_init(cls):
@@ -72,6 +74,7 @@ def master():
     every time and pop the least recent one if the length > maximum.
     """
     init = Initializer.create_init()
+    init.timer()
     # for previous frame used
     frame0 = None
     while True:
@@ -93,7 +96,7 @@ def master():
                 init.flows.pop()
 
         frame0 = frame
-        time.sleep(1)
+        time.sleep(0.03)
 
 
 class Responder(ipc.Responder):
@@ -139,7 +142,6 @@ class Handler(BaseHTTPRequestHandler):
         """
         init = Initializer.create_init()
         init.timer(start=False)
-        init.timer()
         self.responder = Responder()
         call_request_reader = ipc.FramedReader(self.rfile)
         call_request = call_request_reader.read_framed_message()
