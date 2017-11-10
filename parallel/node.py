@@ -117,7 +117,7 @@ class Responder(ipc.Responder):
                     if req['next'] == 'spatial':
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial() #if node.model is None else node.model
+                        node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
                         Thread(target=self.send, args=(output, 'fc_1', 'spatial', req['time'])).start()
@@ -125,7 +125,7 @@ class Responder(ipc.Responder):
                     elif req['next'] == 'temporal':
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 20)
-                        node.model = ml.load_temporal() #if node.model is None else node.model
+                        node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
                         Thread(target=self.send, args=(output, 'fc_1', 'temporal', req['time'])).start()
@@ -151,7 +151,7 @@ class Responder(ipc.Responder):
                         while len(node.max_temporal_input) > node.max_layer_dim:
                             node.max_temporal_input.popleft()
                         node.model = ml.load_maxpool(input_shape=(node.max_layer_dim, 256),
-                                                     N=node.max_layer_dim) #if node.model is None else node.model
+                                                     N=node.max_layer_dim) if node.model is None else node.model
                         # concatenate inputs from spatial and temporal
                         # ex: (1, 256) + (1, 256) = (2, 256)
                         s_input = np.concatenate(node.max_spatial_input)
@@ -162,7 +162,7 @@ class Responder(ipc.Responder):
                         output = output.reshape(output.size)
 
                         # start forward at head node
-                        node.extra_model = ml.load_fc_1(node.split) #if node.extra_model is None else node.extra_model
+                        node.extra_model = ml.load_fc_1(node.split) if node.extra_model is None else node.extra_model
                         output = node.extra_model.predict(np.array([output]))
 
                         # pop least recent frame from deque
@@ -175,7 +175,7 @@ class Responder(ipc.Responder):
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
                         node.log('get fc_2 layer request', X.shape)
-                        node.model = ml.load_fc_2(split=node.split) #if node.model is None else node.model
+                        node.model = ml.load_fc_2(split=node.split) if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish fc_2 forward')
                         Thread(target=self.send, args=(output, 'initial', '', req['time'])).start()
