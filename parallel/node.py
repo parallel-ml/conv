@@ -207,9 +207,7 @@ class Responder(ipc.Responder):
         queue = node.ip[name]
         address = queue.get()
 
-        port = 12345
-        if node.debug:
-            port = 9999 if name == 'initial' else 12345
+        port = 9999 if name == 'initial' else 12345
         client = ipc.HTTPTransceiver(address, port)
         requestor = ipc.Requestor(PROTOCOL, client)
 
