@@ -87,7 +87,7 @@ def master():
         if frame0 is not None:
             # append new 1-1 optical frame into deque
             init.flows.appendleft(cv2.calcOpticalFlowFarneback(frame0, frame, None, 0.5, 3, 4, 3, 5, 1.1, 0))
-            if len(init.flows) == 3:
+            if len(init.flows) == 10:
                 Thread(target=send_request, args=(image.tobytes(), 'spatial')).start()
                 # concatenate at axis 2
                 # ex: (3, 2, 1) + (3, 2, 1) = (3, 2, 2)

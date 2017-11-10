@@ -15,7 +15,7 @@ def load_spatial():
 
 
 def load_temporal():
-    return load_cnn(nb_channel=6)
+    return load_cnn(nb_channel=20)
 
 
 def load_cnn(nb_class=1000, bias=True, act='relu', bn=True, dropout=False, moredense=False, nb_filter=256,

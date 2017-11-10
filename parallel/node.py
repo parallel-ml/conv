@@ -125,7 +125,7 @@ class Responder(ipc.Responder):
                     elif req['next'] == 'temporal':
                         node.timer()
                         node.log('get temporal request')
-                        X = np.fromstring(bytestr, np.float32).reshape(12, 16, 6)
+                        X = np.fromstring(bytestr, np.float32).reshape(12, 16, 20)
                         node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
