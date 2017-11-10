@@ -1,10 +1,9 @@
+import time
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from SocketServer import ThreadingMixIn
 from collections import deque
 from multiprocessing import Queue
 from threading import Thread
-import time
-from SocketServer import ThreadingMixIn
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import time
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -31,15 +30,28 @@ class Initializer:
         self.spatial_q = Queue()
         self.temporal_q = Queue()
         self.flows = deque()
-        self.timestamp = time.time()
+        self.total = 0
         self.count = 1
+        self.sp_total = 0
+        self.sp_count = 1
+        self.tmp_total = 0
+        self.tmp_count = 1
 
-    def timer(self):
-        if self.count == 1:
-            self.timestamp = time.time()
-        else:
-            print '{:.2f}'.format(self.count / (time.time() - self.timestamp))
+    def timer(self, previous):
+        self.total += time.time() - previous
+        if self.count != 1:
+            print '{:.2f}'.format(self.total / self.count)
         self.count += 1
+
+    def node_timer(self, mode, interval):
+        if mode == 'spatial':
+            self.sp_total += interval
+            print '{:s}: {:.3f}'.format(mode, self.sp_total / self.sp_count)
+            self.sp_count += 1
+        else:
+            self.tmp_total += interval
+            print '{:s}: {:.3f}'.format(mode, self.tmp_total / self.tmp_count)
+            self.tmp_count += 1
 
     @classmethod
     def create_init(cls):
@@ -60,8 +72,13 @@ def send_request(bytestr, mode='spatial'):
     data['input'] = bytestr
     data['next'] = mode
     data['tag'] = ''
+    data['time'] = time.time()
 
+    start = time.time()
     requestor.request('forward', data)
+    end = time.time()
+
+    init.node_timer(mode, end - start)
 
     client.close()
     queue.put(addr)
@@ -120,10 +137,10 @@ class Responder(ipc.Responder):
 
         """
         if msg.name == 'forward':
+            init = Initializer.create_init()
             try:
-                bytestr = req['input']
-                X = np.fromstring(bytestr, np.float32).reshape(1, 51)
-                return
+                init.timer(req['time'])
+                return req['time']
             except Exception, e:
                 print 'Error', e.message
         else:
@@ -139,8 +156,6 @@ class Handler(BaseHTTPRequestHandler):
         response to data sent back.
 
         """
-        init = Initializer.create_init()
-        init.timer()
         self.responder = Responder()
         call_request_reader = ipc.FramedReader(self.rfile)
         call_request = call_request_reader.read_framed_message()

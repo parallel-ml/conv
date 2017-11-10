@@ -57,6 +57,8 @@ class Node(object):
         self.max_temporal_input = deque()
         self.timestamp = time.time()
         self.lock = Lock()
+        self.name = 'unknown'
+        self.total = 0
         self.count = 1
 
     def log(self, step, data=''):
@@ -69,11 +71,9 @@ class Node(object):
     def release_lock(self):
         self.lock.release()
 
-    def timer(self):
-        if self.count == 1:
-            self.timestamp = time.time()
-        else:
-            print '{:.2f}'.format((time.time() - self.timestamp) / self.count)
+    def timer(self, interval):
+        self.total += interval
+        print '{:s}: {:.3f}'.format(self.name, self.total / self.count)
         self.count += 1
 
     @classmethod
@@ -113,29 +113,24 @@ class Responder(ipc.Responder):
             try:
                 with node.graph.as_default():
                     bytestr = req['input']
-
+                    node.name = req['next']
                     if req['next'] == 'spatial':
-                        node.timer()
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
                         node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
-                        Thread(target=self.send, args=(output, 'fc_1', 'spatial')).start()
-                        node.timer()
+                        Thread(target=self.send, args=(output, 'fc_1', 'spatial', req['time'])).start()
 
                     elif req['next'] == 'temporal':
-                        node.timer()
                         node.log('get temporal request')
                         X = np.fromstring(bytestr, np.float32).reshape(12, 16, 20)
                         node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
-                        Thread(target=self.send, args=(output, 'fc_1', 'temporal')).start()
-                        node.timer()
+                        Thread(target=self.send, args=(output, 'fc_1', 'temporal', req['time'])).start()
 
                     elif req['next'] == 'fc_1':
-                        node.timer()
                         tag = req['tag']
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(1, X.size)
@@ -174,30 +169,26 @@ class Responder(ipc.Responder):
                         node.max_spatial_input.popleft()
                         node.max_temporal_input.popleft()
                         node.log('finish fc_1 forward')
-                        for split in np.split(output, node.split):
-                            Thread(target=self.send, args=(split, 'fc_2', '')).start()
-                        node.timer()
+                        Thread(target=self.send, args=(output, 'fc_2', '', req['time'])).start()
 
                     else:
-                        node.timer()
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
                         node.log('get fc_2 layer request', X.shape)
                         node.model = ml.load_fc_2(split=node.split) if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish fc_2 forward')
-                        Thread(target=self.send, args=(output, 'initial', '')).start()
-                        node.timer()
+                        Thread(target=self.send, args=(output, 'initial', '', req['time'])).start()
 
                 node.release_lock()
-                return
+                return req['time']
 
             except Exception, e:
                 node.log('Error', e.message)
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
 
-    def send(self, X, name, tag):
+    def send(self, X, name, tag, time):
         """ send data to other devices
 
         Send data to other devices. The data packet contains data and model name.
@@ -221,8 +212,13 @@ class Responder(ipc.Responder):
         data['input'] = X.tostring()
         data['next'] = name
         data['tag'] = tag
+        data['time'] = time
         node.log('finish assembly')
+        start = time.time()
         requestor.request('forward', data)
+        end = time.time()
+        node.timer(end - start)
+
         node.log('node gets request back')
         client.close()
         queue.put(address)
