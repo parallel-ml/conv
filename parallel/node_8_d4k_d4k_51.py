@@ -50,11 +50,11 @@ class Node(object):
         self.model = None
         self.extra_model = None
         self.graph = tf.get_default_graph()
-        self.split = 1
         self.max_layer_dim = 16
         self.debug = False
         self.max_spatial_input = deque()
         self.max_temporal_input = deque()
+        self.input = deque()
         self.timestamp = time.time()
         self.lock = Lock()
         self.name = 'unknown'
@@ -113,14 +113,14 @@ class Responder(ipc.Responder):
             try:
                 with node.graph.as_default():
                     bytestr = req['input']
-                    node.name = req['next']
                     if req['next'] == 'spatial':
                         node.log('get spatial request')
                         X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
                         node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
-                        Thread(target=self.send, args=(output, 'fc_1', 'spatial', req['time'])).start()
+                        for _ in range(2):
+                            Thread(target=self.send, args=(output, 'fc_1', 'spatial')).start()
 
                     elif req['next'] == 'temporal':
                         node.log('get temporal request')
@@ -128,7 +128,8 @@ class Responder(ipc.Responder):
                         node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
-                        Thread(target=self.send, args=(output, 'fc_1', 'temporal', req['time'])).start()
+                        for _ in range(2):
+                            Thread(target=self.send, args=(output, 'fc_1', 'temporal')).start()
 
                     elif req['next'] == 'fc_1':
                         tag = req['tag']
@@ -143,7 +144,9 @@ class Responder(ipc.Responder):
                         if len(node.max_spatial_input) < node.max_layer_dim or len(
                                 node.max_temporal_input) < node.max_layer_dim:
                             node.release_lock()
-                            return req['time']
+                            return
+
+                        node.log('size is good')
 
                         # pop extra frame due to transmitting delay
                         while len(node.max_spatial_input) > node.max_layer_dim:
@@ -154,6 +157,7 @@ class Responder(ipc.Responder):
                                                      N=node.max_layer_dim) if node.model is None else node.model
                         # concatenate inputs from spatial and temporal
                         # ex: (1, 256) + (1, 256) = (2, 256)
+                        node.log('finish max pooling')
                         s_input = np.concatenate(node.max_spatial_input)
                         t_input = np.concatenate(node.max_temporal_input)
                         s_output = node.model.predict(np.array([s_input]))
@@ -162,33 +166,57 @@ class Responder(ipc.Responder):
                         output = output.reshape(output.size)
 
                         # start forward at head node
-                        node.extra_model = ml.load_fc_1(node.split) if node.extra_model is None else node.extra_model
+                        node.extra_model = ml.load_fc_1(
+                            output_shape=4096) if node.extra_model is None else node.extra_model
                         output = node.extra_model.predict(np.array([output]))
-
-                        # pop least recent frame from deque
-                        node.max_spatial_input.popleft()
-                        node.max_temporal_input.popleft()
                         node.log('finish fc_1 forward')
-                        Thread(target=self.send, args=(output, 'fc_2', '', req['time'])).start()
+                        for _ in range(2):
+                            Thread(target=self.send, args=(output, 'fc_2', '')).start()
+
+                    elif req['next'] == 'fc_2':
+                        X = np.fromstring(bytestr, np.float32)
+                        X = X.reshape(X.size)
+                        node.log('get fc_2 layer request', X.shape)
+                        node.input.append(X)
+                        if len(node.input) < 2:
+                            node.release_lock()
+                            return
+                        while len(node.input) > 2:
+                            node.input.popleft()
+                        X = np.concatenate(node.input, axis=1)
+                        node.log('fc_2 finish assembling data')
+                        node.model = ml.load_fc_2(input_shape=8192,
+                                                  output_shape=4096) if node.model is None else node.model
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish fc_2 forward')
+                        Thread(target=self.send, args=(output, 'fc_3', '')).start()
 
                     else:
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
-                        node.log('get fc_2 layer request', X.shape)
-                        node.model = ml.load_fc_2(split=node.split) if node.model is None else node.model
+                        node.log('get fc_3 layer request', X.shape)
+                        node.input.append(X)
+                        if len(node.input) < 2:
+                            node.release_lock()
+                            return
+                        while len(node.input) > 2:
+                            node.input.popleft()
+                        X = np.concatenate(node.input, axis=1)
+                        node.log('fc_3 finish assembling data')
+                        node.model = ml.load_fc_3(input_shape=8192) if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
-                        node.log('finish fc_2 forward')
-                        Thread(target=self.send, args=(output, 'initial', '', req['time'])).start()
+                        node.log('finish fc_3 forward')
+                        Thread(target=self.send, args=(output, 'initial', '')).start()
 
                 node.release_lock()
-                return req['time']
+                return
 
             except Exception, e:
                 node.log('Error', e.message)
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
 
-    def send(self, X, name, tag, t):
+    def send(self, X, name, tag):
         """ send data to other devices
 
         Send data to other devices. The data packet contains data and model name.
@@ -208,11 +236,12 @@ class Responder(ipc.Responder):
         client = ipc.HTTPTransceiver(address, port)
         requestor = ipc.Requestor(PROTOCOL, client)
 
+        node.name = name
+
         data = dict()
         data['input'] = X.tostring()
         data['next'] = name
         data['tag'] = tag
-        data['time'] = t
         node.log('finish assembly')
         start = time.time()
         requestor.request('forward', data)
@@ -251,7 +280,6 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 def main(cmd):
     node = Node.create()
 
-    node.split = cmd.split
     node.max_layer_dim = cmd.max_dim
     node.debug = cmd.debug
 
@@ -263,6 +291,7 @@ def main(cmd):
         node.ip['initial'] = Queue()
         node.ip['fc_1'] = Queue()
         node.ip['fc_2'] = Queue()
+        address = address['8_d4k_d4k_51']
         for addr in address['fc_1']:
             if addr == '#':
                 break
@@ -271,6 +300,10 @@ def main(cmd):
             if addr == '#':
                 break
             node.ip['fc_2'].put(addr)
+        for addr in address['fc_3']:
+            if addr == '#':
+                break
+            node.ip['fc_3'].put(addr)
         for addr in address['initial']:
             if addr == '#':
                 break
@@ -283,8 +316,6 @@ def main(cmd):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--split', metavar='\b', action='store', default=1, type=int,
-                        help='Choose split for fc layer')
     parser.add_argument('--max_dim', metavar='\b', action='store', default=16, type=int,
                         help='Choose maxpooling layer input dimension')
     parser.add_argument('-d', '--debug', action='store_true', default=False,

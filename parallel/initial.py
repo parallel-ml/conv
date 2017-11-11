@@ -30,17 +30,19 @@ class Initializer:
         self.spatial_q = Queue()
         self.temporal_q = Queue()
         self.flows = deque()
+        self.start = 0.0
         self.total = 0
-        self.count = 1
+        self.count = 0
         self.sp_total = 0
         self.sp_count = 1
         self.tmp_total = 0
         self.tmp_count = 1
 
-    def timer(self, previous):
-        self.total += time.time() - previous
-        if self.count != 1:
-            print '{:.2f}'.format(self.total / self.count)
+    def timer(self):
+        if self.count == 0:
+            self.start = time.time()
+        else:
+            print 'total time: {:.3f} sec'.format((time.time() - self.start) / self.count)
         self.count += 1
 
     def node_timer(self, mode, interval):
@@ -72,7 +74,6 @@ def send_request(bytestr, mode='spatial'):
     data['input'] = bytestr
     data['next'] = mode
     data['tag'] = ''
-    data['time'] = time.time()
 
     start = time.time()
     requestor.request('forward', data)
@@ -112,7 +113,7 @@ def master():
                 init.flows.pop()
 
         frame0 = frame
-        time.sleep(0.03)
+        time.sleep(1)
 
 
 class Responder(ipc.Responder):
@@ -139,8 +140,8 @@ class Responder(ipc.Responder):
         if msg.name == 'forward':
             init = Initializer.create_init()
             try:
-                init.timer(req['time'])
-                return req['time']
+                init.timer()
+                return
             except Exception, e:
                 print 'Error', e.message
         else:
@@ -176,6 +177,7 @@ def main():
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
+        address = address['4_8k_8k51']
         for addr in address['spatial']:
             if addr == '#':
                 break

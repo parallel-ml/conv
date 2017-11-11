@@ -13,11 +13,8 @@
       }, {
         "name" : "tag",
         "type" : "string"
-      }, {
-        "name" : "time",
-        "type" : "double"
       } ],
-      "response" : "double"
+      "response" : "null"
     }
   }
 }

@@ -50,24 +50,6 @@ def load_cnn(nb_class=1000, bias=True, act='relu', bn=True, dropout=False, mored
     return model
 
 
-def load_fc(split=1):
-    input_shape = 7680 / split
-    layer_shape = 4096 / split
-    model = Sequential()
-    model.add(Dense(layer_shape, input_shape=(input_shape,)))
-    model.add(BatchNormalization(input_shape=(layer_shape,)))
-    model.add(Activation('relu', input_shape=(layer_shape,)))
-
-    model.add(Dense(layer_shape, input_shape=(layer_shape,)))
-    model.add(BatchNormalization(input_shape=(layer_shape,)))
-    model.add(Activation('relu', input_shape=(layer_shape,)))
-
-    model.add(Dense(51, input_shape=(layer_shape,)))
-    model.add(BatchNormalization(input_shape=(51,)))
-    model.add(Activation('softmax', input_shape=(51,)))
-    return model
-
-
 def load_maxpool(input_shape=(16, 256), N=16):
     input = Input(shape=input_shape, name='input')
 
@@ -85,21 +67,36 @@ def load_maxpool(input_shape=(16, 256), N=16):
     return model
 
 
-def load_fc_1(split=1):
-    input_shape = 7680 / split
-    layer_shape = 8192 / split
+def load_fc_1(output_shape):
     model = Sequential()
-    model.add(Dense(layer_shape, input_shape=(input_shape,)))
+    model.add(Dense(output_shape, input_shape=(7680,)))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     return model
 
 
-def load_fc_2(split=1):
-    layer_shape = 8192 / split
+def load_fc_2(input_shape, output_shape):
     model = Sequential()
 
-    model.add(Dense(layer_shape, input_shape=(layer_shape,)))
+    model.add(Dense(output_shape, input_shape=(input_shape,)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    return model
+
+
+def load_fc_3(input_shape):
+    model = Sequential()
+
+    model.add(Dense(51, input_shape=(input_shape,)))
+    model.add(BatchNormalization())
+    model.add(Activation('softmax'))
+    return model
+
+
+def load_fc_23(input_shape):
+    model = Sequential()
+
+    model.add(Dense(8192, input_shape=(input_shape,)))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
 
