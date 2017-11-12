@@ -183,7 +183,7 @@ class Responder(ipc.Responder):
                             return
                         while len(node.input) > 2:
                             node.input.popleft()
-                        X = np.concatenate(node.input, axis=1)
+                        X = np.concatenate(node.input)
                         node.log('fc_2 finish assembling data')
                         node.model = ml.load_fc_2(input_shape=8192,
                                                   output_shape=4096) if node.model is None else node.model
@@ -201,7 +201,7 @@ class Responder(ipc.Responder):
                             return
                         while len(node.input) > 2:
                             node.input.popleft()
-                        X = np.concatenate(node.input, axis=1)
+                        X = np.concatenate(node.input)
                         node.log('fc_3 finish assembling data')
                         node.model = ml.load_fc_3(input_shape=8192) if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
