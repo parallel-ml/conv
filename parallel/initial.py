@@ -113,7 +113,7 @@ def master():
                 init.flows.pop()
 
         frame0 = frame
-        time.sleep(1)
+        time.sleep(0.03)
 
 
 class Responder(ipc.Responder):

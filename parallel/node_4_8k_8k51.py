@@ -143,8 +143,6 @@ class Responder(ipc.Responder):
                             node.release_lock()
                             return
 
-                        node.log('size is good')
-
                         # pop extra frame due to transmitting delay
                         while len(node.max_spatial_input) > node.max_layer_dim:
                             node.max_spatial_input.popleft()
