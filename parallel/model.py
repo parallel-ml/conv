@@ -113,7 +113,7 @@ def load_4k_fc():
     model.add(BatchNormalization())
     model.add(Activation('relu'))
 
-    model.add(Dense(4096, input_shape=(input_shape,)))
+    model.add(Dense(4096))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
 
