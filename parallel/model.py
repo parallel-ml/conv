@@ -104,3 +104,20 @@ def load_fc_23(input_shape):
     model.add(BatchNormalization())
     model.add(Activation('softmax'))
     return model
+
+
+def load_4k_fc():
+    model = Sequential()
+
+    model.add(Dense(4096, input_shape=(7680,)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+
+    model.add(Dense(4096, input_shape=(input_shape,)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+
+    model.add(Dense(51))
+    model.add(BatchNormalization())
+    model.add(Activation('softmax'))
+    return model
