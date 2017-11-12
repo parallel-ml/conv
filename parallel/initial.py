@@ -177,7 +177,7 @@ def main():
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        address = address['4_8k_8k51']
+        address = address['4_fc']
         for addr in address['spatial']:
             if addr == '#':
                 break
