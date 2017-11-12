@@ -291,6 +291,7 @@ def main(cmd):
         node.ip['initial'] = Queue()
         node.ip['fc_1'] = Queue()
         node.ip['fc_2'] = Queue()
+        node.ip['fc_3'] = Queue()
         address = address['8_d4k_d4k_51']
         for addr in address['fc_1']:
             if addr == '#':
