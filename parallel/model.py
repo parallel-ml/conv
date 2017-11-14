@@ -67,9 +67,9 @@ def load_maxpool(input_shape=(16, 256), N=16):
     return model
 
 
-def load_fc_1(output_shape):
+def load_fc_1(input_shape, output_shape):
     model = Sequential()
-    model.add(Dense(output_shape, input_shape=(7680,)))
+    model.add(Dense(output_shape, input_shape=(input_shape,)))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     return model
