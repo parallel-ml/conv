@@ -157,11 +157,12 @@ class Responder(ipc.Responder):
                         # ex: (1, 256) + (1, 256) = (2, 256)
                         node.log('finish max pooling')
                         s_input = np.concatenate(node.max_spatial_input)
-                        t_input = np.concatenate(node.max_temporal_input)
-                        s_output = node.model.predict(np.array([s_input]))
-                        t_output = node.model.predict(np.array([t_input]))
-                        output = np.concatenate([s_output, t_output], axis=1)
-                        output = output.reshape(output.size)
+                        # t_input = np.concatenate(node.max_temporal_input)
+                        # s_output = node.model.predict(np.array([s_input]))
+                        # t_output = node.model.predict(np.array([t_input]))
+                        # output = np.concatenate([s_output, t_output], axis=1)
+                        # output = output.reshape(output.size)
+                        output = node.model.predict(np.array([s_input]))
 
                         # start forward at head node
                         node.extra_model = ml.load_fc_1(input_shape=3840, output_shape=4096) \
