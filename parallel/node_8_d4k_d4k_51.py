@@ -161,8 +161,8 @@ class Responder(ipc.Responder):
                         # s_output = node.model.predict(np.array([s_input]))
                         # t_output = node.model.predict(np.array([t_input]))
                         # output = np.concatenate([s_output, t_output], axis=1)
-                        # output = output.reshape(output.size)
                         output = node.model.predict(np.array([s_input]))
+                        output = output.reshape(output.size)
 
                         # start forward at head node
                         node.extra_model = ml.load_fc_1(input_shape=3840, output_shape=4096) \
