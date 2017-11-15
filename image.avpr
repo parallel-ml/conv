@@ -15,7 +15,7 @@
         "name" : "image",
         "type" : "bytes"
       } ],
-      "response" : {"type": "array", "items": "string"}
+      "response" : "null"
       }
   }
 }
