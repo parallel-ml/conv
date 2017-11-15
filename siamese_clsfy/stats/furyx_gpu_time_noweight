@@ -1,4 +1,5 @@
-ing TensorFlow backend.
+rhadidi@furyx:~/scratch/parallel-ml/siamese_clsfy$ CUDA_VISIBLE_DEVICES=0 python model_time.py
+Using TensorFlow backend.
 ##################################################
 #                                                #
 #                    fc layer                    #
@@ -6,9 +7,24 @@ ing TensorFlow backend.
 ##################################################
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
-load : 8.456 sec
+load : 0.217 sec
 ++++++++++++++++++++++++++++++++++++++++++++++++++
-inference : 0.008 sec
+inference : 0.032 sec
+
+
+
+##################################################
+#                                                #
+#                maxpooling layer                #
+#                                                #
+##################################################
+
+model_time.py:77: UserWarning: Update your `Model` call to the Keras 2 API: `Model(outputs=Tensor("fl..., inputs=Tensor("in...)`
+  model = Model(input=input, outputs=flat)
+++++++++++++++++++++++++++++++++++++++++++++++++++
+load : 0.028 sec
+++++++++++++++++++++++++++++++++++++++++++++++++++
+inference : 0.001 sec
 
 
 
@@ -19,9 +35,9 @@ inference : 0.008 sec
 ##################################################
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
-load : 2.767 sec
+load : 0.257 sec
 ++++++++++++++++++++++++++++++++++++++++++++++++++
-inference : 0.011 sec
+inference : 0.008 sec
 
 
 
@@ -32,6 +48,6 @@ inference : 0.011 sec
 ##################################################
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
-load : 3.014 sec
+load : 0.284 sec
 ++++++++++++++++++++++++++++++++++++++++++++++++++
-inference : 0.006 sec
+inference : 0.004 sec

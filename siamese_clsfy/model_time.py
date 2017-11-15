@@ -10,7 +10,7 @@ from util.output import title, timer, avg_timer
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-WEIGHT = False
+WEIGHT = True
 
 
 def main():

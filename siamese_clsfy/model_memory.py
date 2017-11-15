@@ -47,7 +47,9 @@ def run_fc():
 
     def load_weights():
         return load_model(
-            '/home/jiashen/weights/clsfybatch_4/0000_epoch-4.0079_loss-0.0253_acc-4.1435_val_loss-0.0266_val_acc.hdf5')
+            #'/home/jiashen/weights/clsfybatch_4/0000_epoch-4.0079_loss-0.0253_acc-4.1435_val_loss-0.0266_val_acc.hdf5'
+            '/MLdatasets/siamese_model/clsfybatch_300/hmdb/twostream_1/transforms_1/full_fc/split_1/4243_epoch-0.0000_loss-1.0000_acc-8.9889_val_loss-0.2479_val_acc.hdf5'
+            )
 
     test_x = np.random.rand(7680)
     model = load() if not WEIGHT else load_weights()
@@ -93,7 +95,9 @@ def run_temporal():
 
     def load_weights():
         return load_model(
-            '/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5')
+            #'/home/jiashen/weights/batch_4_noaug/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5'
+            '/MLdatasets/siamese_model/batch_4_noaug/hmdb/oflow/first_try/split_1/199_epoch-0.2510_loss-0.9403_acc-6.5269_val_loss-0.3061_val_acc.hdf5'
+            )
 
     model = load() if not WEIGHT else load_weights()
     test_x = np.random.rand(12, 16, 20)
@@ -115,7 +119,9 @@ def run_spatial():
 
     def load_weights():
         return load_model(
-            '/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5')
+            #'/home/jiashen/weights/batch_4_aug/199_epoch-5.2804_loss-0.1080_acc-5.9187_val_loss-0.0662_val_acc.hdf5'
+            '/MLdatasets/siamese_model/batch_100_aug/imgnet/filter_256/28Oct-original/199_epoch-4.2777_loss-0.1949_acc-4.9191_val_loss-0.1437_val_acc.hdf5'
+            )
 
     model = load() if not WEIGHT else load_weights()
     test_x = np.random.rand(12, 16, 3)
