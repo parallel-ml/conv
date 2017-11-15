@@ -35,34 +35,22 @@ def main():
     maxp = np.concatenate([s_output, t_output], axis=1)
     maxp = maxp.reshape(maxp.size)
 
-    model_f1 = load_fc_1()
-    fc1 = model_f1.predict(np.array([maxp]))
-    fc1 = fc1.reshape(fc1.size)
-
-    model_f2 = load_fc_2()
-    output = model_f2.predict(np.array([fc1]))
+    model_fc = load_fc(1)
 
     print '{:.3f} sec'.format(time.time() - start)
     print "Inference"
 
     start = time.time()
     for _ in range(50):
-        sp, tmp = [], []
-        for _ in range(1):
-            sp.append(model_s.predict(np.array([image])))
-        model_t = load_temporal()
-        for _ in range(1):
-            tmp.append(model_t.predict(np.array([flow])))
+        model_s.predict(np.array([image]))
+        model_t.predict(np.array([flow]))
 
         s_output = model_m.predict(np.array([s_input]))
         t_output = model_m.predict(np.array([t_input]))
         maxp = np.concatenate([s_output, t_output], axis=1)
         maxp = maxp.reshape(maxp.size)
 
-        fc1 = model_f1.predict(np.array([maxp]))
-        fc1 = fc1.reshape(fc1.size)
-
-        output = model_f2.predict(np.array([fc1]))
+        fc1 = model_fc.predict(np.array([maxp]))
     print '{:.3f} sec'.format(time.time() - start)
 
 
@@ -109,11 +97,11 @@ def load_cnn(nb_class=1000, bias=True, act='relu', bn=True, dropout=False, mored
 
 def load_fc(split=1):
     input_shape = 7680 / split
-    layer_shape = 4096 / split
+    layer_shape = 8192 / split
     model = Sequential()
     model.add(Dense(layer_shape, input_shape=(input_shape,)))
     model.add(BatchNormalization())
-    model.add(Activation('relu', input_shape=(layer_shape,)))
+    model.add(Activation('relu'))
 
     model.add(Dense(layer_shape))
     model.add(BatchNormalization())
