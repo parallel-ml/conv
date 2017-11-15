@@ -1,22 +1,16 @@
 import time
-import multiprocessing as mp
-import picamera
-from picamera.array import PiRGBArray
-import numpy as np
-import scipy.misc
-import cv2
 import json
 import avro.schema
 import avro.io
 import avro.ipc as ipc
 import avro.protocol as protocol
-import http.client
+import httplib
 import sys
 
-PROTOCOL = protocol.Parse(open('image.avpr').read())
+PROTOCOL = protocol.parse(open('image.avpr').read())
 
 def ping(size):
-    server_addr = ('128.61.79.61', 8000)
+    server_addr = ('128.61.1.2', 8000)
     client = ipc.HTTPTransceiver(server_addr[0], server_addr[1])
     requestor = ipc.Requestor(PROTOCOL, client)
 
@@ -29,6 +23,7 @@ def ping(size):
 
 
 def main():
+    print "Start testing"
     for i in range(0,100):
         start = time.time()
         ping(i)
