@@ -43,8 +43,6 @@ def main():
     output = model_f2.predict(np.array([fc1]))
 
     print '{:.3f} sec'.format(time.time() - start)
-
-
     print "Inference"
 
     start = time.time()
