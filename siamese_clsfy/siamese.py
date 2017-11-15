@@ -52,7 +52,6 @@ def main():
         sp, tmp = [], []
         for _ in range(1):
             sp.append(model_s.predict(np.array([image])))
-        model_t = load_temporal()
         for _ in range(1):
             tmp.append(model_t.predict(np.array([flow])))
 
