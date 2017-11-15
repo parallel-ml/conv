@@ -50,14 +50,12 @@ def main():
     start = time.time()
     for _ in range(50):
         sp, tmp = [], []
-        for _ in range(16):
+        for _ in range(1):
             sp.append(model_s.predict(np.array([image])))
         model_t = load_temporal()
-        for _ in range(16):
+        for _ in range(1):
             tmp.append(model_t.predict(np.array([flow])))
 
-        s_input = np.concatenate(sp)
-        t_input = np.concatenate(tmp)
         s_output = model_m.predict(np.array([s_input]))
         t_output = model_m.predict(np.array([t_input]))
         maxp = np.concatenate([s_output, t_output], axis=1)
