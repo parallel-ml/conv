@@ -1,0 +1,21 @@
+{
+  "protocol" : "image",
+  "namespace" : null,
+  "types" : [ ],
+  "messages" : {
+    "process" : {
+      "request" : [ {
+        "name" : "image",
+        "type" : "bytes"
+      } ],
+      "response" : {"type": "array", "items": "string"}
+    },
+    "pass" : {
+      "request" : [ {
+        "name" : "image",
+        "type" : "bytes"
+      } ],
+      "response" : {"type": "array", "items": "string"}
+      }
+  }
+}
