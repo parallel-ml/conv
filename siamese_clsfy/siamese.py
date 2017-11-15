@@ -19,29 +19,54 @@ def main():
     image = np.random.rand(12, 16, 3) * 255
     image = image.astype(np.uint8)
     flow = np.random.rand(12, 16, 20)
-    model = load_spatial()
+    model_s = load_spatial()
     sp, tmp = [], []
     for _ in range(16):
-        sp.append(model.predict(np.array([image])))
-    model = load_temporal()
+        sp.append(model_s.predict(np.array([image])))
+    model_t = load_temporal()
     for _ in range(16):
-        tmp.append(model.predict(np.array([flow])))
+        tmp.append(model_t.predict(np.array([flow])))
 
     s_input = np.concatenate(sp)
     t_input = np.concatenate(tmp)
-    model = load_maxpool()
-    s_output = model.predict(np.array([s_input]))
-    t_output = model.predict(np.array([t_input]))
+    model_m = load_maxpool()
+    s_output = model_m.predict(np.array([s_input]))
+    t_output = model_m.predict(np.array([t_input]))
     maxp = np.concatenate([s_output, t_output], axis=1)
     maxp = maxp.reshape(maxp.size)
 
-    model = load_fc_1()
-    fc1 = model.predict(np.array([maxp]))
+    model_f1 = load_fc_1()
+    fc1 = model_f1.predict(np.array([maxp]))
     fc1 = fc1.reshape(fc1.size)
 
-    model = load_fc_2()
-    output = model.predict(np.array([fc1]))
+    model_f2 = load_fc_2()
+    output = model_f2.predict(np.array([fc1]))
 
+    print '{:.3f} sec'.format(time.time() - start)
+
+
+    print "Inference"
+
+    start = time.time()
+    for _ in range(50):
+        sp, tmp = [], []
+        for _ in range(16):
+            sp.append(model_s.predict(np.array([image])))
+        model_t = load_temporal()
+        for _ in range(16):
+            tmp.append(model_t.predict(np.array([flow])))
+
+        s_input = np.concatenate(sp)
+        t_input = np.concatenate(tmp)
+        s_output = model_m.predict(np.array([s_input]))
+        t_output = model_m.predict(np.array([t_input]))
+        maxp = np.concatenate([s_output, t_output], axis=1)
+        maxp = maxp.reshape(maxp.size)
+
+        fc1 = model_f1.predict(np.array([maxp]))
+        fc1 = fc1.reshape(fc1.size)
+
+        output = model_f2.predict(np.array([fc1]))
     print '{:.3f} sec'.format(time.time() - start)
 
 
