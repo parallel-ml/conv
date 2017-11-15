@@ -14,8 +14,6 @@ N = 4096
 
 def main():
     run_fc_1()
-    run_fc_2()
-    run_fc_3()
 
 
 @title('fc layer first')
@@ -24,8 +22,8 @@ def run_fc_1():
     def load():
         model = Sequential()
         model.add(Dense(N, input_shape=(7680,)))
-        model.add(BatchNormalization(input_shape=(N,)))
-        model.add(Activation('relu', input_shape=(N,)))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
 
         return model
 
