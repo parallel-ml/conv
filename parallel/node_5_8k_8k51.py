@@ -160,7 +160,8 @@ class Responder(ipc.Responder):
                         output = output.reshape(output.size)
 
                         # start forward at head node
-                        node.extra_model = ml.load_fc_1(output_shape=8192) if node.extra_model is None else node.extra_model
+                        node.extra_model = ml.load_fc_1(input_shape=7680,
+                                                        output_shape=8192) if node.extra_model is None else node.extra_model
                         output = node.extra_model.predict(np.array([output]))
 
                         node.log('finish max pooling')
