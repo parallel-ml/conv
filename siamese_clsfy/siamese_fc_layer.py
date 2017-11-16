@@ -1,4 +1,7 @@
+#!/usr/bin/python
+
 import os
+import sys
 
 import numpy as np
 from keras.layers import Dense, Activation
@@ -13,12 +16,15 @@ N = 4096
 
 
 def main():
+    global N
+    N = int(sys.argv[1])
+    print "N = " + str(N)
     run_fc_1()
 
 
 @title('fc layer first')
 def run_fc_1():
-    @timer('load')
+    #@timer('load')
     def load():
         model = Sequential()
         model.add(Dense(N, input_shape=(7680,)))
@@ -30,7 +36,7 @@ def run_fc_1():
     test_x = np.random.rand(7680)
     model = load()
 
-    @avg_timer('inference')
+    #@avg_timer('inference')
     def predict():
         model.predict(np.array([test_x]))
 

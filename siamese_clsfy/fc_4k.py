@@ -35,7 +35,7 @@ def train():
 def test():
     @timer('load')
     def load():
-        model = load_model('/home/jiashen/weights/4k_weights/fc_4k_test_weights.h5')
+        model = load_model('/home/pi/fc_4k_test_weights.h5')
         return model
 
     test_x = np.random.rand(7680)
