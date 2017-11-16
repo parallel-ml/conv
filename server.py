@@ -18,8 +18,10 @@ PROTOCOL = protocol.parse(open('image.avpr').read())
 class ImageResponder(ipc.Responder):
     def __init__(self):
         ipc.Responder.__init__(self, PROTOCOL)
+        print "start init"
 
     def Invoke(self, msg, req):
+        print "start invoke"
         if msg.name == 'process':
             image = req['image']
 
@@ -28,20 +30,20 @@ class ImageResponder(ipc.Responder):
             return response
 
         else:
-            print("Schema does not match")
+            print "Schema does not match"
 
 
 class ImageHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         self.responder = ImageResponder()
         call_request_reader = ipc.FramedReader(self.rfile)
-        call_request = call_request_reader.Read()
-        resp_body = self.responder.Respond(call_request)
+        call_request = call_request_reader.read_framed_message()
+        resp_body = self.responder.respond(call_request)
         self.send_response(200)
         self.send_header('Content=Type', 'avro/binary')
         self.end_headers()
         resp_writer = ipc.FramedWriter(self.wfile)
-        resp_writer.Write(resp_body)
+        resp_writer.write_framed_message(resp_body)
 
 server_addr = ('0.0.0.0', 8000)
 
