@@ -4,12 +4,8 @@ from SocketServer import ThreadingMixIn
 import avro.ipc as ipc
 import avro.protocol as protocol
 import avro.schema as schema
-import matplotlib
 
-matplotlib.use('Agg')
-import time
-
-PROTOCOL = protocol.parse(open('resource/image.avpr').read())
+PROTOCOL = protocol.parse(open('image.avpr').read())
 
 
 class ImageResponder(ipc.Responder):
@@ -24,7 +20,7 @@ class ImageResponder(ipc.Responder):
         :return:
         """
         if msg.name == 'procimage':
-            return 'GET'
+            return msg.req['image']
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
 
@@ -53,6 +49,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 server_addr = ('0.0.0.0', 12345)
 
 if __name__ == '__main__':
+    print "Start Testing"
     server = ThreadedHTTPServer(server_addr, ImageHandler)
     server.allow_reuse_address = True
     server.serve_forever()

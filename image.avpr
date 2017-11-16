@@ -6,11 +6,8 @@
     "procimage" : {
       "request" : [ {
         "name" : "image",
-        "type" : "bytes"
-      }, {
-        "name" : "time",
-        "type" : "float"
-      } ],
+        "type" : "string"
+      }
       "response" : "string"
     }
   }
