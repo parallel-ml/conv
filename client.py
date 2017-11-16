@@ -24,11 +24,10 @@ def send_request(size):
 
 
 def main():
-    start = time.time()
     for i in range(1,10):
+        start = time.time()
         send_request(i)
-    print 'client stuff?'
-
+        print i, ",", time.time() - start
 
 if __name__ == '__main__':
     main()
