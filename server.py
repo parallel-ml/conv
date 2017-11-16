@@ -48,4 +48,7 @@ server_addr = ('0.0.0.0', 8000)
 if __name__ == '__main__':
     server = HTTPServer(server_addr, ImageHandler)
     server.allow_reuse_address = True
+
+    print "start testing"
+
     server.serve_forever()
