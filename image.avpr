@@ -8,7 +8,7 @@
         "name" : "image",
         "type" : "string"
       } ],
-      "response" : {"type": "string"}
+      "response" : "null"
     },
     "pass" : {
       "request" : [ {
