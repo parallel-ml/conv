@@ -19,8 +19,9 @@ class ImageResponder(ipc.Responder):
         :param req: request sent by client
         :return:
         """
+        print "invoke"
         if msg.name == 'procimage':
-            return msg.req['image']
+            return req['image']
         else:
             raise schema.AvroException('unexpected message:', msg.getname())
 
