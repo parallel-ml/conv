@@ -1,5 +1,3 @@
-import numpy as np
-import cv2
 import time
 import array
 import io
@@ -10,12 +8,12 @@ import avro.schema
 import avro.ipc as ipc
 import avro.protocol as protocol
 # import http.server
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from socketserver import ThreadingMixIn
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from SocketServer import ThreadingMixIn
 
 
 
-PROTOCOL = protocol.Parse(open('image.avpr').read())
+PROTOCOL = protocol.parse(open('image.avpr').read())
 
 class ImageResponder(ipc.Responder):
     def __init__(self):
@@ -45,13 +43,9 @@ class ImageHandler(BaseHTTPRequestHandler):
         resp_writer = ipc.FramedWriter(self.wfile)
         resp_writer.Write(resp_body)
 
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """handle requests in separate thread"""
-
-
 server_addr = ('0.0.0.0', 8000)
 
 if __name__ == '__main__':
-    server = ThreadedHTTPServer(server_addr, ImageHandler)
+    server = HTTPServer(server_addr, ImageHandler)
     server.allow_reuse_address = True
     server.serve_forever()
