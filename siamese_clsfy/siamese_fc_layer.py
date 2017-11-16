@@ -13,18 +13,26 @@ from util.output import title, timer, avg_timer
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 N = 4096
+load_only=False
+repeats=10
 
 
 def main():
     global N
+    global load_only
     N = int(sys.argv[1])
+    if sys.argv[2]=="l":
+        load_only=True
+        
     print "N = " + str(N)
+    print "L = " + str(load_only)
+    print "repeats = " + str(repeats)
     run_fc_1()
 
 
 @title('fc layer first')
 def run_fc_1():
-    #@timer('load')
+    @timer('load')
     def load():
         model = Sequential()
         model.add(Dense(N, input_shape=(7680,)))
@@ -36,11 +44,13 @@ def run_fc_1():
     test_x = np.random.rand(7680)
     model = load()
 
-    #@avg_timer('inference')
+    @avg_timer('inference')
     def predict():
         model.predict(np.array([test_x]))
 
-    predict()
+    if not load_only: 
+        for _ in range(repeats):
+            predict()
 
 
 @title('fc layer second')
