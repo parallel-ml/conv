@@ -3,19 +3,15 @@
   "namespace" : null,
   "types" : [ ],
   "messages" : {
-    "process" : {
-      "request" : [ {
-        "name" : "image",
-        "type" : "string"
-      } ],
-      "response" : "null"
-    },
-    "pass" : {
+    "procimage" : {
       "request" : [ {
         "name" : "image",
         "type" : "bytes"
+      }, {
+        "name" : "time",
+        "type" : "float"
       } ],
-      "response" : "null"
-      }
+      "response" : "string"
+    }
   }
 }
