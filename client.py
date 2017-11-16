@@ -16,7 +16,8 @@ def ping(size):
 
     # fill in the Message record and send it
     message = dict()
-    message['image'] = bytes(size*1000)
+    print '1' * (size*1000)
+    message['image'] ='1' * (size*1000)
 
     data = requestor.Request('process', message)
     client.Close()

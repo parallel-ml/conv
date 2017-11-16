@@ -6,7 +6,7 @@
     "process" : {
       "request" : [ {
         "name" : "image",
-        "type" : "bytes"
+        "type" : "string"
       } ],
       "response" : {"type": "string"}
     },
