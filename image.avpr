@@ -7,7 +7,7 @@
       "request" : [ {
         "name" : "image",
         "type" : "string"
-      }
+      } ],
       "response" : "string"
     }
   }
