@@ -5,6 +5,7 @@ import sys
 
 import numpy as np
 from keras.layers import Dense, Activation
+from keras.layers.convolutional import Conv2D
 from keras.layers.normalization import BatchNormalization
 from keras.models import Sequential
 
@@ -13,9 +14,20 @@ from util.output import title, timer, avg_timer
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 N = 4096
+load_only=False
+repeats=1
 
 
 def main():
+    global N
+    global load_only
+    N = int(sys.argv[1])
+    if sys.argv[2]=="l":
+        load_only=True
+        
+    print "N = " + str(N)
+    print "L = " + str(load_only)
+    print "repeats = " + str(repeats)
     run_fc_1()
 
 
@@ -24,20 +36,22 @@ def run_fc_1():
     @timer('load')
     def load():
         model = Sequential()
-        model.add(Dense(N, input_shape=(7680,)))
+        model.add(Conv2D(N, (5, 5), padding='same', input_shape=(200, 200, 3)))
         model.add(BatchNormalization())
         model.add(Activation('relu'))
 
         return model
 
-    test_x = np.random.rand(7680)
+    test_x = np.random.rand(200,200,3)
     model = load()
 
     @avg_timer('inference')
     def predict():
         model.predict(np.array([test_x]))
 
-    predict()
+    if not load_only: 
+        for _ in range(repeats):
+            predict()
 
 
 @title('fc layer second')
