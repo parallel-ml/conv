@@ -68,8 +68,7 @@ def resnet50(input_shape=(224, 224, 3)):
     else:
         bn_axis = 1
 
-    x = Conv2D(
-        64, (7, 7), strides=(2, 2), padding='same', name='conv1')(img_input)
+    x = Conv2D(64, (7, 7), strides=(2, 2), padding='same', name='conv1')(img_input)
     x = BatchNormalization(axis=bn_axis, name='bn_conv1')(x)
     x = Activation('relu')(x)
     x = MaxPooling2D((3, 3), strides=(2, 2))(x)

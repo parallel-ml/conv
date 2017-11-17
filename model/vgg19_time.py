@@ -66,18 +66,21 @@ def vgg16():
     x = layers(x, 256, 'block3_conv1', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, 256, 'block3_conv2', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, 256, 'block3_conv3', 'conv', kernal=(3, 3), activation='relu', padding='same')
+    x = layers(x, 256, 'block3_conv4', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, None, 'block3_pool', 'maxpool', pool_size=(2, 2), strides=(2, 2))
 
     # Block 4
     x = layers(x, 512, 'block4_conv1', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, 512, 'block4_conv2', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, 512, 'block4_conv3', 'conv', kernal=(3, 3), activation='relu', padding='same')
+    x = layers(x, 512, 'block4_conv4', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, None, 'block4_pool', 'maxpool', pool_size=(2, 2), strides=(2, 2))
 
     # Block 5
     x = layers(x, 512, 'block5_conv1', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, 512, 'block5_conv2', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, 512, 'block5_conv3', 'conv', kernal=(3, 3), activation='relu', padding='same')
+    x = layers(x, 512, 'block5_conv4', 'conv', kernal=(3, 3), activation='relu', padding='same')
     x = layers(x, None, 'block5_pool', 'maxpool', pool_size=(2, 2), strides=(2, 2))
 
     # Classification block
