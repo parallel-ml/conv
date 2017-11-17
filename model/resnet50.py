@@ -107,4 +107,6 @@ def resnet50(input_shape=(224, 224, 3)):
     model = Model(inputs, x, name='resnet50')
     return model
 
-resnet50().summary()
+model = resnet50()
+from keras.utils import plot_model
+plot_model(model, to_file='resnet50.png')
