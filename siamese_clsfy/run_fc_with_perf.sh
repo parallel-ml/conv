@@ -11,12 +11,14 @@ OS="page-faults,dTLB-load-misses,dTLB-store-misses,iTLB-load-misses"
 
 ARM='"armv7_cortex_a7/br_immed_retired/","armv7_cortex_a7/br_mis_pred/","armv7_cortex_a7/br_pred/","armv7_cortex_a7/br_return_retired/","armv7_cortex_a7/bus_access/","armv7_cortex_a7/bus_cycles/","armv7_cortex_a7/cid_write_retired/","armv7_cortex_a7/cpu_cycles/","armv7_cortex_a7/exc_return/","armv7_cortex_a7/exc_taken/","armv7_cortex_a7/inst_retired/","armv7_cortex_a7/inst_spec/","armv7_cortex_a7/l1d_cache/","armv7_cortex_a7/l1d_cache_refill/","armv7_cortex_a7/l1d_cache_wb/","armv7_cortex_a7/l1d_tlb_refill/","armv7_cortex_a7/l1i_cache/","armv7_cortex_a7/l1i_cache_refill/","armv7_cortex_a7/l1i_tlb_refill/","armv7_cortex_a7/l2d_cache/","armv7_cortex_a7/l2d_cache_refill/","armv7_cortex_a7/l2d_cache_wb/","armv7_cortex_a7/ld_retired/","armv7_cortex_a7/mem_access/","armv7_cortex_a7/memory_error/","armv7_cortex_a7/pc_write_retired/","armv7_cortex_a7/st_retired/","armv7_cortex_a7/sw_incr/","armv7_cortex_a7/ttbr_write_retired/,"armv7_cortex_a7/unaligned_ldst_retired/"'
 
-limits=( 512 1024 2048 4096 8192 10240 12228 14336 16384)
+#limits=( 512 1024 2048 4096 8192 10240 12228 14336 16384)
+limits=( 256 512 1024 2048 4096 5120 6114 7168 8192 10240 12228 14336 16384)
 
 for i in "${limits[@]}"
 do
   echo $i
   sudo /home/pi/perf/perf  stat -e $GENERAL,$BRANCH,$CACHE,$CAHCE_L1,$CACHE_LLC,$OS,$ARM -r $REPEAT -a ./siamese_fc_layer.py $i l 2>&1 | tee stat_fc_$i 
   sudo /home/pi/perf/perf  stat -e $GENERAL,$BRANCH,$CACHE,$CAHCE_L1,$CACHE_LLC,$OS,$ARM -r $REPEAT -a ./siamese_fc_layer.py $i n 2>&1 | tee -a stat_fc_$i
+  #./siamese_fc_layer.py $i n
 done
 
