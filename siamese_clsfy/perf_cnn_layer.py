@@ -36,13 +36,13 @@ def run_fc_1():
     @timer('load')
     def load():
         model = Sequential()
-        model.add(Conv2D(N, (5, 5), padding='same', input_shape=(200, 200, 3)))
+        model.add(Conv2D(64, (5, 5), padding='same', input_shape=(100, 100, N)))
         model.add(BatchNormalization())
         model.add(Activation('relu'))
 
         return model
 
-    test_x = np.random.rand(200,200,3)
+    test_x = np.random.rand(100,100,N)
     model = load()
 
     @avg_timer('inference')
