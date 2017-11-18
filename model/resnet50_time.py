@@ -126,6 +126,13 @@ def resnet50(input_shape=(224, 224, 3)):
     x = Activation('relu')(x)
     x = MaxPooling2D((3, 3), strides=(2, 2))(x)
 
+    model = Model(img_input, x)
+    test_x = np.random.random_sample(input_shape)
+    start = time.time()
+    for _ in range(50):
+        model.predict(np.array([test_x]))
+    print 'input conv: {:.3f} sec'.format((time.time() - start) / 50)
+
     x = conv_block(x, 3, [64, 64, 256], stage=2, block='a', strides=(1, 1))
     x = identity_block(x, 3, [64, 64, 256], stage=2, block='b')
     x = identity_block(x, 3, [64, 64, 256], stage=2, block='c')
@@ -146,8 +153,22 @@ def resnet50(input_shape=(224, 224, 3)):
     x = identity_block(x, 3, [512, 512, 2048], stage=5, block='b')
     x = identity_block(x, 3, [512, 512, 2048], stage=5, block='c')
 
-    x = AveragePooling2D((7, 7), name='avg_pool')(x)
+    fc_input_shape = Model(img_input, x).output_shape
+    fc_input_shape = fc_input_shape[1:] if fc_input_shape[0] is None else fc_input_shape
+    temp_input = Input(shape=fc_input_shape)
 
+    fc = AveragePooling2D((7, 7), name='avg_pool')(temp_input)
+    fc = Flatten()(fc)
+    fc = Dense(1000, activation='softmax', name='fc1000')(fc)
+
+    temp_model = Model(temp_input, fc)
+    test_x = np.random.random_sample(fc_input_shape)
+    start = time.time()
+    for _ in range(50):
+        temp_model.predict(np.array([test_x]))
+    print 'final fc: {:.3f} sec'.format((time.time() - start) / 50)
+
+    x = AveragePooling2D((7, 7), name='avg_pool')(x)
     x = Flatten()(x)
     x = Dense(1000, activation='softmax', name='fc1000')(x)
 
