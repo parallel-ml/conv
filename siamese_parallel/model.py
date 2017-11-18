@@ -23,25 +23,25 @@ def load_cnn(nb_class=1000, bias=True, act='relu', bn=True, dropout=False, mored
     # input image is 16x12, RGB(x3)
     model = Sequential()
     model.add(Conv2D(nb_filter, (5, 5), use_bias=bias, padding='same', input_shape=(12, 16, nb_channel)))
-    # now model.output_shape == (None, 12, 16, 128)
+    # now models.output_shape == (None, 12, 16, 128)
     if bn:
         model.add(BatchNormalization())
     model.add(Activation(act, name='relu_1'))
 
     model.add(Conv2D(nb_filter, (3, 3), use_bias=bias, padding='same'))
-    # now model.output_shape == (None, 12, 16, 128)
+    # now models.output_shape == (None, 12, 16, 128)
     if bn:
         model.add(BatchNormalization())
     model.add(Activation(act, name='relu_2'))
 
     model.add(Conv2D(nb_filter, (3, 3), use_bias=bias, padding='same'))
-    # now model.output_shape == (None, 12, 16, 128)
+    # now models.output_shape == (None, 12, 16, 128)
     if bn:
         model.add(BatchNormalization())
     model.add(Activation(act, name='relu_3'))
 
     model.add(Flatten())
-    # now model.output_shape == (None, 24576)
+    # now models.output_shape == (None, 24576)
     model.add(Dense(256, input_dim=24576, use_bias=bias, name='dense_4'))
     if bn:
         model.add(BatchNormalization())

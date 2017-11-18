@@ -98,12 +98,15 @@ def resnet50(input_shape=(224, 224, 3)):
     x = Flatten()(x)
     x = Dense(1000, activation='softmax', name='fc1000')(x)
 
-    # Ensure that the model takes into account
+    # Ensure that the models takes into account
     # any potential predecessors of `input_tensor`.
     inputs = img_input
 
-    # Create model.
+    # Create models.
     model = Model(inputs, x, name='resnet50')
     return model
 
-model = resnet50().summary()
+model = resnet50()
+model.summary()
+from keras.utils import plot_model
+plot_model(model, to_file='model_description/resnet50.png')

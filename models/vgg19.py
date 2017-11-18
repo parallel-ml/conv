@@ -42,8 +42,10 @@ def vgg19(input_shape=(224, 224, 3)):
     x = Dense(4096, activation='relu', name='fc2')(x)
     x = Dense(1000, activation='softmax', name='predictions')(x)
 
-    model = Model(img_input, x, name='vgg19')
+    return Model(img_input, x, name='vgg19')
 
-    return model
 
-vgg19().summary()
+model = vgg19()
+model.summary()
+from keras.utils import plot_model
+plot_model(model, to_file='model_description/vgg19.png')

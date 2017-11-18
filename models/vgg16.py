@@ -42,5 +42,7 @@ def vgg16(input_shape=(224, 224, 3)):
     return Model(img_input, x, name='vgg16')
 
 
-if __name__ == '__main__':
-    vgg16().summary()
+model = vgg16()
+
+from keras.utils import plot_model
+plot_model(model, to_file='model_description/vgg16.png')

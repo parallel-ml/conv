@@ -15,7 +15,7 @@ def main():
         def finetune(n):
             test_x = np.random.rand(n, 256)
 
-            @timer('load model')
+            @timer('load models')
             def load(*args, **kwargs):
                 N = kwargs['N']
 

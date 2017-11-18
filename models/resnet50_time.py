@@ -172,7 +172,7 @@ def resnet50(input_shape=(224, 224, 3)):
     x = Flatten()(x)
     x = Dense(1000, activation='softmax', name='fc1000')(x)
 
-    # Create model.
+    # Create models.
     model = Model(img_input, x, name='resnet50')
     return model
 

@@ -29,17 +29,17 @@ class Node(object):
     """ singleton factory with threading safe lock.
 
     Attributes:
-        ip: A dictionary contains Queue of ip addresses for different model type.
-        model: loaded model associated to a node.
+        ip: A dictionary contains Queue of ip addresses for different models type.
+        model: loaded models associated to a node.
         graph: default graph used by Tensorflow
         max_layer_dim: dimension of max pooling layer
         debug: flag for debugging
         max_spatial_input: input at fc layer from spatial CNN
         max_temporal_input: input at fc layer from temporal CNN
         lock: threading lock for safe usage of this class. The lock is used
-                for safe model forwarding. If the model is processing input and
+                for safe models forwarding. If the models is processing input and
                 it gets request from other devices, the new request will wait
-                until the previous model forwarding finishes.
+                until the previous models forwarding finishes.
 
     """
 
@@ -54,7 +54,6 @@ class Node(object):
         self.debug = False
         self.max_spatial_input = deque()
         self.max_temporal_input = deque()
-        self.input = deque()
         self.timestamp = time.time()
         self.lock = Lock()
         self.name = 'unknown'
@@ -93,7 +92,7 @@ class Responder(ipc.Responder):
         """ process response
 
         invoke handles the request and get response for the request. This is the key
-        of each node. All model forwarding and output redirect are done here.
+        of each node. All models forwarding and output redirect are done here.
 
         Args:
             msg: meta data
@@ -144,8 +143,6 @@ class Responder(ipc.Responder):
                             node.release_lock()
                             return
 
-                        node.log('size is good')
-
                         # pop extra frame due to transmitting delay
                         while len(node.max_spatial_input) > node.max_layer_dim:
                             node.max_spatial_input.popleft()
@@ -155,56 +152,33 @@ class Responder(ipc.Responder):
                                                      N=node.max_layer_dim) if node.model is None else node.model
                         # concatenate inputs from spatial and temporal
                         # ex: (1, 256) + (1, 256) = (2, 256)
-                        node.log('finish max pooling')
                         s_input = np.concatenate(node.max_spatial_input)
-                        # t_input = np.concatenate(node.max_temporal_input)
-                        # s_output = node.model.predict(np.array([s_input]))
-                        # t_output = node.model.predict(np.array([t_input]))
-                        # output = np.concatenate([s_output, t_output], axis=1)
-                        output = node.model.predict(np.array([s_input]))
+                        t_input = np.concatenate(node.max_temporal_input)
+                        s_output = node.model.predict(np.array([s_input]))
+                        t_output = node.model.predict(np.array([t_input]))
+                        output = np.concatenate([s_output, t_output], axis=1)
                         output = output.reshape(output.size)
 
                         # start forward at head node
-                        node.extra_model = ml.load_fc_1(input_shape=3840, output_shape=4096) \
-                            if node.extra_model is None else node.extra_model
+                        node.extra_model = ml.load_fc_1(input_shape=7680,
+                                                        output_shape=8192) if node.extra_model is None else node.extra_model
                         output = node.extra_model.predict(np.array([output]))
-                        node.log('finish fc_1 forward')
-                        for _ in range(2):
-                            Thread(target=self.send, args=(output, 'fc_2', '')).start()
 
-                    elif req['next'] == 'fc_2':
-                        X = np.fromstring(bytestr, np.float32)
-                        X = X.reshape(X.size)
-                        node.log('get fc_2 layer request', X.shape)
-                        node.input.append(X)
-                        if len(node.input) < 2:
-                            node.release_lock()
-                            return
-                        while len(node.input) > 2:
-                            node.input.popleft()
-                        X = np.concatenate(node.input)
-                        node.log('fc_2 finish assembling data')
-                        node.model = ml.load_fc_2(input_shape=8192,
-                                                  output_shape=4096) if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish fc_2 forward')
-                        Thread(target=self.send, args=(output, 'fc_3', '')).start()
+                        node.log('finish max pooling')
+
+                        # pop least recent frame from deque
+                        node.max_spatial_input.popleft()
+                        node.max_temporal_input.popleft()
+                        node.log('finish fc_1 forward')
+                        Thread(target=self.send, args=(output, 'fc_2', '')).start()
 
                     else:
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(X.size)
-                        node.log('get fc_3 layer request', X.shape)
-                        node.input.append(X)
-                        if len(node.input) < 2:
-                            node.release_lock()
-                            return
-                        while len(node.input) > 2:
-                            node.input.popleft()
-                        X = np.concatenate(node.input)
-                        node.log('fc_3 finish assembling data')
-                        node.model = ml.load_fc_3(input_shape=8192) if node.model is None else node.model
+                        node.log('get fc_2 layer request', X.shape)
+                        node.model = ml.load_fc_23(input_shape=8192) if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
-                        node.log('finish fc_3 forward')
+                        node.log('finish fc_2 forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
 
                 node.release_lock()
@@ -218,12 +192,12 @@ class Responder(ipc.Responder):
     def send(self, X, name, tag):
         """ send data to other devices
 
-        Send data to other devices. The data packet contains data and model name.
+        Send data to other devices. The data packet contains data and models name.
         Ip address of next device pop from Queue of a ip list.
 
         Args:
              X: numpy array
-             name: next device model name
+             name: next device models name
              tag: mark the current layer label
 
         """
@@ -290,8 +264,7 @@ def main(cmd):
         node.ip['initial'] = Queue()
         node.ip['fc_1'] = Queue()
         node.ip['fc_2'] = Queue()
-        node.ip['fc_3'] = Queue()
-        address = address['8_d4k_d4k_51']
+        address = address['5_8k_8k51']
         for addr in address['fc_1']:
             if addr == '#':
                 break
@@ -300,10 +273,6 @@ def main(cmd):
             if addr == '#':
                 break
             node.ip['fc_2'].put(addr)
-        for addr in address['fc_3']:
-            if addr == '#':
-                break
-            node.ip['fc_3'].put(addr)
         for addr in address['initial']:
             if addr == '#':
                 break

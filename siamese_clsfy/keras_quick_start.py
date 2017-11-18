@@ -95,7 +95,7 @@ def load_cnn(nb_class=1000, bias=True, act='relu', bn=True, dropout=False, mored
         model.add(BatchNormalization())
 
     model.add(Flatten())
-    # now model.output_shape == (None, 24576)
+    # now models.output_shape == (None, 24576)
     model.add(Dense(256, input_dim=24576, use_bias=bias, name='dense_4'))
     if bn:
         model.add(BatchNormalization())

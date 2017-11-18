@@ -29,17 +29,17 @@ class Node(object):
     """ singleton factory with threading safe lock.
 
     Attributes:
-        ip: A dictionary contains Queue of ip addresses for different model type.
-        model: loaded model associated to a node.
+        ip: A dictionary contains Queue of ip addresses for different models type.
+        model: loaded models associated to a node.
         graph: default graph used by Tensorflow
         max_layer_dim: dimension of max pooling layer
         debug: flag for debugging
         max_spatial_input: input at fc layer from spatial CNN
         max_temporal_input: input at fc layer from temporal CNN
         lock: threading lock for safe usage of this class. The lock is used
-                for safe model forwarding. If the model is processing input and
+                for safe models forwarding. If the models is processing input and
                 it gets request from other devices, the new request will wait
-                until the previous model forwarding finishes.
+                until the previous models forwarding finishes.
 
     """
 
@@ -92,7 +92,7 @@ class Responder(ipc.Responder):
         """ process response
 
         invoke handles the request and get response for the request. This is the key
-        of each node. All model forwarding and output redirect are done here.
+        of each node. All models forwarding and output redirect are done here.
 
         Args:
             msg: meta data
@@ -118,7 +118,7 @@ class Responder(ipc.Responder):
                         node.model = ml.load_spatial() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish spatial forward')
-                        Thread(target=self.send, args=(output, 'fc_1', 'spatial')).start()
+                        Thread(target=self.send, args=(output, 'fc', 'spatial')).start()
 
                     elif req['next'] == 'temporal':
                         node.log('get temporal request')
@@ -126,9 +126,9 @@ class Responder(ipc.Responder):
                         node.model = ml.load_temporal() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish temporal forward')
-                        Thread(target=self.send, args=(output, 'fc_1', 'temporal')).start()
+                        Thread(target=self.send, args=(output, 'fc', 'temporal')).start()
 
-                    elif req['next'] == 'fc_1':
+                    else:
                         tag = req['tag']
                         X = np.fromstring(bytestr, np.float32)
                         X = X.reshape(1, X.size)
@@ -160,8 +160,7 @@ class Responder(ipc.Responder):
                         output = output.reshape(output.size)
 
                         # start forward at head node
-                        node.extra_model = ml.load_fc_1(input_shape=7680,
-                                                        output_shape=8192) if node.extra_model is None else node.extra_model
+                        node.extra_model = ml.load_4k_fc() if node.extra_model is None else node.extra_model
                         output = node.extra_model.predict(np.array([output]))
 
                         node.log('finish max pooling')
@@ -170,15 +169,6 @@ class Responder(ipc.Responder):
                         node.max_spatial_input.popleft()
                         node.max_temporal_input.popleft()
                         node.log('finish fc_1 forward')
-                        Thread(target=self.send, args=(output, 'fc_2', '')).start()
-
-                    else:
-                        X = np.fromstring(bytestr, np.float32)
-                        X = X.reshape(X.size)
-                        node.log('get fc_2 layer request', X.shape)
-                        node.model = ml.load_fc_23(input_shape=8192) if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish fc_2 forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
 
                 node.release_lock()
@@ -192,12 +182,12 @@ class Responder(ipc.Responder):
     def send(self, X, name, tag):
         """ send data to other devices
 
-        Send data to other devices. The data packet contains data and model name.
+        Send data to other devices. The data packet contains data and models name.
         Ip address of next device pop from Queue of a ip list.
 
         Args:
              X: numpy array
-             name: next device model name
+             name: next device models name
              tag: mark the current layer label
 
         """
@@ -262,17 +252,11 @@ def main(cmd):
         node.ip['fc'] = Queue()
         node.ip['maxpool'] = Queue()
         node.ip['initial'] = Queue()
-        node.ip['fc_1'] = Queue()
-        node.ip['fc_2'] = Queue()
-        address = address['5_8k_8k51']
-        for addr in address['fc_1']:
+        address = address['4_fc']
+        for addr in address['fc']:
             if addr == '#':
                 break
-            node.ip['fc_1'].put(addr)
-        for addr in address['fc_2']:
-            if addr == '#':
-                break
-            node.ip['fc_2'].put(addr)
+            node.ip['fc'].put(addr)
         for addr in address['initial']:
             if addr == '#':
                 break

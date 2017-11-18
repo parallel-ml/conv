@@ -19,8 +19,8 @@ class Initializer:
     """ singleton factory for initializer node
 
     Attributes:
-        spatial_q: Queue for storing spatial model devices
-        temporal_q: Queue for storing temporal model devices
+        spatial_q: Queue for storing spatial models devices
+        temporal_q: Queue for storing temporal models devices
         flows: deque for storing fixed size frames
 
     """
@@ -124,7 +124,7 @@ class Responder(ipc.Responder):
         """ process response
 
         invoke handles the request and get response for the request. This is the key
-        of each node. All model forwarding and output redirect are done here.
+        of each node. All models forwarding and output redirect are done here.
 
         Args:
             msg: meta data
