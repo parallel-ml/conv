@@ -54,7 +54,7 @@ def alexnet():
     img_input = Input(shape=(224, 224, 3))
 
     stream1 = conv2D_bn(img_input, 3, 11, 11)
-    stream1 = MaxPooling2D(strides=(4, 4), pool_size=(4, 4))(stream1)
+    stream1 = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(stream1)
     stream1 = ZeroPadding2D(padding=(1, 1))(stream1)
 
     stream1 = conv2D_bn(stream1, 48, 5, 5)
@@ -66,7 +66,7 @@ def alexnet():
     stream1 = ZeroPadding2D(padding=(1, 1))(stream1)
 
     stream2 = conv2D_bn(img_input, 3, 11, 11)
-    stream2 = MaxPooling2D(strides=(4, 4), pool_size=(4, 4))(stream2)
+    stream2 = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(stream2)
     stream2 = ZeroPadding2D(padding=(1, 1))(stream2)
 
     stream2 = conv2D_bn(stream2, 48, 5, 5)
@@ -123,6 +123,4 @@ def alexnet():
     return Model(input=img_input, output=[fc])
 
 
-model = alexnet()
-from keras.utils import plot_model
-plot_model(model, to_file='alexnet_2stream.png')
+model = alexnet().summary()
