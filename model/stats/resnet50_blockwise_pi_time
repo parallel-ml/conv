@@ -1,16 +1,18 @@
-stage_2_block_a_conv_shortcut: 0.478 sec
-stage_2_block_b_identity_shortcut: 0.422 sec
-stage_2_block_c_identity_shortcut: 0.412 sec
-stage_3_block_a_conv_shortcut: 0.404 sec
+input conv: 0.232 sec
+stage_2_block_a_conv_shortcut: 0.481 sec
+stage_2_block_b_identity_shortcut: 0.420 sec
+stage_2_block_c_identity_shortcut: 0.414 sec
+stage_3_block_a_conv_shortcut: 0.393 sec
 stage_3_block_b_identity_shortcut: 0.280 sec
-stage_3_block_c_identity_shortcut: 0.273 sec
-stage_3_block_d_identity_shortcut: 0.274 sec
-stage_4_block_a_conv_shortcut: 0.312 sec
-stage_4_block_b_identity_shortcut: 0.237 sec
-stage_4_block_c_identity_shortcut: 0.239 sec
-stage_4_block_d_identity_shortcut: 0.256 sec
-stage_4_block_e_identity_shortcut: 0.238 sec
-stage_4_block_f_identity_shortcut: 0.239 sec
-stage_5_block_a_conv_shortcut: 0.290 sec
-stage_5_block_b_identity_shortcut: 0.234 sec
-stage_5_block_c_identity_shortcut: 0.226 sec
+stage_3_block_c_identity_shortcut: 0.292 sec
+stage_3_block_d_identity_shortcut: 0.279 sec
+stage_4_block_a_conv_shortcut: 0.310 sec
+stage_4_block_b_identity_shortcut: 0.241 sec
+stage_4_block_c_identity_shortcut: 0.240 sec
+stage_4_block_d_identity_shortcut: 0.240 sec
+stage_4_block_e_identity_shortcut: 0.239 sec
+stage_4_block_f_identity_shortcut: 0.240 sec
+stage_5_block_a_conv_shortcut: 0.288 sec
+stage_5_block_b_identity_shortcut: 0.236 sec
+stage_5_block_c_identity_shortcut: 0.227 sec
+final fc: 0.112 sec
