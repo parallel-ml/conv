@@ -1,22 +1,21 @@
-import numpy as np
-import time
 import os
-from keras.layers import Flatten, Dense, Dropout, Activation, Input, merge
-from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D
-from keras.layers.merge import Multiply, Concatenate
-from keras.models import Model
-from keras.layers.core import Layer
-from keras import backend as K
+import time
 
+import numpy as np
+from keras import backend as K
+from keras.layers import Flatten, Dense, Input
+from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D
+from keras.layers.core import Layer
+from keras.models import Model
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
 
 img_input = None
 
 
 class LRN2D(Layer):
     """ LRN2D class is from original keras but gets removed at latest version """
+
     def __init__(self, alpha=0.0001, k=1, beta=0.75, n=5, **kwargs):
         self.alpha = alpha
         self.k = k
@@ -75,7 +74,7 @@ def conv2D_bn(x, nb_filter, nb_row, nb_col, activation='relu', batch_norm=True, 
         print '{:s}: {:.3f} sec'.format(name, (time.time() - start) / 50)
         del temp_model
 
-    x = Conv2D(nb_filter, kernel_size=(nb_row, nb_col), activation=activation,)(x)
+    x = Conv2D(nb_filter, kernel_size=(nb_row, nb_col), activation=activation, )(x)
     x = ZeroPadding2D(padding=(1, 1))(x)
 
     if batch_norm:
@@ -129,7 +128,7 @@ def dense(x, act='relu', dim=4096, name=''):
     return x
 
 
-def alexnet():
+def alexnet1():
     global img_input
     img_input = Input(shape=(224, 224, 3))
 
@@ -141,11 +140,14 @@ def alexnet():
 
     fc = flatten(stream1)
 
+
+def alexnet2():
+    fc = Input(shape=(27648,))
+
     fc = dense(fc, name='fc1 single stream')
     fc = dense(fc, name='fc2 single stream')
     fc = dense(fc, act='softmax', dim=1000, name='fc3 single stream')
 
-    return Model(img_input, fc)
 
-
-model = alexnet()
+alexnet1()
+alexnet2()

@@ -64,6 +64,7 @@ class Node(object):
         self.name = 'unknown'
         self.total = 0
         self.count = 1
+        self.input = deque()
 
     def log(self, step, data=''):
         if self.debug:
@@ -118,16 +119,45 @@ class Responder(ipc.Responder):
                 with node.graph.as_default():
                     bytestr = req['input']
                     if req['next'] == 'block1':
-                        pass
+                        node.log('block1 gets data')
+                        X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
+                        node.model = ml.node_8_block1() #if node.model is None else node.modal
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish block1 forward')
+                        Thread(target=self.send, args=(output, 'block2', '')).start()
 
                     elif req['next'] == 'block2':
-                        pass
+                        node.log('block2 gets data')
+                        X = np.fromstring(bytestr, np.float32).reshape(111, 111, 3)
+                        node.model = ml.node_8_block2() #if node.model is None else node.modal
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish block2 forward')
+                        for _ in range(2):
+                            Thread(target=self.send, args=(output, 'block3', '')).start()
 
                     elif req['next'] == 'block3':
-                        pass
+                        node.log('block3 gets data')
+                        X = np.fromstring(bytestr, np.float32).reshape(27648)
+                        node.model = ml.node_8_block3() #if node.model is None else node.modal
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish block3 forward')
+                        Thread(target=self.send, args=(output, 'block4', '')).start()
 
                     else:
-                        pass
+                        node.log('block4 gets data')
+                        X = np.fromstring(bytestr, np.float32).reshape(2048)
+                        node.input.append(X)
+                        node.log('input size', str(len(node.input)))
+                        if len(node.input) < 2:
+                            node.release_lock()
+                            return
+                        while len(node.input) > 2:
+                            node.input.popleft()
+                        X = np.concatenate(node.input)
+                        node.model = ml.node_8_block4() #if node.model is None else node.modal
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish block4 forward')
+                        Thread(target=self.send, args=(output, 'initial', '')).start()
 
                 node.release_lock()
                 return
@@ -206,7 +236,27 @@ def main(cmd):
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        pass
+        node.ip['block2'] = Queue()
+        node.ip['block3'] = Queue()
+        node.ip['block4'] = Queue()
+        node.ip['initial'] = Queue()
+        address = address['node_6']
+        for addr in address['block2']:
+            if addr == '#':
+                break
+            node.ip['block2'].put(addr)
+        for addr in address['block3']:
+            if addr == '#':
+                break
+            node.ip['block3'].put(addr)
+        for addr in address['block4']:
+            if addr == '#':
+                break
+            node.ip['block4'].put(addr)
+        for addr in address['initial']:
+            if addr == '#':
+                break
+            node.ip['initial'].put(addr)
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True

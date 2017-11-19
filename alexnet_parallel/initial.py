@@ -19,8 +19,7 @@ class Initializer:
     """ singleton factory for initializer node
 
     Attributes:
-        spatial_q: Queue for storing spatial models devices
-        temporal_q: Queue for storing temporal models devices
+        queue: Queue for storing block1 models devices
         start: start time of getting a frame
         count: total number of frames gets back
         node_total: total layerwise time
@@ -30,8 +29,7 @@ class Initializer:
     instance = None
 
     def __init__(self):
-        self.spatial_q = Queue()
-        self.temporal_q = Queue()
+        self.queue = Queue()
         self.start = 0.0
         self.count = 0
         self.node_total = 0
@@ -90,8 +88,8 @@ def master():
         # current frame
         ret, frame = 'unknown', np.random.rand(224, 224, 3) * 255
         frame = frame.astype(dtype=np.uint8)
-        Thread(target=send_request, args=(frame.tobytes(), 'conv1')).start()
-        time.sleep(0.03)
+        Thread(target=send_request, args=(frame.tobytes(), 'block1')).start()
+        time.sleep(1)
 
 
 class Responder(ipc.Responder):
@@ -155,8 +153,8 @@ def main():
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        address = address['conv1']
-        for addr in address:
+        address = address['node_6']
+        for addr in address['block1']:
             if addr == '#':
                 break
             init.queue.put(addr)
