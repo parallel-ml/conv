@@ -88,59 +88,27 @@ def conv2D_bn(x, nb_filter, nb_row, nb_col, activation='relu', batch_norm=True, 
     return x
 
 
-def concatenate(s1, s2, name=''):
-    if name != '':
-        global img_input
-        input_shape = Model(img_input, s1).output_shape
-        input_shape = input_shape[1:] if input_shape[0] is None else input_shape
-        temp_input1 = Input(shape=input_shape)
-        temp_input2 = Input(shape=input_shape)
+def flatten(x):
+    global img_input
+    input_shape = Model(img_input, x).output_shape
+    input_shape = input_shape[1:] if input_shape[0] is None else input_shape
+    temp_input1 = Input(shape=input_shape)
 
-        y = Concatenate(axis=3)([temp_input1, temp_input2])
-        y = ZeroPadding2D(padding=(1, 1))(y)
+    y = Flatten()(temp_input1)
 
-        temp_model = Model([temp_input1, temp_input2], y)
-        test_s1 = np.random.random_sample(input_shape)
-        test_s2 = np.random.random_sample(input_shape)
-        start = time.time()
-        for _ in range(50):
-            temp_model.predict([np.array([test_s1]), np.array([test_s2])])
-        print '{:s}: {:.3f} sec'.format(name, (time.time() - start) / 50)
-        del temp_model
+    temp_model = Model(temp_input1, y)
+    test_s1 = np.random.random_sample(input_shape)
+    start = time.time()
+    for _ in range(50):
+        temp_model.predict(np.array([test_s1]))
+    print '{:s}: {:.3f} sec'.format('flatten', (time.time() - start) / 50)
+    del temp_model
 
-    x = Concatenate(axis=3)([s1, s2])
-    x = ZeroPadding2D(padding=(1, 1))(x)
+    x = Flatten()(x)
     return x
 
 
-def multiply(s1, s2, flatten=True, name=''):
-    if name != '':
-        global img_input
-        input_shape = Model(img_input, s1).output_shape
-        input_shape = input_shape[1:] if input_shape[0] is None else input_shape
-        temp_input1 = Input(shape=input_shape)
-        temp_input2 = Input(shape=input_shape)
-
-        y = Multiply()([temp_input1, temp_input2])
-        if flatten:
-            y = Flatten()(y)
-
-        temp_model = Model([temp_input1, temp_input2], y)
-        test_s1 = np.random.random_sample(input_shape)
-        test_s2 = np.random.random_sample(input_shape)
-        start = time.time()
-        for _ in range(50):
-            temp_model.predict([np.array([test_s1]), np.array([test_s2])])
-        print '{:s}: {:.3f} sec'.format(name, (time.time() - start) / 50)
-        del temp_model
-
-    x = Multiply()([s1, s2])
-    if flatten:
-        x = Flatten()(x)
-    return x
-
-
-def dense(x, act='relu', dim=2048, dropout=True, name=''):
+def dense(x, act='relu', dim=4096, name=''):
     if name != '':
         global img_input
         input_shape = Model(img_input, x).output_shape
@@ -148,8 +116,6 @@ def dense(x, act='relu', dim=2048, dropout=True, name=''):
         temp_input = Input(shape=input_shape)
 
         y = Dense(dim, activation=act)(temp_input)
-        if dropout:
-            y = Dropout(0.5)(y)
 
         temp_model = Model(temp_input, y)
         test_x = np.random.random_sample(input_shape)
@@ -160,8 +126,6 @@ def dense(x, act='relu', dim=2048, dropout=True, name=''):
         del temp_model
 
     x = Dense(dim, activation=act)(x)
-    if dropout:
-        x = Dropout(0.5)(x)
     return x
 
 
@@ -169,43 +133,17 @@ def alexnet():
     global img_input
     img_input = Input(shape=(224, 224, 3))
 
-    # first three conv nets
     stream1 = conv2D_bn(img_input, 3, 11, 11, name='conv1 single stream')
     stream1 = conv2D_bn(stream1, 48, 5, 5, name='conv2 single stream')
     stream1 = conv2D_bn(stream1, 128, 3, 3, name='conv3 single stream')
+    stream1 = conv2D_bn(stream1, 192, 3, 3, name='conv4 single stream')
+    stream1 = conv2D_bn(stream1, 192, 3, 3, name='conv5 single stream')
 
-    stream2 = conv2D_bn(img_input, 3, 11, 11)
-    stream2 = conv2D_bn(stream2, 48, 5, 5)
-    stream2 = conv2D_bn(stream2, 128, 3, 3)
+    fc = flatten(stream1)
 
-    # merge conv nets
-    stream1_after_merge = concatenate(stream1, stream2, name='concatenate')
-    stream2_after_merge = concatenate(stream1, stream2)
-
-    # rest two conv nets
-    stream1_after_merge = conv2D_bn(stream1_after_merge, 192, 3, 3, name='conv4 single stream')
-    stream1_after_merge = conv2D_bn(stream1_after_merge, 192, 3, 3, name='conv5 single stream')
-
-    stream2_after_merge = conv2D_bn(stream2_after_merge, 192, 3, 3)
-    stream2_after_merge = conv2D_bn(stream2_after_merge, 192, 3, 3)
-
-    # first fc layer
-    fc1_stream1 = multiply(stream1_after_merge, stream2_after_merge, flatten=True, name='merge1_fc')
-    fc1_stream1 = dense(fc1_stream1, name='fc1 single stream')
-
-    fc1_stream2 = multiply(stream1_after_merge, stream2_after_merge, flatten=True)
-    fc1_stream2 = dense(fc1_stream2)
-
-    # second fc layer
-    fc2_stream1 = multiply(fc1_stream1, fc1_stream2, flatten=False, name='merge2_fc')
-    fc2_stream1 = dense(fc2_stream1, name='fc2 single stream')
-
-    fc2_stream2 = multiply(fc1_stream1, fc1_stream2, flatten=False)
-    fc2_stream2 = dense(fc2_stream2)
-
-    # final classification layer
-    fc = multiply(fc2_stream1, fc2_stream2, flatten=False, name='merge3_fc')
-    fc = dense(fc, act='softmax', dim=1000, dropout=False, name='fc3 single stream')
+    fc = dense(fc, name='fc1 single stream')
+    fc = dense(fc, name='fc2 single stream')
+    fc = dense(fc, act='softmax', dim=1000, name='fc3 single stream')
 
     return Model(img_input, fc)
 

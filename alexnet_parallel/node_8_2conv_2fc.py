@@ -18,11 +18,21 @@ import yaml
 import model as ml
 import util
 
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 matplotlib.use('Agg')
 
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
+
+
+"""
+    Alexnet is divided into several blocks in 8 nodes config
+    block1: conv1
+    block2: conv2, conv3, conv4, conv5, flatten
+    block3: fc1
+    block4: fc2, fc3
+"""
 
 
 class Node(object):
@@ -31,19 +41,15 @@ class Node(object):
     Attributes:
         ip: A dictionary contains Queue of ip addresses for different models type.
         model: loaded models associated to a node.
-        extra_model: used by maxpooling layer
         graph: default graph used by Tensorflow
-        max_layer_dim: dimension of max pooling layer
         debug: flag for debugging
-        max_spatial_input: input at fc layer from spatial CNN
-        max_temporal_input: input at fc layer from temporal CNN
         lock: threading lock for safe usage of this class. The lock is used
                 for safe models forwarding. If the models is processing input and
                 it gets request from other devices, the new request will wait
                 until the previous models forwarding finishes.
         name: model name
-        total: total time counted
-        count: number of frame gets back
+        total: total time of getting frames
+        count: total number of frames gets back
 
     """
 
@@ -52,12 +58,8 @@ class Node(object):
     def __init__(self):
         self.ip = dict()
         self.model = None
-        self.extra_model = None
         self.graph = tf.get_default_graph()
-        self.max_layer_dim = 16
         self.debug = False
-        self.max_spatial_input = deque()
-        self.max_temporal_input = deque()
         self.lock = Lock()
         self.name = 'unknown'
         self.total = 0
@@ -115,64 +117,17 @@ class Responder(ipc.Responder):
             try:
                 with node.graph.as_default():
                     bytestr = req['input']
-                    if req['next'] == 'spatial':
-                        node.log('get spatial request')
-                        X = np.fromstring(bytestr, np.uint8).reshape(12, 16, 3)
-                        node.model = ml.load_spatial() if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish spatial forward')
-                        Thread(target=self.send, args=(output, 'fc', 'spatial')).start()
+                    if req['next'] == 'block1':
+                        pass
 
-                    elif req['next'] == 'temporal':
-                        node.log('get temporal request')
-                        X = np.fromstring(bytestr, np.float32).reshape(12, 16, 20)
-                        node.model = ml.load_temporal() if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish temporal forward')
-                        Thread(target=self.send, args=(output, 'fc', 'temporal')).start()
+                    elif req['next'] == 'block2':
+                        pass
+
+                    elif req['next'] == 'block3':
+                        pass
 
                     else:
-                        tag = req['tag']
-                        X = np.fromstring(bytestr, np.float32)
-                        X = X.reshape(1, X.size)
-                        if tag == 'spatial':
-                            node.max_spatial_input.append(X)
-                        else:
-                            node.max_temporal_input.append(X)
-                        node.log('get head request', 'spatial: %d temporal: %d' % (
-                            len(node.max_spatial_input), len(node.max_temporal_input)))
-                        if len(node.max_spatial_input) < node.max_layer_dim or len(
-                                node.max_temporal_input) < node.max_layer_dim:
-                            node.release_lock()
-                            return
-
-                        # pop extra frame due to transmitting delay
-                        while len(node.max_spatial_input) > node.max_layer_dim:
-                            node.max_spatial_input.popleft()
-                        while len(node.max_temporal_input) > node.max_layer_dim:
-                            node.max_temporal_input.popleft()
-                        node.model = ml.load_maxpool(input_shape=(node.max_layer_dim, 256),
-                                                     N=node.max_layer_dim) if node.model is None else node.model
-                        # concatenate inputs from spatial and temporal
-                        # ex: (1, 256) + (1, 256) = (2, 256)
-                        s_input = np.concatenate(node.max_spatial_input)
-                        t_input = np.concatenate(node.max_temporal_input)
-                        s_output = node.model.predict(np.array([s_input]))
-                        t_output = node.model.predict(np.array([t_input]))
-                        output = np.concatenate([s_output, t_output], axis=1)
-                        output = output.reshape(output.size)
-
-                        # start forward at head node
-                        node.extra_model = ml.load_4k_fc() if node.extra_model is None else node.extra_model
-                        output = node.extra_model.predict(np.array([output]))
-
-                        node.log('finish max pooling')
-
-                        # pop least recent frame from deque
-                        node.max_spatial_input.popleft()
-                        node.max_temporal_input.popleft()
-                        node.log('finish fc_1 forward')
-                        Thread(target=self.send, args=(output, 'initial', '')).start()
+                        pass
 
                 node.release_lock()
                 return
@@ -246,24 +201,12 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 def main(cmd):
     node = Node.create()
 
-    node.max_layer_dim = cmd.max_dim
     node.debug = cmd.debug
 
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        node.ip['fc'] = Queue()
-        node.ip['maxpool'] = Queue()
-        node.ip['initial'] = Queue()
-        address = address['4_fc']
-        for addr in address['fc']:
-            if addr == '#':
-                break
-            node.ip['fc'].put(addr)
-        for addr in address['initial']:
-            if addr == '#':
-                break
-            node.ip['initial'].put(addr)
+        pass
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True
@@ -272,8 +215,6 @@ def main(cmd):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--max_dim', metavar='\b', action='store', default=16, type=int,
-                        help='Choose maxpooling layer input dimension')
     parser.add_argument('-d', '--debug', action='store_true', default=False,
                         help='Set to debug mode')
     cmd = parser.parse_args()

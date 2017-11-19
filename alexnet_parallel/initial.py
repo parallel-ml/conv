@@ -21,13 +21,10 @@ class Initializer:
     Attributes:
         spatial_q: Queue for storing spatial models devices
         temporal_q: Queue for storing temporal models devices
-        flows: deque for storing fixed size frames
-        start: start time of getting back a frame
+        start: start time of getting a frame
         count: total number of frames gets back
-        sp_total: total time of spatial layer
-        sp_count: total count of spatial feedback
-        tmp_total: total time of temporal layer
-        tmp_count: total count of temporal feedback
+        node_total: total layerwise time
+        node_count: total layerwise frame count
 
     """
     instance = None
@@ -35,13 +32,10 @@ class Initializer:
     def __init__(self):
         self.spatial_q = Queue()
         self.temporal_q = Queue()
-        self.flows = deque()
         self.start = 0.0
         self.count = 0
-        self.sp_total = 0
-        self.sp_count = 1
-        self.tmp_total = 0
-        self.tmp_count = 1
+        self.node_total = 0
+        self.node_count = 1
 
     def timer(self):
         if self.count == 0:
@@ -51,14 +45,9 @@ class Initializer:
         self.count += 1
 
     def node_timer(self, mode, interval):
-        if mode == 'spatial':
-            self.sp_total += interval
-            print '{:s}: {:.3f}'.format(mode, self.sp_total / self.sp_count)
-            self.sp_count += 1
-        else:
-            self.tmp_total += interval
-            print '{:s}: {:.3f}'.format(mode, self.tmp_total / self.tmp_count)
-            self.tmp_count += 1
+        self.node_total += interval
+        print '{:s}: {:.3f}'.format(mode, self.node_total / self.node_count)
+        self.node_count += 1
 
     @classmethod
     def create_init(cls):
@@ -67,9 +56,9 @@ class Initializer:
         return cls.instance
 
 
-def send_request(bytestr, mode='spatial'):
+def send_request(bytestr, mode):
     init = Initializer.create_init()
-    queue = init.spatial_q if mode == 'spatial' else init.temporal_q
+    queue = init.queue
 
     addr = queue.get()
     client = ipc.HTTPTransceiver(addr, 12345)
@@ -97,27 +86,11 @@ def master():
     every time and pop the least recent one if the length > maximum.
     """
     init = Initializer.create_init()
-    # for previous frame used
-    frame0 = None
     while True:
         # current frame
-        ret, frame = 'unknown', np.random.rand(12, 16, 3) * 255
+        ret, frame = 'unknown', np.random.rand(224, 224, 3) * 255
         frame = frame.astype(dtype=np.uint8)
-        image = frame
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        if frame0 is not None:
-            # append new 1-1 optical frame into deque
-            init.flows.appendleft(cv2.calcOpticalFlowFarneback(frame0, frame, None, 0.5, 3, 4, 3, 5, 1.1, 0))
-            if len(init.flows) == 10:
-                Thread(target=send_request, args=(image.tobytes(), 'spatial')).start()
-                # concatenate at axis 2
-                # ex: (3, 2, 1) + (3, 2, 1) = (3, 2, 2)
-                optical_flow = np.concatenate(init.flows, axis=2)
-                Thread(target=send_request, args=(optical_flow.tobytes(), 'temporal')).start()
-                init.flows.pop()
-
-        frame0 = frame
+        Thread(target=send_request, args=(frame.tobytes(), 'conv1')).start()
         time.sleep(0.03)
 
 
@@ -182,15 +155,11 @@ def main():
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        address = address['5_8k_8k51']
-        for addr in address['spatial']:
+        address = address['conv1']
+        for addr in address:
             if addr == '#':
                 break
-            init.spatial_q.put(addr)
-        for addr in address['temporal']:
-            if addr == '#':
-                break
-            init.temporal_q.put(addr)
+            init.queue.put(addr)
 
     server = ThreadedHTTPServer(('0.0.0.0', 9999), Handler)
     server.allow_reuse_address = True

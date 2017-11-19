@@ -31,6 +31,7 @@ class Node(object):
     Attributes:
         ip: A dictionary contains Queue of ip addresses for different models type.
         model: loaded models associated to a node.
+        extra_model: used by maxpooling layer
         graph: default graph used by Tensorflow
         max_layer_dim: dimension of max pooling layer
         debug: flag for debugging
@@ -40,6 +41,9 @@ class Node(object):
                 for safe models forwarding. If the models is processing input and
                 it gets request from other devices, the new request will wait
                 until the previous models forwarding finishes.
+        name: model name
+        total: total time counted
+        count: number of frame gets back
 
     """
 
@@ -54,7 +58,6 @@ class Node(object):
         self.debug = False
         self.max_spatial_input = deque()
         self.max_temporal_input = deque()
-        self.timestamp = time.time()
         self.lock = Lock()
         self.name = 'unknown'
         self.total = 0
