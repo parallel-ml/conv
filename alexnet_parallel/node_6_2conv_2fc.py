@@ -18,13 +18,11 @@ import yaml
 import model as ml
 import util
 
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 matplotlib.use('Agg')
 
 PROTOCOL = protocol.parse(open('resource/image.avpr').read())
-
 
 """
     Alexnet is divided into several blocks in 8 nodes config
@@ -121,7 +119,7 @@ class Responder(ipc.Responder):
                     if req['next'] == 'block1':
                         node.log('block1 gets data')
                         X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
-                        node.model = ml.node_8_block1() #if node.model is None else node.modal
+                        node.model = ml.node_8_block1() if node.model is None else node.modal
                         output = node.model.predict(np.array([X]))
                         node.log('finish block1 forward')
                         Thread(target=self.send, args=(output, 'block2', '')).start()
@@ -129,7 +127,7 @@ class Responder(ipc.Responder):
                     elif req['next'] == 'block2':
                         node.log('block2 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(111, 111, 3)
-                        node.model = ml.node_8_block2() #if node.model is None else node.modal
+                        node.model = ml.node_8_block2() if node.model is None else node.modal
                         output = node.model.predict(np.array([X]))
                         node.log('finish block2 forward')
                         for _ in range(2):
@@ -138,7 +136,7 @@ class Responder(ipc.Responder):
                     elif req['next'] == 'block3':
                         node.log('block3 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(27648)
-                        node.model = ml.node_8_block3() #if node.model is None else node.modal
+                        node.model = ml.node_8_block3() if node.model is None else node.modal
                         output = node.model.predict(np.array([X]))
                         node.log('finish block3 forward')
                         Thread(target=self.send, args=(output, 'block4', '')).start()
@@ -154,7 +152,7 @@ class Responder(ipc.Responder):
                         while len(node.input) > 2:
                             node.input.popleft()
                         X = np.concatenate(node.input)
-                        node.model = ml.node_8_block4() #if node.model is None else node.modal
+                        node.model = ml.node_8_block4() if node.model is None else node.modal
                         output = node.model.predict(np.array([X]))
                         node.log('finish block4 forward')
                         Thread(target=self.send, args=(output, 'initial', '')).start()
