@@ -34,6 +34,7 @@ class Initializer:
         self.count = 0
         self.node_total = 0
         self.node_count = 1
+        self.request_count = 2
 
     def timer(self):
         if self.count == 0:
@@ -54,7 +55,7 @@ class Initializer:
         return cls.instance
 
 
-def send_request(bytestr, mode):
+def send_request(bytestr, mode, tag=''):
     init = Initializer.create_init()
     queue = init.queue
 
@@ -65,7 +66,7 @@ def send_request(bytestr, mode):
     data = dict()
     data['input'] = bytestr
     data['next'] = mode
-    data['tag'] = ''
+    data['tag'] = tag
 
     start = time.time()
     requestor.request('forward', data)
@@ -84,11 +85,20 @@ def master():
     every time and pop the least recent one if the length > maximum.
     """
     init = Initializer.create_init()
+
+    ret, frame = 'unknown', np.random.rand(224, 224, 3) * 255
+    frame = frame.astype(dtype=np.uint8)
+    for _ in range(2):
+        Thread(target=send_request, args=(frame.tobytes(), 'block1')).start()
+
+    while init.request_count > 0:
+        time.sleep(1)
+
     while True:
         # current frame
         ret, frame = 'unknown', np.random.rand(224, 224, 3) * 255
         frame = frame.astype(dtype=np.uint8)
-        Thread(target=send_request, args=(frame.tobytes(), 'block1')).start()
+        Thread(target=send_request, args=(frame.tobytes(), 'block1', 'initial')).start()
         time.sleep(0.03)
 
 
@@ -116,6 +126,8 @@ class Responder(ipc.Responder):
         if msg.name == 'forward':
             init = Initializer.create_init()
             try:
+                if req['tag'] == 'initial':
+                    init.request_count -= 1 if init.request_count > 0 else 0
                 init.timer()
                 return
             except Exception, e:

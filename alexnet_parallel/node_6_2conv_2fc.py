@@ -122,7 +122,7 @@ class Responder(ipc.Responder):
                         node.model = ml.node_8_block1() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block1 forward')
-                        Thread(target=self.send, args=(output, 'block2', '')).start()
+                        Thread(target=self.send, args=(output, 'block2', req['tag'])).start()
 
                     elif req['next'] == 'block2':
                         node.log('block2 gets data')
@@ -131,7 +131,7 @@ class Responder(ipc.Responder):
                         output = node.model.predict(np.array([X]))
                         node.log('finish block2 forward')
                         for _ in range(2):
-                            Thread(target=self.send, args=(output, 'block3', '')).start()
+                            Thread(target=self.send, args=(output, 'block3', req['tag'])).start()
 
                     elif req['next'] == 'block3':
                         node.log('block3 gets data')
@@ -139,7 +139,7 @@ class Responder(ipc.Responder):
                         node.model = ml.node_8_block3() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block3 forward')
-                        Thread(target=self.send, args=(output, 'block4', '')).start()
+                        Thread(target=self.send, args=(output, 'block4', req['tag'])).start()
 
                     else:
                         node.log('block4 gets data')
@@ -155,7 +155,7 @@ class Responder(ipc.Responder):
                         node.model = ml.node_8_block4() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block4 forward')
-                        Thread(target=self.send, args=(output, 'initial', '')).start()
+                        Thread(target=self.send, args=(output, 'initial', req['tag'])).start()
 
                 node.release_lock()
                 return
