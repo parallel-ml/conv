@@ -119,30 +119,38 @@ class Responder(ipc.Responder):
                     if req['next'] == 'block1':
                         node.log('block1 gets data')
                         X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
-                        node.model = ml.node_6_block1() if node.model is None else node.model
+                        node.model = ml.node_6_block1() #if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block1 forward')
                         Thread(target=self.send, args=(output, 'block2', req['tag'])).start()
 
-                    elif req['next'] == 'block2':
+                    if req['next'] == 'block2':
                         node.log('block2 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(111, 111, 3)
-                        node.model = ml.node_6_block2() if node.model is None else node.model
+                        node.model = ml.node_8_block2() #if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block2 forward')
-                        for _ in range(2):
-                            Thread(target=self.send, args=(output, 'block3', req['tag'])).start()
+                        Thread(target=self.send, args=(output, 'block3', req['tag'])).start()
 
                     elif req['next'] == 'block3':
                         node.log('block3 gets data')
-                        X = np.fromstring(bytestr, np.float32).reshape(27648)
-                        node.model = ml.node_6_block3() if node.model is None else node.model
+                        X = np.fromstring(bytestr, np.float32).reshape(57, 57, 48)
+                        node.model = ml.node_8_block3() #if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block3 forward')
-                        Thread(target=self.send, args=(output, 'block4', req['tag'])).start()
+                        for _ in range(2):
+                            Thread(target=self.send, args=(output, 'block4', req['tag'])).start()
 
                     elif req['next'] == 'block4':
                         node.log('block4 gets data')
+                        X = np.fromstring(bytestr, np.float32).reshape(27648)
+                        node.model = ml.node_6_block3() #if node.model is None else node.model
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish block4 forward')
+                        Thread(target=self.send, args=(output, 'block5', req['tag'])).start()
+
+                    elif req['next'] == 'block5':
+                        node.log('block5 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(2048)
                         node.input.append(X)
                         node.log('input size', str(len(node.input)))
@@ -152,9 +160,9 @@ class Responder(ipc.Responder):
                         while len(node.input) > 2:
                             node.input.popleft()
                         X = np.concatenate(node.input)
-                        node.model = ml.node_6_block4() if node.model is None else node.model
+                        node.model = ml.node_6_block4() #if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
-                        node.log('finish block4 forward')
+                        node.log('finish block5 forward')
                         Thread(target=self.send, args=(output, 'initial', req['tag'])).start()
 
                 node.release_lock()
@@ -237,8 +245,9 @@ def main(cmd):
         node.ip['block2'] = Queue()
         node.ip['block3'] = Queue()
         node.ip['block4'] = Queue()
+        node.ip['block5'] = Queue()
         node.ip['initial'] = Queue()
-        address = address['node_6']
+        address = address['node_8']
         for addr in address['block2']:
             if addr == '#':
                 break
@@ -251,6 +260,10 @@ def main(cmd):
             if addr == '#':
                 break
             node.ip['block4'].put(addr)
+        for addr in address['block5']:
+            if addr == '#':
+                break
+            node.ip['block5'].put(addr)
         for addr in address['initial']:
             if addr == '#':
                 break

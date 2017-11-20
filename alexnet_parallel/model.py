@@ -39,14 +39,14 @@ class LRN2D(Layer):
         return dict(list(base_config.items()) + list(config.items()))
 
 
-def node_8_block1():
+def node_6_block1():
     img = Input(shape=(224, 224, 3))
     output = conv2D_bn(img, 3, 11, 11)
     model = Model(img, output)
     return model
 
 
-def node_8_block2():
+def node_6_block2():
     block_input = Input(shape=(111, 111, 3))
     x = conv2D_bn(block_input, 48, 5, 5)
     x = conv2D_bn(x, 128, 3, 3)
@@ -57,17 +57,34 @@ def node_8_block2():
     return model
 
 
-def node_8_block3():
+def node_6_block3():
     block_input = Input(shape=(27648,))
     x = Dense(2048, activation='relu')(block_input)
     model = Model(block_input, x)
     return model
 
 
-def node_8_block4():
+def node_6_block4():
     block_input = Input(shape=(4096,))
     x = Dense(4096, activation='relu')(block_input)
     x = Dense(1000, activation='relu')(block_input)
+    model = Model(block_input, x)
+    return model
+
+
+def node_8_block2():
+    block_input = Input(shape=(111, 111, 3))
+    x = conv2D_bn(block_input, 48, 5, 5)
+    model = Model(block_input, x)
+    return model
+
+
+def node_8_block3():
+    block_input = Input(shape=(57, 57, 48))
+    x = conv2D_bn(block_input, 128, 3, 3)
+    x = conv2D_bn(x, 192, 3, 3)
+    x = conv2D_bn(x, 192, 3, 3)
+    x = Flatten()(x)
     model = Model(block_input, x)
     return model
 
