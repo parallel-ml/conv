@@ -82,9 +82,3 @@ def conv2D_bn(x, nb_filter, nb_row, nb_col, activation='relu', batch_norm=True):
     x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
     x = ZeroPadding2D(padding=(1, 1))(x)
     return x
-
-
-node_8_block1()
-node_8_block2()
-node_8_block3()
-node_8_block4()
