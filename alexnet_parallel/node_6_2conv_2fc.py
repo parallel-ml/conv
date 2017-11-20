@@ -141,7 +141,7 @@ class Responder(ipc.Responder):
                         node.log('finish block3 forward')
                         Thread(target=self.send, args=(output, 'block4', req['tag'])).start()
 
-                    else:
+                    elif req['next'] == 'block4':
                         node.log('block4 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(2048)
                         node.input.append(X)

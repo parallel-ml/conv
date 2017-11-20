@@ -128,6 +128,8 @@ class Responder(ipc.Responder):
             try:
                 if req['tag'] == 'initial':
                     init.request_count -= 1 if init.request_count > 0 else 0
+                print req['tag']
+                print init.request_count
                 init.timer()
                 return
             except Exception, e:
