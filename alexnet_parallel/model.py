@@ -82,3 +82,21 @@ def conv2D_bn(x, nb_filter, nb_row, nb_col, activation='relu', batch_norm=True):
     x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
     x = ZeroPadding2D(padding=(1, 1))(x)
     return x
+
+
+def whole():
+    img_input = Input(shape=(224, 224, 3))
+
+    stream1 = conv2D_bn(img_input, 3, 11, 11)
+    stream1 = conv2D_bn(stream1, 48, 5, 5)
+    stream1 = conv2D_bn(stream1, 128, 3, 3)
+
+    stream1 = conv2D_bn(stream1, 192, 3, 3)
+    stream1 = conv2D_bn(stream1, 192, 3, 3)
+
+    fc = Flatten()(stream1)
+    fc = Dense(4096, activation='relu')(fc)
+    fc = Dense(4096, activation='relu')(fc)
+    fc = Dense(1000, activation='softmax')(fc)
+
+    return Model(img_input, fc)
