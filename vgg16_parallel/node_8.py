@@ -111,7 +111,7 @@ class Responder(ipc.Responder):
                     if req['next'] == 'block1':
                         node.log('block1 gets data')
                         X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
-                        node.model = ml.cnn_block() #if node.model is None else node.model
+                        node.model = ml.cnn_block() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block1 forward')
                         Thread(target=self.send, args=(output, 'block6', req['tag'])).start()
@@ -119,7 +119,7 @@ class Responder(ipc.Responder):
                     elif req['next'] == 'block6':
                         node.log('block6 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(25088)
-                        node.model = ml.block6() #if node.model is None else node.model
+                        node.model = ml.block6() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block6 forward')
                         Thread(target=self.send, args=(output, 'block7', req['tag'])).start()
@@ -135,7 +135,7 @@ class Responder(ipc.Responder):
                         while len(node.input) > 2:
                             node.input.popleft()
                         X = np.concatenate(node.input)
-                        node.model = ml.block7() #if node.model is None else node.model
+                        node.model = ml.block7() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block7 forward')
                         Thread(target=self.send, args=(output, 'initial', req['tag'])).start()
