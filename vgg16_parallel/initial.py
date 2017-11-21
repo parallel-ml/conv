@@ -88,9 +88,7 @@ def master():
         # current frame
         ret, frame = 'unknown', np.random.rand(224, 224, 3) * 255
         frame = frame.astype(dtype=np.uint8)
-        Thread(target=send_request, args=(frame.tobytes(), 'block1-a', 'initial')).start()
-        time.sleep(0.03)
-        Thread(target=send_request, args=(frame.tobytes(), 'block1-b', 'initial')).start()
+        Thread(target=send_request, args=(frame.tobytes(), 'block1', 'initial')).start()
         time.sleep(0.03)
 
 
@@ -156,12 +154,7 @@ def main():
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
         address = address['node_8']
-        for addr in address['block1-a']:
-            if addr == '#':
-                break
-            init.queue.put(addr)
-
-        for addr in address['block1-b']:
+        for addr in address['block1']:
             if addr == '#':
                 break
             init.queue.put(addr)

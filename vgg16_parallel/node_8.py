@@ -108,42 +108,18 @@ class Responder(ipc.Responder):
             try:
                 with node.graph.as_default():
                     bytestr = req['input']
-                    if req['next'] == 'block1-a':
+                    if req['next'] == 'block1':
                         node.log('block1 gets data')
                         X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
-                        node.model = ml.block1() if node.model is None else node.model
+                        node.model = ml.cnn_block() #if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block1 forward')
-                        Thread(target=self.send, args=(output, 'block234-a', req['tag'])).start()
-
-                    elif req['next'] == 'block1-b':
-                        node.log('block1 gets data')
-                        X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
-                        node.model = ml.block1() if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish block1 forward')
-                        Thread(target=self.send, args=(output, 'block234-b', req['tag'])).start()
-
-                    elif req['next'] == 'block234-a' or req['next'] == 'block234-b':
-                        node.log('block4 gets data')
-                        X = np.fromstring(bytestr, np.float32).reshape(112, 112, 64)
-                        node.model = ml.block234() if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish block4 forward')
-                        Thread(target=self.send, args=(output, 'block5', req['tag'])).start()
-
-                    elif req['next'] == 'block5':
-                        node.log('block5 gets data')
-                        X = np.fromstring(bytestr, np.float32).reshape(14, 14, 512)
-                        node.model = ml.block5() if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish block5 forward')
                         Thread(target=self.send, args=(output, 'block6', req['tag'])).start()
 
                     elif req['next'] == 'block6':
                         node.log('block6 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(25088)
-                        node.model = ml.block6() if node.model is None else node.model
+                        node.model = ml.block6() #if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block6 forward')
                         Thread(target=self.send, args=(output, 'block7', req['tag'])).start()
@@ -159,7 +135,7 @@ class Responder(ipc.Responder):
                         while len(node.input) > 2:
                             node.input.popleft()
                         X = np.concatenate(node.input)
-                        node.model = ml.block7() if node.model is None else node.model
+                        node.model = ml.block7() #if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block7 forward')
                         Thread(target=self.send, args=(output, 'initial', req['tag'])).start()
@@ -241,25 +217,10 @@ def main(cmd):
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        node.ip['block234-a'] = Queue()
-        node.ip['block234-b'] = Queue()
-        node.ip['block5'] = Queue()
         node.ip['block6'] = Queue()
         node.ip['block7'] = Queue()
         node.ip['initial'] = Queue()
         address = address['node_8']
-        for addr in address['block234-a']:
-            if addr == '#':
-                break
-            node.ip['block234-a'].put(addr)
-        for addr in address['block234-b']:
-            if addr == '#':
-                break
-            node.ip['block234-b'].put(addr)
-        for addr in address['block5']:
-            if addr == '#':
-                break
-            node.ip['block5'].put(addr)
         for addr in address['block6']:
             if addr == '#':
                 break
