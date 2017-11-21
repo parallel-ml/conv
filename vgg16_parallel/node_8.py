@@ -114,28 +114,12 @@ class Responder(ipc.Responder):
                         node.model = ml.block1() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block1 forward')
-                        Thread(target=self.send, args=(output, 'block2', req['tag'])).start()
+                        Thread(target=self.send, args=(output, 'block234', req['tag'])).start()
 
-                    elif req['next'] == 'block2':
-                        node.log('block2 gets data')
-                        X = np.fromstring(bytestr, np.float32).reshape(112, 112, 64)
-                        node.model = ml.block2() if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish block2 forward')
-                        Thread(target=self.send, args=(output, 'block3', req['tag'])).start()
-
-                    elif req['next'] == 'block3':
-                        node.log('block3 gets data')
-                        X = np.fromstring(bytestr, np.float32).reshape(56, 56, 128)
-                        node.model = ml.block3() if node.model is None else node.model
-                        output = node.model.predict(np.array([X]))
-                        node.log('finish block3 forward')
-                        Thread(target=self.send, args=(output, 'block4', req['tag'])).start()
-
-                    elif req['next'] == 'block4':
+                    elif req['next'] == 'block234':
                         node.log('block4 gets data')
-                        X = np.fromstring(bytestr, np.float32).reshape(28, 28, 256)
-                        node.model = ml.block4() if node.model is None else node.model
+                        X = np.fromstring(bytestr, np.float32).reshape(112, 112, 64)
+                        node.model = ml.block234() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block4 forward')
                         Thread(target=self.send, args=(output, 'block5', req['tag'])).start()
@@ -249,26 +233,16 @@ def main(cmd):
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        node.ip['block2'] = Queue()
-        node.ip['block3'] = Queue()
-        node.ip['block4'] = Queue()
+        node.ip['block234'] = Queue()
         node.ip['block5'] = Queue()
         node.ip['block6'] = Queue()
         node.ip['block7'] = Queue()
         node.ip['initial'] = Queue()
         address = address['node_8']
-        for addr in address['block2']:
+        for addr in address['block234']:
             if addr == '#':
                 break
-            node.ip['block2'].put(addr)
-        for addr in address['block3']:
-            if addr == '#':
-                break
-            node.ip['block3'].put(addr)
-        for addr in address['block4']:
-            if addr == '#':
-                break
-            node.ip['block4'].put(addr)
+            node.ip['block234'].put(addr)
         for addr in address['block5']:
             if addr == '#':
                 break
