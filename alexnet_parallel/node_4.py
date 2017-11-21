@@ -126,7 +126,7 @@ class Responder(ipc.Responder):
 
                     elif req['next'] == 'block2':
                         node.log('block2 gets data')
-                        X = np.fromstring(bytestr, np.float32).reshape(111, 111, 3)
+                        X = np.fromstring(bytestr, np.float32).reshape(4608)
                         node.model = ml.node_4_block2() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block2 forward')
