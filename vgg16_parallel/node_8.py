@@ -108,15 +108,23 @@ class Responder(ipc.Responder):
             try:
                 with node.graph.as_default():
                     bytestr = req['input']
-                    if req['next'] == 'block1':
+                    if req['next'] == 'block1-a':
                         node.log('block1 gets data')
                         X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
                         node.model = ml.block1() if node.model is None else node.model
                         output = node.model.predict(np.array([X]))
                         node.log('finish block1 forward')
-                        Thread(target=self.send, args=(output, 'block234', req['tag'])).start()
+                        Thread(target=self.send, args=(output, 'block234-a', req['tag'])).start()
 
-                    elif req['next'] == 'block234':
+                    elif req['next'] == 'block1-b':
+                        node.log('block1 gets data')
+                        X = np.fromstring(bytestr, np.uint8).reshape(224, 224, 3)
+                        node.model = ml.block1() if node.model is None else node.model
+                        output = node.model.predict(np.array([X]))
+                        node.log('finish block1 forward')
+                        Thread(target=self.send, args=(output, 'block234-b', req['tag'])).start()
+
+                    elif req['next'] == 'block234-a' or req['next'] == 'block234-b':
                         node.log('block4 gets data')
                         X = np.fromstring(bytestr, np.float32).reshape(112, 112, 64)
                         node.model = ml.block234() if node.model is None else node.model
@@ -233,16 +241,21 @@ def main(cmd):
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        node.ip['block234'] = Queue()
+        node.ip['block234-a'] = Queue()
+        node.ip['block234-b'] = Queue()
         node.ip['block5'] = Queue()
         node.ip['block6'] = Queue()
         node.ip['block7'] = Queue()
         node.ip['initial'] = Queue()
         address = address['node_8']
-        for addr in address['block234']:
+        for addr in address['block234-a']:
             if addr == '#':
                 break
-            node.ip['block234'].put(addr)
+            node.ip['block234-a'].put(addr)
+        for addr in address['block234-b']:
+            if addr == '#':
+                break
+            node.ip['block234-b'].put(addr)
         for addr in address['block5']:
             if addr == '#':
                 break
