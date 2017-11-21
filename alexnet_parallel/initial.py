@@ -153,7 +153,7 @@ def main():
     # read ip resources from config file
     with open('resource/ip') as file:
         address = yaml.safe_load(file)
-        address = address['node_8']
+        address = address['node_6']
         for addr in address['block1']:
             if addr == '#':
                 break
