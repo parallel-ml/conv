@@ -132,11 +132,11 @@ def alexnet1():
     global img_input
     img_input = Input(shape=(224, 224, 3))
 
-    stream1 = conv2D_bn(img_input, 3, 11, 11, name='conv1 single stream')
-    stream1 = conv2D_bn(stream1, 48, 5, 5, name='conv2 single stream')
-    stream1 = conv2D_bn(stream1, 128, 3, 3, name='conv3 single stream')
-    stream1 = conv2D_bn(stream1, 192, 3, 3, name='conv4 single stream')
-    stream1 = conv2D_bn(stream1, 192, 3, 3, name='conv5 single stream')
+    stream1 = conv2D_bn(img_input, 3, 11, 11, name='conv1 quickstart stream')
+    stream1 = conv2D_bn(stream1, 48, 5, 5, name='conv2 quickstart stream')
+    stream1 = conv2D_bn(stream1, 128, 3, 3, name='conv3 quickstart stream')
+    stream1 = conv2D_bn(stream1, 192, 3, 3, name='conv4 quickstart stream')
+    stream1 = conv2D_bn(stream1, 192, 3, 3, name='conv5 quickstart stream')
 
     fc = flatten(stream1)
 
@@ -144,9 +144,9 @@ def alexnet1():
 def alexnet2():
     fc = Input(shape=(27648,))
 
-    fc = dense(fc, name='fc1 single stream')
-    fc = dense(fc, name='fc2 single stream')
-    fc = dense(fc, act='softmax', dim=1000, name='fc3 single stream')
+    fc = dense(fc, name='fc1 quickstart stream')
+    fc = dense(fc, name='fc2 quickstart stream')
+    fc = dense(fc, act='softmax', dim=1000, name='fc3 quickstart stream')
 
 
 alexnet1()
