@@ -14,10 +14,10 @@ def merge(tensors):
 
 
 def conv(tensors, kernal, stride, padding):
-    return [Conv2D(filters=1, kernel_size=kernal, strides=stride, padding=padding)(x) for x in tensors]
+    return [Conv2D(1, kernal, strides=stride, padding=padding)(x) for x in tensors]
 
 
-def forward(data, filters, kernal, stride=(1, 1), padding='same'):
+def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
     X = Input(data.shape)
     output = merge(conv(split(X, filters), kernal, stride, padding))
     model = Model(X, output)
