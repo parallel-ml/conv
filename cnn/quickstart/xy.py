@@ -3,6 +3,7 @@ from keras.layers.merge import Concatenate
 from keras.models import Model
 import keras.backend as K
 import numpy as np
+import math
 
 
 def split_xy_2(X, kernal, stride):
@@ -18,11 +19,14 @@ def split_xy_2(X, kernal, stride):
     wk, hk = kernal
     ws, hs = stride
     _, W, H, _ = K.int_shape(X)
+
+    # calculate boundary
     ow, oh = (W - wk) / ws + 1, (H - hk) / hs + 1
     wl, wr = ow / 2, ow - ow / 2
     wlb, wrb = (wl - 1) * ws + wk, W - ((wr - 1) * ws + wk)
     hl, hr = oh / 2, oh - oh / 2
     hlb, hrb = (hl - 1) * hs + hk, H - ((hr - 1) * hs + hk)
+
     return Lambda(
         lambda x:
         [x[:, :wlb, :hlb, :], x[:, wrb:, :hlb, :], x[:, :wlb, hrb:, :], x[:, wrb:, hrb:, :]]
@@ -30,9 +34,60 @@ def split_xy_2(X, kernal, stride):
 
 
 def merge_2(tensors):
-    up = Concatenate(axis=1)(tensors[:2])
-    down = Concatenate(axis=1)(tensors[2:])
+    # assemble all tensors on same row
+    up, down = Concatenate(axis=1)(tensors[:2]), Concatenate(axis=1)(tensors[2:])
     return Concatenate(axis=2)([up, down])
+
+
+def split_xy(X, kernal, stride, num):
+    """ a general function for split tensors with different shapes"""
+    wk, hk = kernal
+    ws, hs = stride
+    _, W, H, _ = K.int_shape(X)
+
+    # output size
+    ow, oh = (W - wk) / ws + 1, (H - hk) / hs + 1
+
+    # calculate boundary for general chunk
+    wchunk, hchunk = ow / num, oh / num
+    rw, rh = (wchunk - 1) * ws + wk, (hchunk - 1) * hs + hk
+
+    # calculate special boundary for last chunk
+    wlchunk, hlchunk = ow - (num - 1) * wchunk, oh - (num - 1) * hchunk
+    lrw, lrh = (wlchunk - 1) * ws + wk, (hlchunk - 1) * hs + hk
+
+    offset = lambda kernals, strides, i: (kernals - strides) * i if kernals - strides > 0 else 0
+
+    # create a list of tuple with boundary (left, right, up, down)
+    boundary = []
+    for r in range(num):
+        for c in range(num):
+            if r == num - 1 and c == num - 1:
+                boundary.append((W - lrw, W, H - lrh, H))
+            elif r == num - 1:
+                boundary.append((rw * c - offset(wk, ws, c), rw * c - offset(wk, ws, c) + rw, H - lrh, H))
+            elif c == num - 1:
+                boundary.append((W - lrw, W, rh * r - offset(hk, hs, r), rh * r - offset(hk, hs, r) + rh))
+            else:
+                boundary.append(
+                    (
+                        rw * c - offset(wk, ws, c),
+                        rw * c - offset(wk, ws, c) + rw,
+                        rh * r - offset(hk, hs, r),
+                        rh * r - offset(hk, hs, r) + rh,
+                    )
+                )
+
+    return Lambda(
+        lambda x:
+        [x[:, lb:rb, ub:db, :] for lb, rb, ub, db in boundary]
+    )(X)
+
+
+def merge(tensors):
+    size = int(math.sqrt(len(tensors)))
+    rows = [Concatenate(axis=1)(tensors[k * size:k * size + size]) for k in range(size)]
+    return Concatenate(axis=2)(rows)
 
 
 def conv(tensors, filters, kernal, stride, padding):
@@ -41,6 +96,6 @@ def conv(tensors, filters, kernal, stride, padding):
 
 def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge_2(conv(split_xy_2(X, kernal, stride), filters, kernal, stride, padding))
+    output = merge(conv(split_xy(X, kernal, stride, 3), filters, kernal, stride, padding))
     model = Model(X, output)
     return model.predict(np.array([data]))
