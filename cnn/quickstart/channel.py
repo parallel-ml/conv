@@ -22,4 +22,3 @@ def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
     output = merge(conv(split(X, filters), kernal, stride, padding))
     model = Model(X, output)
     return model.predict(np.array([data]))
-

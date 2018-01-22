@@ -91,8 +91,8 @@ def merge(tensors):
 
 
 def conv(tensors, filters, kernal, stride, padding):
-    return [Conv2D(filters, kernal, strides=stride, padding=padding)(x) for x in tensors]
-
+    layer = Conv2D(filters, kernal, strides=stride, padding=padding)
+    return [layer(x) for x in tensors]
 
 def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
     X = Input(data.shape)
