@@ -1,8 +1,7 @@
+from __future__ import absolute_import
 from keras.layers import Conv2D, Input
 from keras.models import Model
-import channel
-import xy
-import filter
+from ..utils import channel, filter, xy
 import numpy as np
 
 
