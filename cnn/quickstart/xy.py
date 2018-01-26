@@ -94,6 +94,7 @@ def conv(tensors, filters, kernal, stride, padding):
     layer = Conv2D(filters, kernal, strides=stride, padding=padding)
     return [layer(x) for x in tensors]
 
+
 def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
     X = Input(data.shape)
     output = merge(conv(split_xy(X, kernal, stride, 3), filters, kernal, stride, padding))

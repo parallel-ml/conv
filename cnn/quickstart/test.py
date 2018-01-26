@@ -2,6 +2,7 @@ from keras.layers import Conv2D, Input
 from keras.models import Model
 import channel
 import xy
+import filter
 import numpy as np
 
 
@@ -120,4 +121,43 @@ assert model.output_shape[1:] == output.shape[1:], (
     'actual: ', output.shape[1:],
     'kernal: ', (4, 4),
     'stride: ', (3, 3),
+)
+
+X = Input([40, 40, 20])
+conv = Conv2D(10, (3, 3))(X)
+model = Model(X, conv)
+
+data = np.random.random_sample([40, 40, 20])
+output = filter.forward(data, 10, (3, 3))
+assert model.output_shape[1:] == output.shape[1:], (
+    'expected: ', model.output_shape[1:],
+    'actual: ', output.shape[1:],
+    'kernal: ', (3, 3),
+    'stride: ', (1, 1),
+)
+
+X = Input([40, 40, 20])
+conv = Conv2D(10, (3, 3), strides=(2, 2))(X)
+model = Model(X, conv)
+
+data = np.random.random_sample([40, 40, 20])
+output = filter.forward(data, 10, (3, 3), stride=(2, 2))
+assert model.output_shape[1:] == output.shape[1:], (
+    'expected: ', model.output_shape[1:],
+    'actual: ', output.shape[1:],
+    'kernal: ', (3, 3),
+    'stride: ', (2, 2),
+)
+
+X = Input([60, 60, 10])
+conv = Conv2D(10, (3, 3), strides=(2, 2))(X)
+model = Model(X, conv)
+
+data = np.random.random_sample([60, 60, 10])
+output = filter.forward(data, 10, (3, 3), stride=(2, 2))
+assert model.output_shape[1:] == output.shape[1:], (
+    'expected: ', model.output_shape[1:],
+    'actual: ', output.shape[1:],
+    'kernal: ', (3, 3),
+    'stride: ', (2, 2),
 )
