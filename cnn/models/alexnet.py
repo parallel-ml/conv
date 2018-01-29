@@ -4,6 +4,7 @@ from keras.models import Model
 from lrn import LRN2D  # use only during training
 from cnn.utils import channel as conv_channel
 from cnn.utils import xy as conv_xy
+from cnn.utils import filter as conv_filter
 
 
 def conv2D_bn(X, nb_filter, kernal, activation='relu', batch_norm=True, max_pooling=True, stride=(1, 1)):
@@ -28,15 +29,39 @@ def channel_unit(X, filters, kernal, max_pooling=True, stride=(1, 1)):
     """ cnn unit with channel separation """
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
-    X = conv_channel.split(X, filters)
-    X = conv_channel.conv(X, kernal, stride, 'same')
+    X = conv_channel.split(X, 3)
+    X = conv_channel.conv(X, filters, kernal, stride, 'same')
     X = conv_channel.merge(X)
     return X
 
 
-def filter_unit(X):
+def filter_unit(X, filters, kernal, max_pooling=True, stride=(1, 1)):
     """ cnn unit with depth wise separation """
-    pass
+    if max_pooling:
+        X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
+    X = conv_filter.split(X, 3)
+    X = conv_filter.conv(X, filters, kernal, stride, 'same')
+    X = conv_filter.merge(X)
+    return X
+
+
+def filter():
+    img = Input(shape=(220, 220, 3))
+
+    x = filter_unit(img, 48, (11, 11), max_pooling=False, stride=(4, 4))
+    x = filter_unit(x, 128, (5, 5))
+
+    x = filter_unit(x, 192, (3, 3))
+    x = filter_unit(x, 192, (3, 3), max_pooling=False)
+    x = filter_unit(x, 128, (3, 3), max_pooling=False)
+
+    x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
+    fc = Flatten()(x)
+    fc = Dense(4096, activation='relu')(fc)
+    fc = Dense(4096, activation='relu')(fc)
+    fc = Dense(1000, activation='softmax')(fc)
+
+    return Model(img, fc)
 
 
 def xy():

@@ -4,21 +4,25 @@ from keras.models import Model
 import numpy as np
 
 
-def split(X, filters):
+def split(X, num):
     """ return a list of 3D tensor split by channel """
-    return Lambda(lambda x: [x for _ in range(filters)])(X)
+    return Lambda(lambda x: [x for _ in range(num)])(X)
 
 
 def merge(tensors):
     return Concatenate()(tensors)
 
 
-def conv(tensors, kernal, stride, padding):
-    return [Conv2D(1, kernal, strides=stride, padding=padding)(x) for x in tensors]
+def conv(tensors, filters, kernal, stride, padding):
+    size = []
+    for _ in range(len(tensors) - 1):
+        size.append(filters / len(tensors))
+    size.append(filters - filters / len(tensors) * (len(tensors) - 1))
+    return [Conv2D(size[i], kernal, strides=stride, padding=padding)(x) for i, x in enumerate(tensors)]
 
 
 def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split(X, filters), kernal, stride, padding))
+    output = merge(conv(split(X, 3), filters, kernal, stride, padding))
     model = Model(X, output)
     return model.predict(np.array([data]))
