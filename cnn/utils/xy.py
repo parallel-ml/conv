@@ -1,4 +1,4 @@
-from keras.layers import Conv2D, Input, Lambda
+from keras.layers import Conv2D, Input, Lambda, ZeroPadding2D
 from keras.layers.merge import Concatenate
 from keras.models import Model
 import keras.backend as K
@@ -39,8 +39,22 @@ def merge_2(tensors):
     return Concatenate(axis=2)([up, down])
 
 
-def split_xy(X, kernal, stride, num):
+def split_xy(X, kernal, stride, padding, num):
     """ a general function for split tensors with different shapes"""
+    # take care of padding here and set padding of conv always to be valid
+    if padding == 'same':
+        wk, hk = kernal
+        ws, hs = stride
+        _, W, H, _ = K.int_shape(X)
+        ow, oh = W / ws, H / hs
+        if W % ws != 0:
+            ow += 1
+        if H % hs != 0:
+            oh += 1
+        wp, hp = (ow - 1) * ws + wk - W, (oh - 1) * hs + hk - H
+        wp, hp = wp if wp >= 0 else 0, hp if hp >= 0 else 0
+        X = ZeroPadding2D(padding=((hp / 2, hp - hp / 2), (wp / 2, wp - wp / 2)))(X)
+
     wk, hk = kernal
     ws, hs = stride
     _, W, H, _ = K.int_shape(X)
@@ -97,6 +111,6 @@ def conv(tensors, filters, kernal, stride, padding):
 
 def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split_xy(X, kernal, stride, 3), filters, kernal, stride, padding))
+    output = merge(conv(split_xy(X, kernal, stride, padding, 3), filters, kernal, stride, 'valid'))
     model = Model(X, output)
     return model.predict(np.array([data]))

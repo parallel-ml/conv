@@ -17,8 +17,9 @@ def xy_unit(X, filters, kernal, max_pooling=True, stride=(1, 1), num=3):
     """ cnn unit with spatial separation """
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
-    X = conv_xy.split_xy(X, kernal, stride, num)
-    X = conv_xy.conv(X, filters, kernal, stride, 'same')
+    X = conv_xy.split_xy(X, kernal, stride, 'same', num)
+    # keep padding of conv2d layer always to be valid
+    X = conv_xy.conv(X, filters, kernal, stride, 'valid')
     X = conv_xy.merge(X)
     return X
 
