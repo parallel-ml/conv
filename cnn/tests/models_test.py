@@ -1,26 +1,51 @@
 import sys
-from cnn.models import alexnet
+from cnn.models import alexnet, vgg16
 from keras.utils import plot_model
 
-path = 'cnn/models/resource/'
 
-sys.stdout = open(path + 'alexnet.txt', 'w+')
-model = alexnet.original()
-print model.summary()
-plot_model(model, to_file=path + 'alexnet.png')
+def test_alexnet():
+    path = 'cnn/models/resource/alexnet/alexnet'
 
-sys.stdout = open(path + 'alexnet_filter_split.txt', 'w+')
-model = alexnet.filter()
-print model.summary()
-plot_model(model, to_file=path + 'alexnet_filter_split.png')
+    sys.stdout = open(path + '.txt', 'w+')
+    model = alexnet.original()
+    print model.summary()
+    plot_model(model, to_file=path + '.png')
 
-sys.stdout = open(path + 'alexnet_channel_split.txt', 'w+')
-model = alexnet.channel()
-print model.summary()
-plot_model(model, to_file=path + 'alexnet_channel_split.png')
+    sys.stdout = open(path + '_filter_split.txt', 'w+')
+    model = alexnet.filter()
+    print model.summary()
+    plot_model(model, to_file=path + '_filter_split.png')
 
-sys.stdout = open(path + 'alexnet_spatial_split.txt', 'w+')
-model = alexnet.xy()
-print model.summary()
-plot_model(model, to_file=path + 'alexnet_spatial_split.png')
+    sys.stdout = open(path + '_channel_split.txt', 'w+')
+    model = alexnet.channel()
+    print model.summary()
+    plot_model(model, to_file=path + '_channel_split.png')
 
+    sys.stdout = open(path + '_spatial_split.txt', 'w+')
+    model = alexnet.xy()
+    print model.summary()
+    plot_model(model, to_file=path + '_spatial_split.png')
+
+
+def test_vgg16():
+    path = 'cnn/models/resource/vgg16/vgg16'
+
+    sys.stdout = open(path + '.txt', 'w+')
+    model = vgg16.original()
+    print model.summary()
+    plot_model(model, to_file=path + '.png')
+
+    sys.stdout = open(path + '_filter_split.txt', 'w+')
+    model = vgg16.filter()
+    print model.summary()
+    plot_model(model, to_file=path + '_filter_split.png')
+
+    sys.stdout = open(path + '_channel_split.txt', 'w+')
+    model = vgg16.channel()
+    print model.summary()
+    plot_model(model, to_file=path + '_channel_split.png')
+
+    sys.stdout = open(path + '_spatial_split.txt', 'w+')
+    model = vgg16.xy()
+    print model.summary()
+    plot_model(model, to_file=path + '_spatial_split.png')

@@ -18,7 +18,8 @@ def conv(tensors, filters, kernal, stride, padding):
     for _ in range(len(tensors) - 1):
         size.append(filters / len(tensors))
     size.append(filters - filters / len(tensors) * (len(tensors) - 1))
-    return [Conv2D(size[i], kernal, strides=stride, padding=padding)(x) for i, x in enumerate(tensors)]
+    return [Conv2D(size[i], kernal, strides=stride, padding=padding, activation='relu')(x) for i, x in
+            enumerate(tensors)]
 
 
 def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
