@@ -4,7 +4,7 @@ from unit import filter_unit, channel_unit, xy_unit
 
 
 def original():
-    img_input = Input(shape=[220, 220, 3])
+    img_input = Input(shape=[224, 224, 3])
 
     # Block 1
     x = Conv2D(64, (3, 3), activation='relu', padding='same')(img_input)
@@ -44,7 +44,7 @@ def original():
 
 
 def filter():
-    img_input = Input(shape=[220, 220, 3])
+    img_input = Input(shape=[224, 224, 3])
 
     # Block 1
     x = filter_unit(img_input, 64, (3, 3), max_pooling=False)
@@ -84,7 +84,7 @@ def filter():
 
 
 def xy():
-    img_input = Input(shape=[220, 220, 3])
+    img_input = Input(shape=[224, 224, 3])
 
     # Block 1
     x = xy_unit(img_input, 64, (3, 3), max_pooling=False)
@@ -124,7 +124,7 @@ def xy():
 
 
 def channel():
-    img_input = Input(shape=[220, 220, 3])
+    img_input = Input(shape=[224, 224, 3])
 
     # Block 1
     x = channel_unit(img_input, 64, (3, 3), max_pooling=False)

@@ -3,7 +3,7 @@ from keras import backend as K
 
 
 class LRN2D(Layer):
-    """ LRN2D class is from original keras but gets removed at latest version """
+    """ LRN2D class is from original keras but gets removed at latest version. """
 
     def __init__(self, alpha=0.0001, k=1, beta=0.75, n=5, **kwargs):
         self.alpha = alpha

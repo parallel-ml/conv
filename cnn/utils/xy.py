@@ -8,13 +8,14 @@ import math
 
 def split_xy_2(X, kernal, stride):
     """
-        return a list of 3D tensor split by x and y
+        Return a list of 3D tensor split by x and y
 
-        output_size = floor((input_size - kernal_size + 2 * padding) / stride) + 1
-        left_part_size = output_size / 2
-        right_part_size = output_size - left_part_size
-        left_input_size = (left_part_size - 1) * stride + kernal_size
-        right_input_size = input_size - ...
+        Arithmetic, calculation used:
+            output_size = floor((input_size - kernal_size + 2 * padding) / stride) + 1
+            left_part_size = output_size / 2
+            right_part_size = output_size - left_part_size
+            left_input_size = (left_part_size - 1) * stride + kernal_size
+            right_input_size = input_size - ...
     """
     wk, hk = kernal
     ws, hs = stride
@@ -40,7 +41,7 @@ def merge_2(tensors):
 
 
 def split_xy(X, kernal, stride, padding, num):
-    """ a general function for split tensors with different shapes"""
+    """ A general function for split tensors with different shapes. """
     # take care of padding here and set padding of conv always to be valid
     if padding == 'same':
         wk, hk = kernal

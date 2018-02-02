@@ -5,7 +5,7 @@ import numpy as np
 
 
 def split(X, num):
-    """ return a list of 3D tensor split by channel """
+    """ Return a list of 3D tensor split by channel. """
     return Lambda(lambda x: [x for _ in range(num)])(X)
 
 

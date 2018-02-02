@@ -12,7 +12,7 @@ def conv_unit(X, nb_filter, kernal, activation='relu', batch_norm=True, max_pool
 
 
 def xy_unit(X, filters, kernal, max_pooling=True, stride=(1, 1), num=3):
-    """ cnn unit with spatial separation """
+    """ Cnn unit with spatial separation. """
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
     X = conv_xy.split_xy(X, kernal, stride, 'same', num)
@@ -23,7 +23,7 @@ def xy_unit(X, filters, kernal, max_pooling=True, stride=(1, 1), num=3):
 
 
 def channel_unit(X, filters, kernal, max_pooling=True, stride=(1, 1)):
-    """ cnn unit with channel separation """
+    """ Cnn unit with channel separation. """
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
     X = conv_channel.split(X, 3)
@@ -33,7 +33,7 @@ def channel_unit(X, filters, kernal, max_pooling=True, stride=(1, 1)):
 
 
 def filter_unit(X, filters, kernal, max_pooling=True, stride=(1, 1)):
-    """ cnn unit with depth wise separation """
+    """ Cnn unit with depth wise separation. """
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
     X = conv_filter.split(X, 3)
