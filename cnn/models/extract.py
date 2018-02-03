@@ -3,6 +3,10 @@ import keras
 import argparse
 
 
+ROOT = 'cnn/models/weights/'
+DENSE = 19
+
+
 def main():
     vgg16 = keras.applications.VGG16(include_top=True, weights='imagenet', input_tensor=None, input_shape=None,
                                      pooling=None, classes=1000)
@@ -21,7 +25,7 @@ def channel(model, num):
     num_layer = 0
     for i, layer in enumerate(model.layers):
         # make not dense layer
-        if len(layer.get_weights()) > 0 and i <= 19:
+        if len(layer.get_weights()) > 0 and i <= DENSE:
             # offset the lambda layer
             num_layer += 1
             weights = channel_weights(layer.get_weights(), num)
@@ -31,14 +35,14 @@ def channel(model, num):
                 num_layer += 1
             # offset the concatenate layer
             num_layer += 1
-        elif i <= 19:
+        elif i <= DENSE:
             # offset the layer without weights
             num_layer += 1
         else:
             channel_layer = vgg16_channel.layers[num_layer]
             channel_layer.set_weights(layer.get_weights())
             num_layer += 1
-    print vgg16_channel.summary()
+    vgg16_channel.save(ROOT + 'vgg16_channel_split.h5')
 
 
 def channel_weights(weights, num):
@@ -58,7 +62,6 @@ def channel_weights(weights, num):
     """
     kernal, bias = weights[0], weights[1]
     filters = bias.shape[-1]
-    print kernal.shape, bias.shape
     size, last = filters / num, filters - filters / num * (num - 1)
     split_weights = []
     for i in range(num):
