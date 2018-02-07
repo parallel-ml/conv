@@ -106,3 +106,5 @@ ENV/
 
 # Keras weights file
 *.h5
+*.gz
+*.tar
