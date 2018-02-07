@@ -1,9 +1,10 @@
 from vgg16 import channel as channel_model
 import keras
 import argparse
+from os.path import expanduser
 
 
-ROOT = 'cnn/models/weights/'
+HOME = expanduser("~") + '/weights/'
 DENSE = 19
 
 
@@ -42,7 +43,7 @@ def channel(model, num):
             channel_layer = vgg16_channel.layers[num_layer]
             channel_layer.set_weights(layer.get_weights())
             num_layer += 1
-    vgg16_channel.save(ROOT + 'vgg16_channel_split.h5')
+    vgg16_channel.save(HOME + 'vgg16_channel_split.h5')
 
 
 def channel_weights(weights, num):

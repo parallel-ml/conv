@@ -1,5 +1,5 @@
-from cnn.models import predict
+from cnn.models import evaluate
 
 
 def test_vgg16_channel_split():
-    predict.vgg16_channel_split()
+    evaluate.vgg16_channel_split()
