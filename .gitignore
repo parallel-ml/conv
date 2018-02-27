@@ -108,3 +108,5 @@ ENV/
 *.h5
 *.gz
 *.tar
+
+*.DS_Store

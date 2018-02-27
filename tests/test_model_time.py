@@ -5,7 +5,7 @@ import time
 
 def test_vgg16_channel():
     model = vgg16.channel()
-    image = np.random.random_sample((220, 220, 3))
+    image = np.random.random_sample((224, 224, 3))
     start = time.time()
     for _ in range(20):
         model.predict(np.array([image]))
@@ -14,7 +14,7 @@ def test_vgg16_channel():
 
 def test_vgg16_spatial():
     model = vgg16.xy()
-    image = np.random.random_sample((220, 220, 3))
+    image = np.random.random_sample((224, 224, 3))
     start = time.time()
     for _ in range(20):
         model.predict(np.array([image]))
@@ -23,7 +23,7 @@ def test_vgg16_spatial():
 
 def test_vgg16_filter():
     model = vgg16.filter()
-    image = np.random.random_sample((220, 220, 3))
+    image = np.random.random_sample((224, 224, 3))
     start = time.time()
     for _ in range(20):
         model.predict(np.array([image]))
@@ -32,7 +32,7 @@ def test_vgg16_filter():
 
 def test_vgg16_original():
     model = vgg16.original()
-    image = np.random.random_sample((220, 220, 3))
+    image = np.random.random_sample((224, 224, 3))
     start = time.time()
     for _ in range(20):
         model.predict(np.array([image]))
