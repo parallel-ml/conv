@@ -1,10 +1,10 @@
 from keras.layers.convolutional import Conv2D, MaxPooling2D
-from cnn.utils import channel as conv_channel
-from cnn.utils import xy as conv_xy
-from cnn.utils import filter as conv_filter
+from utils import channel as conv_channel
+from utils import xy as conv_xy
+from utils import filter as conv_filter
 
 
-def conv_unit(X, nb_filter, kernal, activation='relu', batch_norm=True, max_pooling=True, stride=(1, 1)):
+def conv_unit(X, nb_filter, kernal, activation='relu', max_pooling=True, stride=(1, 1)):
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
     X = Conv2D(nb_filter, kernel_size=kernal, activation=activation, strides=stride, padding='same')(X)
