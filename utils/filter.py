@@ -21,8 +21,8 @@ def merge(tensors):
     return Add()([x for x in tensors])
 
 
-def conv(tensors, filters, kernal, stride, padding):
-    return [Conv2D(filters, kernal, strides=stride, padding=padding, activation='relu')(x) for x in tensors]
+def conv(tensors, filters, kernal, stride, padding, activation):
+    return [Conv2D(filters, kernal, strides=stride, padding=padding, activation=activation)(x) for x in tensors]
 
 
 def forward(data, filters, kernal, stride=(1, 1), padding='valid'):

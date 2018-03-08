@@ -105,8 +105,8 @@ def merge(tensors):
     return Concatenate(axis=2)(rows)
 
 
-def conv(tensors, filters, kernal, stride, padding):
-    layer = Conv2D(filters, kernal, strides=stride, padding=padding, activation='relu')
+def conv(tensors, filters, kernal, stride, padding, activation):
+    layer = Conv2D(filters, kernal, strides=stride, padding=padding, activation=activation)
     return [layer(x) for x in tensors]
 
 
