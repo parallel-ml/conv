@@ -21,12 +21,12 @@ def merge(tensors):
     return Add()([x for x in tensors])
 
 
-def conv(tensors, filters, kernal, stride, padding, activation):
-    return [Conv2D(filters, kernal, strides=stride, padding=padding, activation=activation)(x) for x in tensors]
+def conv(tensors, filters, kernal, strides, padding, activation):
+    return [Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation)(x) for x in tensors]
 
 
-def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
+def forward(data, filters, kernal, strides=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split(X, 4), filters, kernal, stride, padding))
+    output = merge(conv(split(X, 4), filters, kernal, strides, padding))
     model = Model(X, output)
     return model.predict(np.array([data]))

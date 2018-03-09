@@ -47,31 +47,31 @@ def filter():
     img_input = Input(shape=[224, 224, 3])
 
     # Block 1
-    x = filter_unit(img_input, 64, (3, 3), max_pooling=False)
-    x = filter_unit(x, 64, (3, 3), max_pooling=False)
+    x = filter_unit(img_input, 64, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 64, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 2
-    x = filter_unit(x, 128, (3, 3), max_pooling=False)
-    x = filter_unit(x, 128, (3, 3), max_pooling=False)
+    x = filter_unit(x, 128, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 128, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 3
-    x = filter_unit(x, 256, (3, 3), max_pooling=False)
-    x = filter_unit(x, 256, (3, 3), max_pooling=False)
-    x = filter_unit(x, 256, (3, 3), max_pooling=False)
+    x = filter_unit(x, 256, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 256, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 256, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 4
-    x = filter_unit(x, 512, (3, 3), max_pooling=False)
-    x = filter_unit(x, 512, (3, 3), max_pooling=False)
-    x = filter_unit(x, 512, (3, 3), max_pooling=False)
+    x = filter_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 512, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 5
-    x = filter_unit(x, 512, (3, 3), max_pooling=False)
-    x = filter_unit(x, 512, (3, 3), max_pooling=False)
-    x = filter_unit(x, 512, (3, 3), max_pooling=False)
+    x = filter_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = filter_unit(x, 512, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Classification block
@@ -87,31 +87,31 @@ def xy():
     img_input = Input(shape=[224, 224, 3])
 
     # Block 1
-    x = xy_unit(img_input, 64, (3, 3), max_pooling=False)
-    x = xy_unit(x, 64, (3, 3), max_pooling=False)
+    x = xy_unit(img_input, 64, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 64, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 2
-    x = xy_unit(x, 128, (3, 3), max_pooling=False)
-    x = xy_unit(x, 128, (3, 3), max_pooling=False)
+    x = xy_unit(x, 128, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 128, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 3
-    x = xy_unit(x, 256, (3, 3), max_pooling=False)
-    x = xy_unit(x, 256, (3, 3), max_pooling=False)
-    x = xy_unit(x, 256, (3, 3), max_pooling=False)
+    x = xy_unit(x, 256, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 256, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 256, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 4
-    x = xy_unit(x, 512, (3, 3), max_pooling=False)
-    x = xy_unit(x, 512, (3, 3), max_pooling=False)
-    x = xy_unit(x, 512, (3, 3), max_pooling=False)
+    x = xy_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 512, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 5
-    x = xy_unit(x, 512, (3, 3), max_pooling=False)
-    x = xy_unit(x, 512, (3, 3), max_pooling=False)
-    x = xy_unit(x, 512, (3, 3), max_pooling=False)
+    x = xy_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = xy_unit(x, 512, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Classification block
@@ -127,31 +127,31 @@ def channel():
     img_input = Input(shape=[224, 224, 3])
 
     # Block 1
-    x = channel_unit(img_input, 64, (3, 3), max_pooling=False)
-    x = channel_unit(x, 64, (3, 3), max_pooling=False)
+    x = channel_unit(img_input, 64, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 64, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 2
-    x = channel_unit(x, 128, (3, 3), max_pooling=False)
-    x = channel_unit(x, 128, (3, 3), max_pooling=False)
+    x = channel_unit(x, 128, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 128, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 3
-    x = channel_unit(x, 256, (3, 3), max_pooling=False)
-    x = channel_unit(x, 256, (3, 3), max_pooling=False)
-    x = channel_unit(x, 256, (3, 3), max_pooling=False)
+    x = channel_unit(x, 256, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 256, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 256, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 4
-    x = channel_unit(x, 512, (3, 3), max_pooling=False)
-    x = channel_unit(x, 512, (3, 3), max_pooling=False)
-    x = channel_unit(x, 512, (3, 3), max_pooling=False)
+    x = channel_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 512, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Block 5
-    x = channel_unit(x, 512, (3, 3), max_pooling=False)
-    x = channel_unit(x, 512, (3, 3), max_pooling=False)
-    x = channel_unit(x, 512, (3, 3), max_pooling=False)
+    x = channel_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 512, (3, 3), max_pooling=False, padding='same')
+    x = channel_unit(x, 512, (3, 3), max_pooling=False, padding='same')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     # Classification block

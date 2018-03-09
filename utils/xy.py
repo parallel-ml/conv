@@ -6,7 +6,7 @@ import numpy as np
 import math
 
 
-def split_xy_2(X, kernal, stride):
+def split_xy_2(X, kernal, strides):
     """
         Return a list of 3D tensor split by x and y
 
@@ -18,7 +18,7 @@ def split_xy_2(X, kernal, stride):
             right_input_size = input_size - ...
     """
     wk, hk = kernal
-    ws, hs = stride
+    ws, hs = strides
     _, W, H, _ = K.int_shape(X)
 
     # calculate boundary
@@ -40,12 +40,12 @@ def merge_2(tensors):
     return Concatenate(axis=2)([up, down])
 
 
-def split_xy(X, kernal, stride, padding, num):
+def split_xy(X, kernal, strides, padding, num):
     """ A general function for split tensors with different shapes. """
     # take care of padding here and set padding of conv always to be valid
     if padding == 'same':
         wk, hk = kernal
-        ws, hs = stride
+        ws, hs = strides
         _, W, H, _ = K.int_shape(X)
         ow, oh = W / ws, H / hs
         if W % ws != 0:
@@ -57,7 +57,7 @@ def split_xy(X, kernal, stride, padding, num):
         X = ZeroPadding2D(padding=((hp / 2, hp - hp / 2), (wp / 2, wp - wp / 2)))(X)
 
     wk, hk = kernal
-    ws, hs = stride
+    ws, hs = strides
     _, W, H, _ = K.int_shape(X)
 
     # output size
@@ -105,13 +105,13 @@ def merge(tensors):
     return Concatenate(axis=2)(rows)
 
 
-def conv(tensors, filters, kernal, stride, padding, activation):
-    layer = Conv2D(filters, kernal, strides=stride, padding=padding, activation=activation)
+def conv(tensors, filters, kernal, strides, padding, activation):
+    layer = Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation)
     return [layer(x) for x in tensors]
 
 
-def forward(data, filters, kernal, stride=(1, 1), padding='valid'):
+def forward(data, filters, kernal, strides=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split_xy(X, kernal, stride, padding, 3), filters, kernal, stride, 'valid'))
+    output = merge(conv(split_xy(X, kernal, strides, padding, 3), filters, kernal, strides, 'valid'))
     model = Model(X, output)
     return model.predict(np.array([data]))
