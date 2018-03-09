@@ -59,10 +59,10 @@ def test_resnet50():
     print model.summary()
     plot_model(model, to_file=path + '.png')
 
-    # sys.stdout = open(path + '_filter_split.txt', 'w+')
-    # model = resnet50.filter()
-    # print model.summary()
-    # plot_model(model, to_file=path + '_filter_split.png')
+    sys.stdout = open(path + '_filter_split.txt', 'w+')
+    model = resnet50.filter()
+    print model.summary()
+    plot_model(model, to_file=path + '_filter_split.png')
 
     sys.stdout = open(path + '_channel_split.txt', 'w+')
     model = resnet50.channel()
