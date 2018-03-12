@@ -1,5 +1,5 @@
 import sys
-from ..models import alexnet, vgg16, resnet50
+from ..models import alexnet, vgg16, resnet50, xception
 from keras.utils import plot_model
 
 
@@ -73,3 +73,27 @@ def test_resnet50():
     model = resnet50.xy()
     print model.summary()
     plot_model(model, to_file=path + '_spatial_split.png')
+
+
+def test_xception():
+    path = 'models/resource/xception/xception'
+
+    sys.stdout = open(path + '.txt', 'w+')
+    model = xception.original()
+    print model.summary()
+    plot_model(model, to_file=path + '.png')
+
+    # sys.stdout = open(path + '_filter_split.txt', 'w+')
+    # model = xception.filter()
+    # print model.summary()
+    # plot_model(model, to_file=path + '_filter_split.png')
+    #
+    # sys.stdout = open(path + '_channel_split.txt', 'w+')
+    # model = xception.channel()
+    # print model.summary()
+    # plot_model(model, to_file=path + '_channel_split.png')
+    #
+    # sys.stdout = open(path + '_spatial_split.txt', 'w+')
+    # model = xception.xy()
+    # print model.summary()
+    # plot_model(model, to_file=path + '_spatial_split.png')
