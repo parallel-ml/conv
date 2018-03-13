@@ -1,4 +1,4 @@
-from keras.layers import Conv2D, Input, Lambda, ZeroPadding2D
+from keras.layers import Conv2D, Input, Lambda, ZeroPadding2D, SeparableConv2D
 from keras.layers.merge import Concatenate
 from keras.models import Model
 import keras.backend as K
@@ -105,13 +105,17 @@ def merge(tensors):
     return Concatenate(axis=2)(rows)
 
 
-def conv(tensors, filters, kernal, strides, padding, activation):
-    layer = Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation)
+def conv(tensors, filters, kernal, strides, padding, activation, separable, use_bias):
+    if separable:
+        layer = SeparableConv2D(filters, kernal, strides=strides, padding=padding, activation=activation,
+                                use_bias=use_bias)
+    else:
+        layer = Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation, use_bias=use_bias)
     return [layer(x) for x in tensors]
 
 
 def forward(data, filters, kernal, strides=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split_xy(X, kernal, strides, padding, 3), filters, kernal, strides, 'valid'))
+    output = merge(conv(split_xy(X, kernal, strides, padding, 3), filters, kernal, strides, 'valid', 'relu'))
     model = Model(X, output)
     return model.predict(np.array([data]))

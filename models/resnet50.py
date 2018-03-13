@@ -4,7 +4,6 @@ from keras.models import Model
 from keras import layers
 from unit import filter_unit, channel_unit, xy_unit
 
-
 MODE = 'original'
 
 
@@ -161,31 +160,29 @@ def conv(input_tensor, kernel_size, filters, strides=(2, 2)):
     f1, f2, f3 = filters
 
     if MODE == 'channel':
-        x = channel_unit(input_tensor, f1, (1, 1), max_pooling=False, strides=strides, padding='valid')
-        x = channel_unit(x, f2, kernel_size, max_pooling=False, padding='same')
-        x = channel_unit(x, f3, (1, 1), max_pooling=False, padding='valid', activation=None)
+        x = channel_unit(input_tensor, f1, (1, 1), max_pooling=False, strides=strides, padding='valid',
+                         activation='relu')
+        x = channel_unit(x, f2, kernel_size, max_pooling=False, padding='same', activation='relu')
+        x = channel_unit(x, f3, (1, 1), max_pooling=False, padding='valid')
+        shortcut = channel_unit(input_tensor, f3, (1, 1), max_pooling=False, strides=strides, padding='valid')
 
-        shortcut = channel_unit(input_tensor, f3, (1, 1), max_pooling=False, strides=strides,
-                                padding='valid', activation=None)
     elif MODE == 'filter':
-        x = filter_unit(input_tensor, f1, (1, 1), max_pooling=False, strides=strides, padding='valid')
-        x = filter_unit(x, f2, kernel_size, max_pooling=False, padding='same')
-        x = filter_unit(x, f3, (1, 1), max_pooling=False, padding='valid', activation=None)
+        x = filter_unit(input_tensor, f1, (1, 1), max_pooling=False, strides=strides, padding='valid',
+                        activation='relu')
+        x = filter_unit(x, f2, kernel_size, max_pooling=False, padding='same', activation='relu')
+        x = filter_unit(x, f3, (1, 1), max_pooling=False, padding='valid')
+        shortcut = filter_unit(input_tensor, f3, (1, 1), max_pooling=False, strides=strides, padding='valid')
 
-        shortcut = filter_unit(input_tensor, f3, (1, 1), max_pooling=False, strides=strides,
-                               padding='valid', activation=None)
     elif MODE == 'xy':
-        x = xy_unit(input_tensor, f1, (1, 1), max_pooling=False, strides=strides, padding='valid')
-        x = xy_unit(x, f2, kernel_size, max_pooling=False, padding='same')
-        x = xy_unit(x, f3, (1, 1), max_pooling=False, padding='valid', activation=None)
+        x = xy_unit(input_tensor, f1, (1, 1), max_pooling=False, strides=strides, padding='valid', activation='relu')
+        x = xy_unit(x, f2, kernel_size, max_pooling=False, padding='same', activation='relu')
+        x = xy_unit(x, f3, (1, 1), max_pooling=False, padding='valid')
+        shortcut = xy_unit(input_tensor, f3, (1, 1), max_pooling=False, strides=strides, padding='valid')
 
-        shortcut = xy_unit(input_tensor, f3, (1, 1), max_pooling=False, strides=strides,
-                           padding='valid', activation=None)
     else:
         x = Conv2D(f1, (1, 1), strides=strides, activation='relu')(input_tensor)
         x = Conv2D(f2, kernel_size, padding='same', activation='relu')(x)
         x = Conv2D(f3, (1, 1))(x)
-
         shortcut = Conv2D(f3, (1, 1), strides=strides)(input_tensor)
 
     x = layers.add([x, shortcut])
@@ -197,17 +194,17 @@ def identity(input_tensor, kernel_size, filters):
     f1, f2, f3 = filters
 
     if MODE == 'channel':
-        x = channel_unit(input_tensor, f1, (1, 1), max_pooling=False, padding='valid')
+        x = channel_unit(input_tensor, f1, (1, 1), max_pooling=False, padding='valid', activation='relu')
         x = channel_unit(x, f2, kernel_size, max_pooling=False, padding='same')
-        x = channel_unit(x, f3, (1, 1), max_pooling=False, padding='valid', activation=None)
+        x = channel_unit(x, f3, (1, 1), max_pooling=False, padding='valid')
     elif MODE == 'filter':
-        x = filter_unit(input_tensor, f1, (1, 1), max_pooling=False, padding='valid')
+        x = filter_unit(input_tensor, f1, (1, 1), max_pooling=False, padding='valid', activation='relu')
         x = filter_unit(x, f2, kernel_size, max_pooling=False, padding='same')
-        x = filter_unit(x, f3, (1, 1), max_pooling=False, padding='valid', activation=None)
+        x = filter_unit(x, f3, (1, 1), max_pooling=False, padding='valid')
     elif MODE == 'xy':
-        x = xy_unit(input_tensor, f1, (1, 1), max_pooling=False, padding='valid')
+        x = xy_unit(input_tensor, f1, (1, 1), max_pooling=False, padding='valid', activation='relu')
         x = xy_unit(x, f2, kernel_size, max_pooling=False, padding='same')
-        x = xy_unit(x, f3, (1, 1), max_pooling=False, padding='valid', activation=None)
+        x = xy_unit(x, f3, (1, 1), max_pooling=False, padding='valid')
     else:
         x = Conv2D(f1, (1, 1), activation='relu')(input_tensor)
         x = Conv2D(f2, kernel_size, padding='same', activation='relu')(x)
