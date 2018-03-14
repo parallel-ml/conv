@@ -1,4 +1,9 @@
-from keras.layers import Conv2D, Input, Lambda, SeparableConv2D
+"""
+    This module provides single Conv2D layer channel wise split.
+    Technique used is simple that divide filter into number of
+    batches and copy identical inputs onto batch of filters.
+"""
+from keras.layers import Conv2D, Input, Lambda
 from keras.layers.merge import Concatenate
 from keras.models import Model
 import numpy as np
@@ -13,22 +18,18 @@ def merge(tensors):
     return Concatenate()(tensors)
 
 
-def conv(tensors, filters, kernal, strides, padding, activation, separable, use_bias):
+def conv(tensors, filters, kernal, strides, padding, activation):
     size = []
     for _ in range(len(tensors) - 1):
         size.append(filters / len(tensors))
     size.append(filters - filters / len(tensors) * (len(tensors) - 1))
 
-    if separable:
-        return [SeparableConv2D(size[i], kernal, strides=strides, padding=padding, activation=activation,
-                                use_bias=use_bias)(x) for i, x in enumerate(tensors)]
-
-    return [Conv2D(size[i], kernal, strides=strides, padding=padding, activation=activation, use_bias=use_bias)(x) for
+    return [Conv2D(size[i], kernal, strides=strides, padding=padding, activation=activation)(x) for
             i, x in enumerate(tensors)]
 
 
 def forward(data, filters, kernal, strides=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split(X, 3), filters, kernal, strides, padding, 'same', 'relu'))
+    output = merge(conv(split(X, 3), filters, kernal, strides, padding, 'relu'))
     model = Model(X, output)
     return model.predict(np.array([data]))

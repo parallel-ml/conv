@@ -1,4 +1,10 @@
-from keras.layers import Conv2D, Input, Lambda, SeparableConv2D
+"""
+    This module implements single Conv2D layer filter wise split.
+    Compared to channel wise split, instead of splitting the filter
+    parameter, it keeps the same filter but splits the input. At the
+    end, it adds everything back.
+"""
+from keras.layers import Conv2D, Input, Lambda
 from keras.layers.merge import Add
 from keras.models import Model
 import keras.backend as K
@@ -21,17 +27,13 @@ def merge(tensors):
     return Add()([x for x in tensors])
 
 
-def conv(tensors, filters, kernal, strides, padding, activation, separable, use_bias):
-    if separable:
-        return [SeparableConv2D(filters, kernal, strides=strides, padding=padding, activation=activation,
-                                use_bias=use_bias)(x) for x in tensors]
-
-    return [Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation, use_bias=use_bias)(x) for x
+def conv(tensors, filters, kernal, strides, padding, activation):
+    return [Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation)(x) for x
             in tensors]
 
 
 def forward(data, filters, kernal, strides=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split(X, 4), filters, kernal, strides, padding))
+    output = merge(conv(split(X, 4), filters, kernal, strides, padding, 'relu'))
     model = Model(X, output)
     return model.predict(np.array([data]))

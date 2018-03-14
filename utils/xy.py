@@ -1,4 +1,10 @@
-from keras.layers import Conv2D, Input, Lambda, ZeroPadding2D, SeparableConv2D
+"""
+    This module implements single Conv2D layer spatial split.
+    It provides an example of 2 division and another generalized
+    example. The arithmetic technique is discussed in 2 division
+    example.
+"""
+from keras.layers import Conv2D, Input, Lambda, ZeroPadding2D
 from keras.layers.merge import Concatenate
 from keras.models import Model
 import keras.backend as K
@@ -105,12 +111,8 @@ def merge(tensors):
     return Concatenate(axis=2)(rows)
 
 
-def conv(tensors, filters, kernal, strides, padding, activation, separable, use_bias):
-    if separable:
-        layer = SeparableConv2D(filters, kernal, strides=strides, padding=padding, activation=activation,
-                                use_bias=use_bias)
-    else:
-        layer = Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation, use_bias=use_bias)
+def conv(tensors, filters, kernal, strides, padding, activation):
+    layer = Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation)
     return [layer(x) for x in tensors]
 
 
