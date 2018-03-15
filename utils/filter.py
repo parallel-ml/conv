@@ -4,7 +4,7 @@
     parameter, it keeps the same filter but splits the input. At the
     end, it adds everything back.
 """
-from keras.layers import Conv2D, Input, Lambda
+from keras.layers import Conv2D, Input, Lambda, Activation
 from keras.layers.merge import Add
 from keras.models import Model
 import keras.backend as K
@@ -23,17 +23,20 @@ def split(X, num):
     return Lambda(lambda x: [x[:, :, :, lb:rb] for lb, rb in boundary])(X)
 
 
-def merge(tensors):
-    return Add()([x for x in tensors])
+def merge(tensors, activation):
+    X = Add()([x for x in tensors])
+    if activation is not None:
+        X = Activation(activation)(X)
+    return X
 
 
-def conv(tensors, filters, kernal, strides, padding, activation):
-    return [Conv2D(filters, kernal, strides=strides, padding=padding, activation=activation)(x) for x
+def conv(tensors, filters, kernal, strides, padding):
+    return [Conv2D(filters, kernal, strides=strides, padding=padding)(x) for x
             in tensors]
 
 
 def forward(data, filters, kernal, strides=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split(X, 4), filters, kernal, strides, padding, 'relu'))
+    output = merge(conv(split(X, 4), filters, kernal, strides, padding))
     model = Model(X, output)
     return model.predict(np.array([data]))

@@ -37,6 +37,6 @@ def filter_unit(X, filters, kernal, max_pooling=True, strides=(1, 1), padding='v
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
     X = conv_filter.split(X, 3)
-    X = conv_filter.conv(X, filters, kernal, strides, padding, activation)
-    X = conv_filter.merge(X)
+    X = conv_filter.conv(X, filters, kernal, strides, padding)
+    X = conv_filter.merge(X, activation)
     return X
