@@ -3,7 +3,7 @@
     by using its normal Conv2D layer. Instead of treating it as black
     box, we want to split it internally.
 """
-from keras.layers import Conv2D, Lambda, Concatenate, Add, Activation
+from keras.layers import Conv2D, Lambda, Concatenate, Add
 import keras.backend as K
 
 
@@ -22,16 +22,19 @@ def original(X, filters, kernal, strides=(1, 1), padding='valid', activation='re
     return X
 
 
-def filter(X, filters, kernal, strides=(1, 1), padding='valid', activation='relu'):
+def filter(X, filters, kernal, strides=(1, 1), padding='valid', num=3):
     """
         For filter function, the only difference is we do not concatenate the
         output from first Conv2D layer. Instead, it will run parallel spatial
         convolution and add together.
     """
     channel = K.int_shape(X)[-1]
-    X = Lambda(lambda x: [x[:, :, :, k:k + 1] for k in range(channel)])(X)
-    X = [Conv2D(1, kernal, strides=strides, padding=padding, use_bias=False)(x) for x in X]
-    X = [Conv2D(filters, (1, 1), padding=padding)(x) for x in X]
+    boundary = []
+    for i in range(num - 1):
+        boundary.append((i * channel / num, (i + 1) * channel / num))
+    boundary.append((boundary[-1][1], channel))
+    X = Lambda(lambda x: [x[:, :, :, l:r] for l, r in boundary])(X)
+    X = [Conv2D(r - l, kernal, strides=strides, padding=padding, use_bias=False)(x) for x, (l, r) in zip(X, boundary)]
+    X = [Conv2D(filters, (1, 1), padding=padding, use_bias=i + 1 == len(X))(x) for i, x in enumerate(X)]
     X = Add()(X)
-    X = Activation(activation)(X)
     return X

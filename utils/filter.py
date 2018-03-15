@@ -31,12 +31,12 @@ def merge(tensors, activation):
 
 
 def conv(tensors, filters, kernal, strides, padding):
-    return [Conv2D(filters, kernal, strides=strides, padding=padding)(x) for x
-            in tensors]
+    return [Conv2D(filters, kernal, strides=strides, padding=padding, use_bias=i + 1 == len(tensors))(x) for i, x in
+            enumerate(tensors)]
 
 
 def forward(data, filters, kernal, strides=(1, 1), padding='valid'):
     X = Input(data.shape)
-    output = merge(conv(split(X, 4), filters, kernal, strides, padding))
+    output = merge(conv(split(X, 4), filters, kernal, strides, padding), 'relu')
     model = Model(X, output)
     return model.predict(np.array([data]))
