@@ -1,5 +1,5 @@
 import sys
-from ..models import alexnet, vgg16, resnet50, xception
+from ..models import alexnet, vgg16, resnet50, xception, c3d
 from keras.utils import plot_model
 
 
@@ -97,3 +97,12 @@ def test_xception():
     # model = xception.xy()
     # print model.summary()
     # plot_model(model, to_file=path + '_spatial_split.png')
+
+
+def test_c3d():
+    path = 'models/resource/c3d/c3d'
+
+    sys.stdout = open(path + '.txt', 'w+')
+    model = c3d.original()
+    print model.summary()
+    plot_model(model, to_file=path + '.png')
