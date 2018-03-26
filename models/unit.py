@@ -1,7 +1,7 @@
 from keras.layers.convolutional import Conv2D, MaxPooling2D
-from ..utils import channel as conv_channel
-from ..utils import xy as conv_xy
-from ..utils import filter as conv_filter
+from utils import channel as conv_channel
+from utils import xy as conv_xy
+from utils import filter as conv_filter
 
 
 def conv_unit(X, nb_filter, kernal, activation=None, max_pooling=True, strides=(1, 1)):

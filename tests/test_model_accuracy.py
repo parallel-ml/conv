@@ -1,4 +1,4 @@
-from cnn.models import evaluate
+from ..models import evaluate
 
 
 def test_vgg16_channel_split():

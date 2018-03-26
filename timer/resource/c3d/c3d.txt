@@ -1,0 +1,12 @@
+conv3d_1  : 0.17 s
+conv3d_2  : 0.49 s
+conv3d_3  : 0.18 s
+conv3d_4  : 0.36 s
+conv3d_5  : 0.08 s
+conv3d_6  : 0.15 s
+conv3d_7  : 0.03 s
+conv3d_8  : 0.02 s
+dense_1   : 0.02 s
+dense_2   : 0.01 s
+dense_3   : 0.00 s
+

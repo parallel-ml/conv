@@ -1,4 +1,4 @@
-from cnn.models import alexnet, vgg16
+from ..models import alexnet, vgg16
 import numpy as np
 import time
 
