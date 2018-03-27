@@ -1,7 +1,7 @@
 from keras.layers import Conv2D, MaxPooling2D, Dense, Input, SeparableConv2D, Activation, GlobalAveragePooling2D
 from keras.models import Model
 from keras import layers
-from ..utils import separable
+from utils import separable
 
 
 def original():

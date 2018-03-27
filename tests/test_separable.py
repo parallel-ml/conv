@@ -1,6 +1,6 @@
 from keras.layers import Input, SeparableConv2D
 from keras.models import Model
-from ..utils import separable
+from utils import separable
 
 
 def test_original():

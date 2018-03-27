@@ -1,5 +1,5 @@
 import sys
-from ..models import alexnet, vgg16, resnet50, xception, c3d
+from models import alexnet, vgg16, resnet50, xception, c3d
 from keras.utils import plot_model
 
 
