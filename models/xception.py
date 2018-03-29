@@ -100,8 +100,10 @@ def filter():
         residual = x
         x = Activation('relu')(x)
         x = separable.filter(x, 728, (3, 3), padding='same', name=name + '_' + str(depth))
+        depth += 1
         x = Activation('relu')(x)
         x = separable.filter(x, 728, (3, 3), padding='same', name=name + '_' + str(depth))
+        depth += 1
         x = Activation('relu')(x)
         x = separable.filter(x, 728, (3, 3), padding='same', name=name + '_' + str(depth))
         x = layers.add([x, residual])

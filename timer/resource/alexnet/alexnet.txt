@@ -1,9 +1,9 @@
-          conv2d_105: 0.023 s
-          conv2d_106: 0.012 s
-          conv2d_107: 0.010 s
-          conv2d_108: 0.010 s
-          conv2d_109: 0.009 s
-            dense_16: 0.017 s
-            dense_17: 0.016 s
-            dense_18: 0.009 s
+alexnet_original_1_original: 0.021 s
+alexnet_original_2_original: 0.014 s
+alexnet_original_3_original: 0.017 s
+alexnet_original_4_original: 0.013 s
+alexnet_original_5_original: 0.012 s
+alexnet_original_6_dense: 0.017 s
+alexnet_original_7_dense: 0.017 s
+alexnet_original_8_dense: 0.012 s
 

@@ -1,212 +1,212 @@
-          conv2d_575: 0.099 s
-          conv2d_576: 0.062 s
-  depthwise_conv2d_1: 0.054 s
-  depthwise_conv2d_2: 0.053 s
-  depthwise_conv2d_3: 0.054 s
-          conv2d_578: 0.055 s
-          conv2d_579: 0.057 s
-          conv2d_580: 0.057 s
-  depthwise_conv2d_4: 0.055 s
-  depthwise_conv2d_5: 0.056 s
-  depthwise_conv2d_6: 0.056 s
-          conv2d_581: 0.059 s
-          conv2d_582: 0.059 s
-          conv2d_583: 0.060 s
-          conv2d_577: 0.056 s
-  depthwise_conv2d_7: 0.053 s
-  depthwise_conv2d_8: 0.052 s
-  depthwise_conv2d_9: 0.052 s
-          conv2d_585: 0.055 s
-          conv2d_586: 0.051 s
-          conv2d_587: 0.055 s
- depthwise_conv2d_10: 0.054 s
- depthwise_conv2d_11: 0.055 s
- depthwise_conv2d_12: 0.054 s
-          conv2d_588: 0.058 s
-          conv2d_589: 0.057 s
-          conv2d_590: 0.057 s
-          conv2d_584: 0.054 s
- depthwise_conv2d_13: 0.052 s
- depthwise_conv2d_14: 0.053 s
- depthwise_conv2d_15: 0.052 s
-          conv2d_592: 0.054 s
-          conv2d_593: 0.056 s
-          conv2d_594: 0.055 s
- depthwise_conv2d_16: 0.054 s
- depthwise_conv2d_17: 0.054 s
- depthwise_conv2d_18: 0.059 s
-          conv2d_595: 0.064 s
-          conv2d_596: 0.059 s
-          conv2d_597: 0.059 s
-          conv2d_591: 0.056 s
- depthwise_conv2d_19: 0.053 s
- depthwise_conv2d_20: 0.053 s
- depthwise_conv2d_21: 0.053 s
-          conv2d_598: 0.054 s
-          conv2d_599: 0.053 s
-          conv2d_600: 0.054 s
- depthwise_conv2d_22: 0.053 s
- depthwise_conv2d_23: 0.053 s
- depthwise_conv2d_24: 0.053 s
-          conv2d_601: 0.054 s
-          conv2d_602: 0.055 s
-          conv2d_603: 0.055 s
- depthwise_conv2d_25: 0.054 s
- depthwise_conv2d_26: 0.053 s
- depthwise_conv2d_27: 0.054 s
-          conv2d_604: 0.061 s
-          conv2d_605: 0.055 s
-          conv2d_606: 0.053 s
- depthwise_conv2d_28: 0.053 s
- depthwise_conv2d_29: 0.055 s
- depthwise_conv2d_30: 0.059 s
-          conv2d_607: 0.067 s
-          conv2d_608: 0.066 s
-          conv2d_609: 0.063 s
- depthwise_conv2d_31: 0.055 s
- depthwise_conv2d_32: 0.058 s
- depthwise_conv2d_33: 0.060 s
-          conv2d_610: 0.065 s
-          conv2d_611: 0.056 s
-          conv2d_612: 0.056 s
- depthwise_conv2d_34: 0.054 s
- depthwise_conv2d_35: 0.054 s
- depthwise_conv2d_36: 0.053 s
-          conv2d_613: 0.054 s
-          conv2d_614: 0.056 s
-          conv2d_615: 0.055 s
- depthwise_conv2d_37: 0.053 s
- depthwise_conv2d_38: 0.053 s
- depthwise_conv2d_39: 0.052 s
-          conv2d_616: 0.054 s
-          conv2d_617: 0.056 s
-          conv2d_618: 0.068 s
- depthwise_conv2d_40: 0.065 s
- depthwise_conv2d_41: 0.065 s
- depthwise_conv2d_42: 0.067 s
-          conv2d_619: 0.063 s
-          conv2d_620: 0.063 s
-          conv2d_621: 0.061 s
- depthwise_conv2d_43: 0.063 s
- depthwise_conv2d_44: 0.073 s
- depthwise_conv2d_45: 0.062 s
-          conv2d_622: 0.069 s
-          conv2d_623: 0.067 s
-          conv2d_624: 0.065 s
- depthwise_conv2d_46: 0.062 s
- depthwise_conv2d_47: 0.060 s
- depthwise_conv2d_48: 0.066 s
-          conv2d_625: 0.066 s
-          conv2d_626: 0.064 s
-          conv2d_627: 0.060 s
- depthwise_conv2d_49: 0.056 s
- depthwise_conv2d_50: 0.064 s
- depthwise_conv2d_51: 0.057 s
-          conv2d_628: 0.056 s
-          conv2d_629: 0.056 s
-          conv2d_630: 0.056 s
- depthwise_conv2d_52: 0.054 s
- depthwise_conv2d_53: 0.055 s
- depthwise_conv2d_54: 0.054 s
-          conv2d_631: 0.056 s
-          conv2d_632: 0.056 s
-          conv2d_633: 0.055 s
- depthwise_conv2d_55: 0.054 s
- depthwise_conv2d_56: 0.055 s
- depthwise_conv2d_57: 0.053 s
-          conv2d_634: 0.056 s
-          conv2d_635: 0.055 s
-          conv2d_636: 0.057 s
- depthwise_conv2d_58: 0.064 s
- depthwise_conv2d_59: 0.059 s
- depthwise_conv2d_60: 0.059 s
-          conv2d_637: 0.061 s
-          conv2d_638: 0.059 s
-          conv2d_639: 0.064 s
- depthwise_conv2d_61: 0.057 s
- depthwise_conv2d_62: 0.055 s
- depthwise_conv2d_63: 0.055 s
-          conv2d_640: 0.061 s
-          conv2d_641: 0.059 s
-          conv2d_642: 0.069 s
- depthwise_conv2d_64: 0.061 s
- depthwise_conv2d_65: 0.076 s
- depthwise_conv2d_66: 0.072 s
-          conv2d_643: 0.066 s
-          conv2d_644: 0.064 s
-          conv2d_645: 0.061 s
- depthwise_conv2d_67: 0.062 s
- depthwise_conv2d_68: 0.074 s
- depthwise_conv2d_69: 0.066 s
-          conv2d_646: 0.064 s
-          conv2d_647: 0.059 s
-          conv2d_648: 0.059 s
- depthwise_conv2d_70: 0.056 s
- depthwise_conv2d_71: 0.055 s
- depthwise_conv2d_72: 0.072 s
-          conv2d_649: 0.058 s
-          conv2d_650: 0.069 s
-          conv2d_651: 0.057 s
- depthwise_conv2d_73: 0.056 s
- depthwise_conv2d_74: 0.055 s
- depthwise_conv2d_75: 0.055 s
-          conv2d_652: 0.057 s
-          conv2d_653: 0.057 s
-          conv2d_654: 0.057 s
- depthwise_conv2d_76: 0.056 s
- depthwise_conv2d_77: 0.057 s
- depthwise_conv2d_78: 0.060 s
-          conv2d_655: 0.077 s
-          conv2d_656: 0.062 s
-          conv2d_657: 0.057 s
- depthwise_conv2d_79: 0.059 s
- depthwise_conv2d_80: 0.077 s
- depthwise_conv2d_81: 0.062 s
-          conv2d_658: 0.064 s
-          conv2d_659: 0.077 s
-          conv2d_660: 0.059 s
- depthwise_conv2d_82: 0.069 s
- depthwise_conv2d_83: 0.064 s
- depthwise_conv2d_84: 0.063 s
-          conv2d_661: 0.065 s
-          conv2d_662: 0.065 s
-          conv2d_663: 0.069 s
- depthwise_conv2d_85: 0.067 s
- depthwise_conv2d_86: 0.076 s
- depthwise_conv2d_87: 0.064 s
-          conv2d_664: 0.067 s
-          conv2d_665: 0.072 s
-          conv2d_666: 0.065 s
- depthwise_conv2d_88: 0.062 s
- depthwise_conv2d_89: 0.058 s
- depthwise_conv2d_90: 0.058 s
-          conv2d_667: 0.059 s
-          conv2d_668: 0.059 s
-          conv2d_669: 0.059 s
- depthwise_conv2d_91: 0.057 s
- depthwise_conv2d_92: 0.058 s
- depthwise_conv2d_93: 0.056 s
-          conv2d_671: 0.058 s
-          conv2d_672: 0.059 s
-          conv2d_673: 0.059 s
- depthwise_conv2d_94: 0.058 s
- depthwise_conv2d_95: 0.058 s
- depthwise_conv2d_96: 0.059 s
-          conv2d_674: 0.062 s
-          conv2d_675: 0.060 s
-          conv2d_676: 0.065 s
-          conv2d_670: 0.087 s
- depthwise_conv2d_97: 0.056 s
- depthwise_conv2d_98: 0.057 s
- depthwise_conv2d_99: 0.057 s
-          conv2d_677: 0.058 s
-          conv2d_678: 0.059 s
-          conv2d_679: 0.060 s
-depthwise_conv2d_100: 0.087 s
-depthwise_conv2d_101: 0.064 s
-depthwise_conv2d_102: 0.057 s
-          conv2d_680: 0.062 s
-          conv2d_681: 0.067 s
-          conv2d_682: 0.076 s
-            dense_33: 0.072 s
+            conv2d_7: 0.108 s
+            conv2d_8: 0.069 s
+xception_filter_2_dconv_0: 0.057 s
+xception_filter_2_dconv_1: 0.060 s
+xception_filter_2_dconv_2: 0.059 s
+xception_filter_2_1x1_conv_0: 0.059 s
+xception_filter_2_1x1_conv_1: 0.063 s
+xception_filter_2_1x1_conv_2: 0.058 s
+xception_filter_3_dconv_0: 0.055 s
+xception_filter_3_dconv_1: 0.057 s
+xception_filter_3_dconv_2: 0.056 s
+xception_filter_3_1x1_conv_0: 0.059 s
+xception_filter_3_1x1_conv_1: 0.063 s
+xception_filter_3_1x1_conv_2: 0.066 s
+xception_filter_1_conv: 0.062 s
+xception_filter_5_dconv_0: 0.066 s
+xception_filter_5_dconv_1: 0.061 s
+xception_filter_5_dconv_2: 0.055 s
+xception_filter_5_1x1_conv_0: 0.066 s
+xception_filter_5_1x1_conv_1: 0.060 s
+xception_filter_5_1x1_conv_2: 0.065 s
+xception_filter_6_dconv_0: 0.070 s
+xception_filter_6_dconv_1: 0.063 s
+xception_filter_6_dconv_2: 0.058 s
+xception_filter_6_1x1_conv_0: 0.060 s
+xception_filter_6_1x1_conv_1: 0.059 s
+xception_filter_6_1x1_conv_2: 0.066 s
+xception_filter_4_conv: 0.055 s
+xception_filter_8_dconv_0: 0.052 s
+xception_filter_8_dconv_1: 0.053 s
+xception_filter_8_dconv_2: 0.057 s
+xception_filter_8_1x1_conv_0: 0.063 s
+xception_filter_8_1x1_conv_1: 0.060 s
+xception_filter_8_1x1_conv_2: 0.066 s
+xception_filter_9_dconv_0: 0.059 s
+xception_filter_9_dconv_1: 0.056 s
+xception_filter_9_dconv_2: 0.054 s
+xception_filter_9_1x1_conv_0: 0.059 s
+xception_filter_9_1x1_conv_1: 0.059 s
+xception_filter_9_1x1_conv_2: 0.059 s
+xception_filter_7_conv: 0.055 s
+xception_filter_10_dconv_0: 0.053 s
+xception_filter_10_dconv_1: 0.053 s
+xception_filter_10_dconv_2: 0.053 s
+xception_filter_10_1x1_conv_0: 0.058 s
+xception_filter_10_1x1_conv_1: 0.063 s
+xception_filter_10_1x1_conv_2: 0.060 s
+xception_filter_11_dconv_0: 0.074 s
+xception_filter_11_dconv_1: 0.064 s
+xception_filter_11_dconv_2: 0.068 s
+xception_filter_11_1x1_conv_0: 0.079 s
+xception_filter_11_1x1_conv_1: 0.092 s
+xception_filter_11_1x1_conv_2: 0.062 s
+xception_filter_12_dconv_0: 0.061 s
+xception_filter_12_dconv_1: 0.061 s
+xception_filter_12_dconv_2: 0.061 s
+xception_filter_12_1x1_conv_0: 0.074 s
+xception_filter_12_1x1_conv_1: 0.064 s
+xception_filter_12_1x1_conv_2: 0.059 s
+xception_filter_13_dconv_0: 0.056 s
+xception_filter_13_dconv_1: 0.057 s
+xception_filter_13_dconv_2: 0.056 s
+xception_filter_13_1x1_conv_0: 0.055 s
+xception_filter_13_1x1_conv_1: 0.057 s
+xception_filter_13_1x1_conv_2: 0.058 s
+xception_filter_14_dconv_0: 0.056 s
+xception_filter_14_dconv_1: 0.057 s
+xception_filter_14_dconv_2: 0.058 s
+xception_filter_14_1x1_conv_0: 0.064 s
+xception_filter_14_1x1_conv_1: 0.061 s
+xception_filter_14_1x1_conv_2: 0.058 s
+xception_filter_15_dconv_0: 0.054 s
+xception_filter_15_dconv_1: 0.054 s
+xception_filter_15_dconv_2: 0.055 s
+xception_filter_15_1x1_conv_0: 0.055 s
+xception_filter_15_1x1_conv_1: 0.054 s
+xception_filter_15_1x1_conv_2: 0.055 s
+xception_filter_16_dconv_0: 0.053 s
+xception_filter_16_dconv_1: 0.052 s
+xception_filter_16_dconv_2: 0.053 s
+xception_filter_16_1x1_conv_0: 0.054 s
+xception_filter_16_1x1_conv_1: 0.055 s
+xception_filter_16_1x1_conv_2: 0.055 s
+xception_filter_17_dconv_0: 0.053 s
+xception_filter_17_dconv_1: 0.053 s
+xception_filter_17_dconv_2: 0.054 s
+xception_filter_17_1x1_conv_0: 0.059 s
+xception_filter_17_1x1_conv_1: 0.060 s
+xception_filter_17_1x1_conv_2: 0.061 s
+xception_filter_18_dconv_0: 0.058 s
+xception_filter_18_dconv_1: 0.059 s
+xception_filter_18_dconv_2: 0.061 s
+xception_filter_18_1x1_conv_0: 0.060 s
+xception_filter_18_1x1_conv_1: 0.062 s
+xception_filter_18_1x1_conv_2: 0.066 s
+xception_filter_19_dconv_0: 0.063 s
+xception_filter_19_dconv_1: 0.059 s
+xception_filter_19_dconv_2: 0.057 s
+xception_filter_19_1x1_conv_0: 0.058 s
+xception_filter_19_1x1_conv_1: 0.061 s
+xception_filter_19_1x1_conv_2: 0.056 s
+xception_filter_20_dconv_0: 0.056 s
+xception_filter_20_dconv_1: 0.058 s
+xception_filter_20_dconv_2: 0.055 s
+xception_filter_20_1x1_conv_0: 0.058 s
+xception_filter_20_1x1_conv_1: 0.062 s
+xception_filter_20_1x1_conv_2: 0.062 s
+xception_filter_21_dconv_0: 0.058 s
+xception_filter_21_dconv_1: 0.060 s
+xception_filter_21_dconv_2: 0.057 s
+xception_filter_21_1x1_conv_0: 0.058 s
+xception_filter_21_1x1_conv_1: 0.057 s
+xception_filter_21_1x1_conv_2: 0.058 s
+xception_filter_22_dconv_0: 0.061 s
+xception_filter_22_dconv_1: 0.058 s
+xception_filter_22_dconv_2: 0.062 s
+xception_filter_22_1x1_conv_0: 0.057 s
+xception_filter_22_1x1_conv_1: 0.056 s
+xception_filter_22_1x1_conv_2: 0.055 s
+xception_filter_23_dconv_0: 0.054 s
+xception_filter_23_dconv_1: 0.055 s
+xception_filter_23_dconv_2: 0.055 s
+xception_filter_23_1x1_conv_0: 0.056 s
+xception_filter_23_1x1_conv_1: 0.062 s
+xception_filter_23_1x1_conv_2: 0.058 s
+xception_filter_24_dconv_0: 0.059 s
+xception_filter_24_dconv_1: 0.058 s
+xception_filter_24_dconv_2: 0.056 s
+xception_filter_24_1x1_conv_0: 0.058 s
+xception_filter_24_1x1_conv_1: 0.057 s
+xception_filter_24_1x1_conv_2: 0.058 s
+xception_filter_25_dconv_0: 0.054 s
+xception_filter_25_dconv_1: 0.057 s
+xception_filter_25_dconv_2: 0.059 s
+xception_filter_25_1x1_conv_0: 0.061 s
+xception_filter_25_1x1_conv_1: 0.057 s
+xception_filter_25_1x1_conv_2: 0.057 s
+xception_filter_26_dconv_0: 0.059 s
+xception_filter_26_dconv_1: 0.057 s
+xception_filter_26_dconv_2: 0.057 s
+xception_filter_26_1x1_conv_0: 0.058 s
+xception_filter_26_1x1_conv_1: 0.058 s
+xception_filter_26_1x1_conv_2: 0.056 s
+xception_filter_27_dconv_0: 0.055 s
+xception_filter_27_dconv_1: 0.060 s
+xception_filter_27_dconv_2: 0.060 s
+xception_filter_27_1x1_conv_0: 0.060 s
+xception_filter_27_1x1_conv_1: 0.061 s
+xception_filter_27_1x1_conv_2: 0.058 s
+xception_filter_28_dconv_0: 0.057 s
+xception_filter_28_dconv_1: 0.058 s
+xception_filter_28_dconv_2: 0.055 s
+xception_filter_28_1x1_conv_0: 0.058 s
+xception_filter_28_1x1_conv_1: 0.060 s
+xception_filter_28_1x1_conv_2: 0.062 s
+xception_filter_29_dconv_0: 0.060 s
+xception_filter_29_dconv_1: 0.056 s
+xception_filter_29_dconv_2: 0.056 s
+xception_filter_29_1x1_conv_0: 0.057 s
+xception_filter_29_1x1_conv_1: 0.056 s
+xception_filter_29_1x1_conv_2: 0.059 s
+xception_filter_30_dconv_0: 0.072 s
+xception_filter_30_dconv_1: 0.060 s
+xception_filter_30_dconv_2: 0.067 s
+xception_filter_30_1x1_conv_0: 0.062 s
+xception_filter_30_1x1_conv_1: 0.058 s
+xception_filter_30_1x1_conv_2: 0.057 s
+xception_filter_31_dconv_0: 0.055 s
+xception_filter_31_dconv_1: 0.056 s
+xception_filter_31_dconv_2: 0.056 s
+xception_filter_31_1x1_conv_0: 0.058 s
+xception_filter_31_1x1_conv_1: 0.058 s
+xception_filter_31_1x1_conv_2: 0.057 s
+xception_filter_32_dconv_0: 0.056 s
+xception_filter_32_dconv_1: 0.056 s
+xception_filter_32_dconv_2: 0.056 s
+xception_filter_32_1x1_conv_0: 0.057 s
+xception_filter_32_1x1_conv_1: 0.068 s
+xception_filter_32_1x1_conv_2: 0.066 s
+xception_filter_33_dconv_0: 0.062 s
+xception_filter_33_dconv_1: 0.064 s
+xception_filter_33_dconv_2: 0.060 s
+xception_filter_33_1x1_conv_0: 0.063 s
+xception_filter_33_1x1_conv_1: 0.061 s
+xception_filter_33_1x1_conv_2: 0.061 s
+xception_filter_36_dconv_0: 0.064 s
+xception_filter_36_dconv_1: 0.062 s
+xception_filter_36_dconv_2: 0.056 s
+xception_filter_36_1x1_conv_0: 0.058 s
+xception_filter_36_1x1_conv_1: 0.058 s
+xception_filter_36_1x1_conv_2: 0.064 s
+xception_filter_37_dconv_0: 0.060 s
+xception_filter_37_dconv_1: 0.065 s
+xception_filter_37_dconv_2: 0.061 s
+xception_filter_37_1x1_conv_0: 0.065 s
+xception_filter_37_1x1_conv_1: 0.065 s
+xception_filter_37_1x1_conv_2: 0.081 s
+xception_filter_35_conv: 0.058 s
+xception_filter_38_dconv_0: 0.053 s
+xception_filter_38_dconv_1: 0.056 s
+xception_filter_38_dconv_2: 0.067 s
+xception_filter_38_1x1_conv_0: 0.062 s
+xception_filter_38_1x1_conv_1: 0.061 s
+xception_filter_38_1x1_conv_2: 0.067 s
+xception_filter_39_dconv_0: 0.058 s
+xception_filter_39_dconv_1: 0.054 s
+xception_filter_39_dconv_2: 0.061 s
+xception_filter_39_1x1_conv_0: 0.064 s
+xception_filter_39_1x1_conv_1: 0.060 s
+xception_filter_39_1x1_conv_2: 0.070 s
+xception_filter_40_dense: 0.063 s
 

@@ -1,12 +1,12 @@
-            conv3d_1: 0.159 s
-            conv3d_2: 0.469 s
-            conv3d_3: 0.171 s
-            conv3d_4: 0.338 s
-            conv3d_5: 0.073 s
-            conv3d_6: 0.141 s
-            conv3d_7: 0.021 s
-            conv3d_8: 0.021 s
-             dense_1: 0.015 s
-             dense_2: 0.008 s
-             dense_3: 0.002 s
+ c3d_original_1_conv: 0.150 s
+ c3d_original_2_conv: 0.461 s
+ c3d_original_3_conv: 0.168 s
+ c3d_original_4_conv: 0.334 s
+ c3d_original_5_conv: 0.075 s
+ c3d_original_6_conv: 0.146 s
+ c3d_original_7_conv: 0.025 s
+ c3d_original_8_conv: 0.026 s
+c3d_original_9_dense: 0.018 s
+c3d_original_10_dense: 0.009 s
+c3d_original_11_dense: 0.003 s
 

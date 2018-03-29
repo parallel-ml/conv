@@ -1,19 +1,19 @@
-          conv2d_125: 0.018 s
-          conv2d_126: 0.010 s
-          conv2d_127: 0.010 s
-          conv2d_128: 0.010 s
-          conv2d_129: 0.010 s
-          conv2d_130: 0.010 s
-          conv2d_131: 0.010 s
-          conv2d_132: 0.010 s
-          conv2d_133: 0.009 s
-          conv2d_134: 0.009 s
-          conv2d_135: 0.010 s
-          conv2d_136: 0.009 s
-          conv2d_137: 0.010 s
-          conv2d_138: 0.010 s
-          conv2d_139: 0.010 s
-            dense_22: 0.017 s
-            dense_23: 0.017 s
-            dense_24: 0.011 s
+alexnet_filter_1_conv_0: 0.020 s
+alexnet_filter_1_conv_1: 0.012 s
+alexnet_filter_1_conv_2: 0.012 s
+alexnet_filter_2_conv_0: 0.012 s
+alexnet_filter_2_conv_1: 0.013 s
+alexnet_filter_2_conv_2: 0.025 s
+alexnet_filter_3_conv_0: 0.010 s
+alexnet_filter_3_conv_1: 0.011 s
+alexnet_filter_3_conv_2: 0.013 s
+alexnet_filter_4_conv_0: 0.012 s
+alexnet_filter_4_conv_1: 0.011 s
+alexnet_filter_4_conv_2: 0.016 s
+alexnet_filter_5_conv_0: 0.011 s
+alexnet_filter_5_conv_1: 0.012 s
+alexnet_filter_5_conv_2: 0.010 s
+alexnet_filter_6_dense: 0.022 s
+alexnet_filter_7_dense: 0.018 s
+alexnet_filter_8_dense: 0.014 s
 

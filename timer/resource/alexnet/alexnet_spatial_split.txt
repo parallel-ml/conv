@@ -1,9 +1,9 @@
-          conv2d_140: 0.026 s
-          conv2d_141: 0.011 s
-          conv2d_142: 0.011 s
-          conv2d_143: 0.011 s
-          conv2d_144: 0.010 s
-            dense_25: 0.019 s
-            dense_26: 0.017 s
-            dense_27: 0.012 s
+alexnet_spatial_1_conv: 0.038 s
+alexnet_spatial_2_conv: 0.011 s
+alexnet_spatial_3_conv: 0.011 s
+alexnet_spatial_4_conv: 0.011 s
+alexnet_spatial_5_conv: 0.011 s
+alexnet_spatial_6_dense: 0.019 s
+alexnet_spatial_7_dense: 0.019 s
+alexnet_spatial_8_dense: 0.013 s
 

@@ -1,55 +1,55 @@
-          conv2d_516: 0.114 s
-          conv2d_517: 0.041 s
-          conv2d_518: 0.043 s
-          conv2d_519: 0.043 s
-          conv2d_520: 0.044 s
-          conv2d_521: 0.042 s
-          conv2d_522: 0.042 s
-          conv2d_523: 0.041 s
-          conv2d_524: 0.041 s
-          conv2d_525: 0.041 s
-          conv2d_526: 0.040 s
-          conv2d_527: 0.040 s
-          conv2d_528: 0.041 s
-          conv2d_529: 0.050 s
-          conv2d_530: 0.047 s
-          conv2d_531: 0.046 s
-          conv2d_532: 0.042 s
-          conv2d_533: 0.041 s
-          conv2d_534: 0.041 s
-          conv2d_535: 0.043 s
-          conv2d_536: 0.041 s
-          conv2d_537: 0.043 s
-          conv2d_538: 0.048 s
-          conv2d_539: 0.041 s
-          conv2d_540: 0.045 s
-          conv2d_541: 0.044 s
-          conv2d_542: 0.043 s
-          conv2d_543: 0.057 s
-          conv2d_544: 0.053 s
-          conv2d_545: 0.048 s
-          conv2d_546: 0.042 s
-          conv2d_547: 0.045 s
-          conv2d_548: 0.042 s
-          conv2d_549: 0.050 s
-          conv2d_550: 0.045 s
-          conv2d_551: 0.045 s
-          conv2d_552: 0.046 s
-          conv2d_553: 0.043 s
-          conv2d_554: 0.054 s
-          conv2d_555: 0.046 s
-          conv2d_556: 0.060 s
-          conv2d_557: 0.044 s
-          conv2d_558: 0.043 s
-          conv2d_559: 0.046 s
-          conv2d_560: 0.050 s
-          conv2d_561: 0.051 s
-          conv2d_562: 0.062 s
-          conv2d_563: 0.060 s
-          conv2d_564: 0.050 s
-          conv2d_565: 0.044 s
-          conv2d_566: 0.043 s
-          conv2d_567: 0.045 s
-          conv2d_568: 0.044 s
-            dense_31: 0.042 s
+  resnet50_spatial_1: 0.145 s
+resnet50_spatial_2a_conv: 0.051 s
+resnet50_spatial_2b_conv: 0.049 s
+resnet50_spatial_2c_conv: 0.045 s
+resnet50_spatial_2s_conv: 0.043 s
+resnet50_spatial_3a_conv: 0.041 s
+resnet50_spatial_3b_conv: 0.041 s
+resnet50_spatial_3c_conv: 0.041 s
+resnet50_spatial_4a_conv: 0.040 s
+resnet50_spatial_4b_conv: 0.042 s
+resnet50_spatial_4c_conv: 0.040 s
+resnet50_spatial_5a_conv: 0.040 s
+resnet50_spatial_5b_conv: 0.041 s
+resnet50_spatial_5c_conv: 0.040 s
+resnet50_spatial_5s_conv: 0.041 s
+resnet50_spatial_6a_conv: 0.041 s
+resnet50_spatial_6b_conv: 0.042 s
+resnet50_spatial_6c_conv: 0.041 s
+resnet50_spatial_7a_conv: 0.041 s
+resnet50_spatial_7b_conv: 0.041 s
+resnet50_spatial_7c_conv: 0.041 s
+resnet50_spatial_8a_conv: 0.041 s
+resnet50_spatial_8b_conv: 0.042 s
+resnet50_spatial_8c_conv: 0.041 s
+resnet50_spatial_9a_conv: 0.044 s
+resnet50_spatial_9b_conv: 0.048 s
+resnet50_spatial_9c_conv: 0.042 s
+resnet50_spatial_9s_conv: 0.043 s
+resnet50_spatial_10a_conv: 0.046 s
+resnet50_spatial_10b_conv: 0.047 s
+resnet50_spatial_10c_conv: 0.043 s
+resnet50_spatial_11a_conv: 0.043 s
+resnet50_spatial_11b_conv: 0.043 s
+resnet50_spatial_11c_conv: 0.042 s
+resnet50_spatial_12a_conv: 0.042 s
+resnet50_spatial_12b_conv: 0.042 s
+resnet50_spatial_12c_conv: 0.042 s
+resnet50_spatial_13a_conv: 0.042 s
+resnet50_spatial_13b_conv: 0.042 s
+resnet50_spatial_13c_conv: 0.042 s
+resnet50_spatial_14a_conv: 0.043 s
+resnet50_spatial_14b_conv: 0.042 s
+resnet50_spatial_14c_conv: 0.042 s
+resnet50_spatial_15a_conv: 0.043 s
+resnet50_spatial_15b_conv: 0.045 s
+resnet50_spatial_15c_conv: 0.043 s
+resnet50_spatial_15s_conv: 0.045 s
+resnet50_spatial_16a_conv: 0.044 s
+resnet50_spatial_16b_conv: 0.044 s
+resnet50_spatial_16c_conv: 0.044 s
+resnet50_spatial_17a_conv: 0.044 s
+resnet50_spatial_17b_conv: 0.046 s
+resnet50_spatial_17c_conv: 0.044 s
+resnet50_spatial_18_dense: 0.043 s
 

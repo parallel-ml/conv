@@ -1,17 +1,17 @@
-            conv2d_1: 0.034 s
-            conv2d_2: 0.103 s
-            conv2d_3: 0.034 s
-            conv2d_4: 0.060 s
-            conv2d_5: 0.025 s
-            conv2d_6: 0.048 s
-            conv2d_7: 0.048 s
-            conv2d_8: 0.023 s
-            conv2d_9: 0.043 s
-           conv2d_10: 0.044 s
-           conv2d_11: 0.013 s
-           conv2d_12: 0.013 s
-           conv2d_13: 0.013 s
-             dense_4: 0.045 s
-             dense_5: 0.009 s
-             dense_6: 0.003 s
+vgg16_original_1_conv: 0.037 s
+vgg16_original_2_conv: 0.115 s
+vgg16_original_3_conv: 0.038 s
+vgg16_original_4_conv: 0.060 s
+vgg16_original_5_conv: 0.026 s
+vgg16_original_6_conv: 0.057 s
+vgg16_original_7_conv: 0.056 s
+vgg16_original_8_conv: 0.024 s
+vgg16_original_9_conv: 0.047 s
+vgg16_original_10_conv: 0.047 s
+vgg16_original_11_conv: 0.013 s
+vgg16_original_12_conv: 0.017 s
+vgg16_original_13_conv: 0.014 s
+vgg16_original_13_dense: 0.047 s
+vgg16_original_14_dense: 0.011 s
+vgg16_original_15_dense: 0.004 s
 
