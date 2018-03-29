@@ -7,7 +7,7 @@ zero_padding2d_1 (ZeroPadding2D (None, 227, 227, 3)  0           input_4[0][0]
 __________________________________________________________________________________________________
 lambda_11 (Lambda)              [(None, 79, 79, 3),  0           zero_padding2d_1[0][0]           
 __________________________________________________________________________________________________
-conv2d_36 (Conv2D)              multiple             17472       lambda_11[0][0]                  
+alexnet_spatial_1_conv (Conv2D) multiple             17472       lambda_11[0][0]                  
                                                                  lambda_11[0][1]                  
                                                                  lambda_11[0][2]                  
                                                                  lambda_11[0][3]                  
@@ -17,17 +17,17 @@ conv2d_36 (Conv2D)              multiple             17472       lambda_11[0][0]
                                                                  lambda_11[0][7]                  
                                                                  lambda_11[0][8]                  
 __________________________________________________________________________________________________
-concatenate_6 (Concatenate)     (None, 55, 18, 48)   0           conv2d_36[0][0]                  
-                                                                 conv2d_36[1][0]                  
-                                                                 conv2d_36[2][0]                  
+concatenate_6 (Concatenate)     (None, 55, 18, 48)   0           alexnet_spatial_1_conv[0][0]     
+                                                                 alexnet_spatial_1_conv[1][0]     
+                                                                 alexnet_spatial_1_conv[2][0]     
 __________________________________________________________________________________________________
-concatenate_7 (Concatenate)     (None, 55, 18, 48)   0           conv2d_36[3][0]                  
-                                                                 conv2d_36[4][0]                  
-                                                                 conv2d_36[5][0]                  
+concatenate_7 (Concatenate)     (None, 55, 18, 48)   0           alexnet_spatial_1_conv[3][0]     
+                                                                 alexnet_spatial_1_conv[4][0]     
+                                                                 alexnet_spatial_1_conv[5][0]     
 __________________________________________________________________________________________________
-concatenate_8 (Concatenate)     (None, 55, 19, 48)   0           conv2d_36[6][0]                  
-                                                                 conv2d_36[7][0]                  
-                                                                 conv2d_36[8][0]                  
+concatenate_8 (Concatenate)     (None, 55, 19, 48)   0           alexnet_spatial_1_conv[6][0]     
+                                                                 alexnet_spatial_1_conv[7][0]     
+                                                                 alexnet_spatial_1_conv[8][0]     
 __________________________________________________________________________________________________
 concatenate_9 (Concatenate)     (None, 55, 55, 48)   0           concatenate_6[0][0]              
                                                                  concatenate_7[0][0]              
@@ -39,7 +39,7 @@ zero_padding2d_2 (ZeroPadding2D (None, 31, 31, 48)   0           max_pooling2d_1
 __________________________________________________________________________________________________
 lambda_12 (Lambda)              [(None, 13, 13, 48), 0           zero_padding2d_2[0][0]           
 __________________________________________________________________________________________________
-conv2d_37 (Conv2D)              (None, 9, 9, 128)    153728      lambda_12[0][0]                  
+alexnet_spatial_2_conv (Conv2D) (None, 9, 9, 128)    153728      lambda_12[0][0]                  
                                                                  lambda_12[0][1]                  
                                                                  lambda_12[0][2]                  
                                                                  lambda_12[0][3]                  
@@ -49,17 +49,17 @@ conv2d_37 (Conv2D)              (None, 9, 9, 128)    153728      lambda_12[0][0]
                                                                  lambda_12[0][7]                  
                                                                  lambda_12[0][8]                  
 __________________________________________________________________________________________________
-concatenate_10 (Concatenate)    (None, 27, 9, 128)   0           conv2d_37[0][0]                  
-                                                                 conv2d_37[1][0]                  
-                                                                 conv2d_37[2][0]                  
+concatenate_10 (Concatenate)    (None, 27, 9, 128)   0           alexnet_spatial_2_conv[0][0]     
+                                                                 alexnet_spatial_2_conv[1][0]     
+                                                                 alexnet_spatial_2_conv[2][0]     
 __________________________________________________________________________________________________
-concatenate_11 (Concatenate)    (None, 27, 9, 128)   0           conv2d_37[3][0]                  
-                                                                 conv2d_37[4][0]                  
-                                                                 conv2d_37[5][0]                  
+concatenate_11 (Concatenate)    (None, 27, 9, 128)   0           alexnet_spatial_2_conv[3][0]     
+                                                                 alexnet_spatial_2_conv[4][0]     
+                                                                 alexnet_spatial_2_conv[5][0]     
 __________________________________________________________________________________________________
-concatenate_12 (Concatenate)    (None, 27, 9, 128)   0           conv2d_37[6][0]                  
-                                                                 conv2d_37[7][0]                  
-                                                                 conv2d_37[8][0]                  
+concatenate_12 (Concatenate)    (None, 27, 9, 128)   0           alexnet_spatial_2_conv[6][0]     
+                                                                 alexnet_spatial_2_conv[7][0]     
+                                                                 alexnet_spatial_2_conv[8][0]     
 __________________________________________________________________________________________________
 concatenate_13 (Concatenate)    (None, 27, 27, 128)  0           concatenate_10[0][0]             
                                                                  concatenate_11[0][0]             
@@ -71,7 +71,7 @@ zero_padding2d_3 (ZeroPadding2D (None, 15, 15, 128)  0           max_pooling2d_1
 __________________________________________________________________________________________________
 lambda_13 (Lambda)              [(None, 6, 6, 128),  0           zero_padding2d_3[0][0]           
 __________________________________________________________________________________________________
-conv2d_38 (Conv2D)              multiple             221376      lambda_13[0][0]                  
+alexnet_spatial_3_conv (Conv2D) multiple             221376      lambda_13[0][0]                  
                                                                  lambda_13[0][1]                  
                                                                  lambda_13[0][2]                  
                                                                  lambda_13[0][3]                  
@@ -81,17 +81,17 @@ conv2d_38 (Conv2D)              multiple             221376      lambda_13[0][0]
                                                                  lambda_13[0][7]                  
                                                                  lambda_13[0][8]                  
 __________________________________________________________________________________________________
-concatenate_14 (Concatenate)    (None, 13, 4, 192)   0           conv2d_38[0][0]                  
-                                                                 conv2d_38[1][0]                  
-                                                                 conv2d_38[2][0]                  
+concatenate_14 (Concatenate)    (None, 13, 4, 192)   0           alexnet_spatial_3_conv[0][0]     
+                                                                 alexnet_spatial_3_conv[1][0]     
+                                                                 alexnet_spatial_3_conv[2][0]     
 __________________________________________________________________________________________________
-concatenate_15 (Concatenate)    (None, 13, 4, 192)   0           conv2d_38[3][0]                  
-                                                                 conv2d_38[4][0]                  
-                                                                 conv2d_38[5][0]                  
+concatenate_15 (Concatenate)    (None, 13, 4, 192)   0           alexnet_spatial_3_conv[3][0]     
+                                                                 alexnet_spatial_3_conv[4][0]     
+                                                                 alexnet_spatial_3_conv[5][0]     
 __________________________________________________________________________________________________
-concatenate_16 (Concatenate)    (None, 13, 5, 192)   0           conv2d_38[6][0]                  
-                                                                 conv2d_38[7][0]                  
-                                                                 conv2d_38[8][0]                  
+concatenate_16 (Concatenate)    (None, 13, 5, 192)   0           alexnet_spatial_3_conv[6][0]     
+                                                                 alexnet_spatial_3_conv[7][0]     
+                                                                 alexnet_spatial_3_conv[8][0]     
 __________________________________________________________________________________________________
 concatenate_17 (Concatenate)    (None, 13, 13, 192)  0           concatenate_14[0][0]             
                                                                  concatenate_15[0][0]             
@@ -101,7 +101,7 @@ zero_padding2d_4 (ZeroPadding2D (None, 15, 15, 192)  0           concatenate_17[
 __________________________________________________________________________________________________
 lambda_14 (Lambda)              [(None, 6, 6, 192),  0           zero_padding2d_4[0][0]           
 __________________________________________________________________________________________________
-conv2d_39 (Conv2D)              multiple             331968      lambda_14[0][0]                  
+alexnet_spatial_4_conv (Conv2D) multiple             331968      lambda_14[0][0]                  
                                                                  lambda_14[0][1]                  
                                                                  lambda_14[0][2]                  
                                                                  lambda_14[0][3]                  
@@ -111,17 +111,17 @@ conv2d_39 (Conv2D)              multiple             331968      lambda_14[0][0]
                                                                  lambda_14[0][7]                  
                                                                  lambda_14[0][8]                  
 __________________________________________________________________________________________________
-concatenate_18 (Concatenate)    (None, 13, 4, 192)   0           conv2d_39[0][0]                  
-                                                                 conv2d_39[1][0]                  
-                                                                 conv2d_39[2][0]                  
+concatenate_18 (Concatenate)    (None, 13, 4, 192)   0           alexnet_spatial_4_conv[0][0]     
+                                                                 alexnet_spatial_4_conv[1][0]     
+                                                                 alexnet_spatial_4_conv[2][0]     
 __________________________________________________________________________________________________
-concatenate_19 (Concatenate)    (None, 13, 4, 192)   0           conv2d_39[3][0]                  
-                                                                 conv2d_39[4][0]                  
-                                                                 conv2d_39[5][0]                  
+concatenate_19 (Concatenate)    (None, 13, 4, 192)   0           alexnet_spatial_4_conv[3][0]     
+                                                                 alexnet_spatial_4_conv[4][0]     
+                                                                 alexnet_spatial_4_conv[5][0]     
 __________________________________________________________________________________________________
-concatenate_20 (Concatenate)    (None, 13, 5, 192)   0           conv2d_39[6][0]                  
-                                                                 conv2d_39[7][0]                  
-                                                                 conv2d_39[8][0]                  
+concatenate_20 (Concatenate)    (None, 13, 5, 192)   0           alexnet_spatial_4_conv[6][0]     
+                                                                 alexnet_spatial_4_conv[7][0]     
+                                                                 alexnet_spatial_4_conv[8][0]     
 __________________________________________________________________________________________________
 concatenate_21 (Concatenate)    (None, 13, 13, 192)  0           concatenate_18[0][0]             
                                                                  concatenate_19[0][0]             
@@ -131,7 +131,7 @@ zero_padding2d_5 (ZeroPadding2D (None, 15, 15, 192)  0           concatenate_21[
 __________________________________________________________________________________________________
 lambda_15 (Lambda)              [(None, 6, 6, 192),  0           zero_padding2d_5[0][0]           
 __________________________________________________________________________________________________
-conv2d_40 (Conv2D)              multiple             221312      lambda_15[0][0]                  
+alexnet_spatial_5_conv (Conv2D) multiple             221312      lambda_15[0][0]                  
                                                                  lambda_15[0][1]                  
                                                                  lambda_15[0][2]                  
                                                                  lambda_15[0][3]                  
@@ -141,17 +141,17 @@ conv2d_40 (Conv2D)              multiple             221312      lambda_15[0][0]
                                                                  lambda_15[0][7]                  
                                                                  lambda_15[0][8]                  
 __________________________________________________________________________________________________
-concatenate_22 (Concatenate)    (None, 13, 4, 128)   0           conv2d_40[0][0]                  
-                                                                 conv2d_40[1][0]                  
-                                                                 conv2d_40[2][0]                  
+concatenate_22 (Concatenate)    (None, 13, 4, 128)   0           alexnet_spatial_5_conv[0][0]     
+                                                                 alexnet_spatial_5_conv[1][0]     
+                                                                 alexnet_spatial_5_conv[2][0]     
 __________________________________________________________________________________________________
-concatenate_23 (Concatenate)    (None, 13, 4, 128)   0           conv2d_40[3][0]                  
-                                                                 conv2d_40[4][0]                  
-                                                                 conv2d_40[5][0]                  
+concatenate_23 (Concatenate)    (None, 13, 4, 128)   0           alexnet_spatial_5_conv[3][0]     
+                                                                 alexnet_spatial_5_conv[4][0]     
+                                                                 alexnet_spatial_5_conv[5][0]     
 __________________________________________________________________________________________________
-concatenate_24 (Concatenate)    (None, 13, 5, 128)   0           conv2d_40[6][0]                  
-                                                                 conv2d_40[7][0]                  
-                                                                 conv2d_40[8][0]                  
+concatenate_24 (Concatenate)    (None, 13, 5, 128)   0           alexnet_spatial_5_conv[6][0]     
+                                                                 alexnet_spatial_5_conv[7][0]     
+                                                                 alexnet_spatial_5_conv[8][0]     
 __________________________________________________________________________________________________
 concatenate_25 (Concatenate)    (None, 13, 13, 128)  0           concatenate_22[0][0]             
                                                                  concatenate_23[0][0]             
@@ -161,11 +161,11 @@ max_pooling2d_12 (MaxPooling2D) (None, 6, 6, 128)    0           concatenate_25[
 __________________________________________________________________________________________________
 flatten_4 (Flatten)             (None, 4608)         0           max_pooling2d_12[0][0]           
 __________________________________________________________________________________________________
-dense_10 (Dense)                (None, 4096)         18878464    flatten_4[0][0]                  
+alexnet_spatial_6_dense (Dense) (None, 4096)         18878464    flatten_4[0][0]                  
 __________________________________________________________________________________________________
-dense_11 (Dense)                (None, 4096)         16781312    dense_10[0][0]                   
+alexnet_spatial_7_dense (Dense) (None, 4096)         16781312    alexnet_spatial_6_dense[0][0]    
 __________________________________________________________________________________________________
-dense_12 (Dense)                (None, 1000)         4097000     dense_11[0][0]                   
+alexnet_spatial_8_dense (Dense) (None, 1000)         4097000     alexnet_spatial_7_dense[0][0]    
 ==================================================================================================
 Total params: 40,702,632
 Trainable params: 40,702,632

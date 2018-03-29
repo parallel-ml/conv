@@ -1,9 +1,9 @@
-            conv3d_1: 0.153 s
-            conv3d_2: 0.466 s
+            conv3d_1: 0.159 s
+            conv3d_2: 0.469 s
             conv3d_3: 0.171 s
-            conv3d_4: 0.337 s
-            conv3d_5: 0.071 s
-            conv3d_6: 0.142 s
+            conv3d_4: 0.338 s
+            conv3d_5: 0.073 s
+            conv3d_6: 0.141 s
             conv3d_7: 0.021 s
             conv3d_8: 0.021 s
              dense_1: 0.015 s

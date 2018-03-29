@@ -30,9 +30,9 @@ def merge(tensors, activation):
     return X
 
 
-def conv(tensors, filters, kernal, strides, padding):
-    return [Conv2D(filters, kernal, strides=strides, padding=padding, use_bias=i + 1 == len(tensors))(x) for i, x in
-            enumerate(tensors)]
+def conv(tensors, filters, kernal, strides, padding, name):
+    return [Conv2D(filters, kernal, strides=strides, padding=padding, use_bias=i + 1 == len(tensors),
+                   name=name + '_conv_' + str(i))(x) for i, x in enumerate(tensors)]
 
 
 def forward(data, filters, kernal, strides=(1, 1), padding='valid'):

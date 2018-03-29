@@ -1,0 +1,17 @@
+           conv2d_92: 0.045 s
+           conv2d_93: 0.018 s
+           conv2d_94: 0.012 s
+           conv2d_95: 0.015 s
+           conv2d_96: 0.011 s
+           conv2d_97: 0.012 s
+           conv2d_98: 0.012 s
+           conv2d_99: 0.011 s
+          conv2d_100: 0.013 s
+          conv2d_101: 0.013 s
+          conv2d_102: 0.010 s
+          conv2d_103: 0.010 s
+          conv2d_104: 0.010 s
+            dense_13: 0.053 s
+            dense_14: 0.016 s
+            dense_15: 0.010 s
+

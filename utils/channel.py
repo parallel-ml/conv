@@ -18,14 +18,14 @@ def merge(tensors):
     return Concatenate()(tensors)
 
 
-def conv(tensors, filters, kernal, strides, padding, activation):
+def conv(tensors, filters, kernal, strides, padding, activation, name):
     size = []
     for _ in range(len(tensors) - 1):
         size.append(filters / len(tensors))
     size.append(filters - filters / len(tensors) * (len(tensors) - 1))
 
-    return [Conv2D(size[i], kernal, strides=strides, padding=padding, activation=activation)(x) for
-            i, x in enumerate(tensors)]
+    return [Conv2D(size[i], kernal, strides=strides, padding=padding, activation=activation, name=name + '_conv_' + str(i))(x)
+            for i, x in enumerate(tensors)]
 
 
 def forward(data, filters, kernal, strides=(1, 1), padding='valid'):

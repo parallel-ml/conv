@@ -18,12 +18,36 @@ def test_vgg16():
     model = vgg16.original()
     print layerwise.timer(model)
 
+    sys.stdout = open(path + '_channel_split.txt', 'w+')
+    model = vgg16.channel()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_filter_split.txt', 'w+')
+    model = vgg16.filter()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_spatial_split.txt', 'w+')
+    model = vgg16.xy()
+    print layerwise.timer(model)
+
 
 def test_alexnet():
     path = 'timer/resource/alexnet/alexnet'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = alexnet.original()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_channel_split.txt', 'w+')
+    model = alexnet.channel()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_filter_split.txt', 'w+')
+    model = alexnet.filter()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_spatial_split.txt', 'w+')
+    model = alexnet.xy()
     print layerwise.timer(model)
 
 
@@ -34,10 +58,26 @@ def test_resnet50():
     model = resnet50.original()
     print layerwise.timer(model)
 
+    sys.stdout = open(path + '_channel_split.txt', 'w+')
+    model = resnet50.channel()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_filter_split.txt', 'w+')
+    model = resnet50.filter()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_spatial_split.txt', 'w+')
+    model = resnet50.xy()
+    print layerwise.timer(model)
+
 
 def test_xception():
     path = 'timer/resource/xception/xception'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = xception.original()
+    print layerwise.timer(model)
+
+    sys.stdout = open(path + '_filter_split.txt', 'w+')
+    model = xception.filter()
     print layerwise.timer(model)
