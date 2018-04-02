@@ -8,7 +8,7 @@ def conv_unit(X, nb_filter, kernal, name, activation=None, max_pooling=True, str
     if max_pooling:
         X = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(X)
     X = Conv2D(nb_filter, kernel_size=kernal, activation=activation, strides=strides,
-               padding='same', name=name + '_original')(X)
+               padding='same', name=name + '_conv')(X)
     return X
 
 

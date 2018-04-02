@@ -53,6 +53,9 @@ def timer(model):
         _model.add(input)
         _model.add(_layer)
 
+        # fake run because the model needs to be complied
+        _model.predict(np.array([data]))
+
         start = time.time()
         for _ in range(50):
             _model.predict(np.array([data]))

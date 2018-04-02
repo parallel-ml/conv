@@ -1,4 +1,4 @@
-from models import c3d, vgg16, alexnet, resnet50, xception
+from models import c3d, vgg16, alexnet, resnet50, xception, yolo
 from timer import layerwise
 import sys
 
@@ -80,4 +80,12 @@ def test_xception():
 
     sys.stdout = open(path + '_filter_split.txt', 'w+')
     model = xception.filter()
+    print layerwise.timer(model)
+
+
+def test_yolo():
+    path = 'timer/resource/yolo/yolo'
+
+    sys.stdout = open(path + '.txt', 'w+')
+    model = yolo.original()
     print layerwise.timer(model)

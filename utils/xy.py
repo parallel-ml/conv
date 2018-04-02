@@ -106,6 +106,10 @@ def split_xy(X, kernal, strides, padding, num):
 
 
 def merge(tensors):
+    """
+        The merge function will concatenate all inputs vertically and
+        then horizontally.
+    """
     size = int(math.sqrt(len(tensors)))
     rows = [Concatenate(axis=1)(tensors[k * size:k * size + size]) for k in range(size)]
     return Concatenate(axis=2)(rows)
