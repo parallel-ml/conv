@@ -1,5 +1,5 @@
 import sys
-from models import alexnet, vgg16, resnet50, xception, c3d
+from models import alexnet, vgg16, resnet50, xception, c3d, yolo
 from keras.utils import plot_model
 
 
@@ -104,5 +104,14 @@ def test_c3d():
 
     sys.stdout = open(path + '.txt', 'w+')
     model = c3d.original()
+    print model.summary()
+    plot_model(model, to_file=path + '.png')
+
+
+def test_yolo():
+    path = 'models/resource/yolo/yolo'
+
+    sys.stdout = open(path + '.txt', 'w+')
+    model = yolo.original()
     print model.summary()
     plot_model(model, to_file=path + '.png')
