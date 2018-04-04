@@ -7,7 +7,7 @@ from utils import separable
 NAME = 'xception'
 
 
-def original():
+def original(include_fc=True):
     img_input = Input([224, 224, 3])
 
     x = Conv2D(32, (3, 3), strides=(2, 2), use_bias=False, activation='relu')(img_input)
@@ -60,12 +60,14 @@ def original():
     x = Activation('relu')(x)
 
     x = GlobalAveragePooling2D()(x)
-    x = Dense(1000, activation='softmax')(x)
+
+    if include_fc:
+        x = Dense(1000, activation='softmax')(x)
 
     return Model(img_input, x)
 
 
-def filter():
+def filter(include_fc=True):
     img_input = Input([224, 224, 3])
     name = NAME + '_filter'
 
@@ -122,6 +124,8 @@ def filter():
     x = Activation('relu')(x)
 
     x = GlobalAveragePooling2D()(x)
-    x = Dense(1000, activation='softmax', name=name + '_40_dense')(x)
+
+    if include_fc:
+        x = Dense(1000, activation='softmax', name=name + '_40_dense')(x)
 
     return Model(img_input, x)

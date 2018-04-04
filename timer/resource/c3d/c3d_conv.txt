@@ -1,0 +1,9 @@
+ c3d_original_1_conv: 0.150 s
+ c3d_original_2_conv: 0.470 s
+ c3d_original_3_conv: 0.171 s
+ c3d_original_4_conv: 0.337 s
+ c3d_original_5_conv: 0.071 s
+ c3d_original_6_conv: 0.139 s
+ c3d_original_7_conv: 0.020 s
+ c3d_original_8_conv: 0.020 s
+

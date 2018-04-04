@@ -7,7 +7,7 @@ from unit import filter_unit, xy_unit, channel_unit, conv_unit
 NAME = 'alexnet'
 
 
-def filter():
+def filter(include_fc=True):
     name = NAME + '_filter'
     img = Input(shape=(220, 220, 3))
 
@@ -20,15 +20,18 @@ def filter():
     x = filter_unit(x, 128, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_5')
 
     x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
-    fc = Flatten()(x)
-    fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
-    fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
-    fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
 
-    return Model(img, fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
+        fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
+        fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
+        x = fc
+
+    return Model(img, x)
 
 
-def xy():
+def xy(include_fc=True):
     name = NAME + '_spatial'
     img = Input(shape=(220, 220, 3))
 
@@ -41,15 +44,18 @@ def xy():
     x = xy_unit(x, 128, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_5')
 
     x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
-    fc = Flatten()(x)
-    fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
-    fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
-    fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
 
-    return Model(img, fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
+        fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
+        fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
+        x = fc
+
+    return Model(img, x)
 
 
-def channel():
+def channel(include_fc=True):
     name = NAME + '_channel'
     img = Input(shape=(220, 220, 3))
 
@@ -62,15 +68,18 @@ def channel():
     x = channel_unit(x, 128, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_5')
 
     x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
-    fc = Flatten()(x)
-    fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
-    fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
-    fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
 
-    return Model(img, fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
+        fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
+        fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
+        x = fc
+
+    return Model(img, x)
 
 
-def original():
+def original(include_fc=True):
     name = NAME + '_original'
     img = Input(shape=(220, 220, 3))
 
@@ -82,9 +91,12 @@ def original():
     x = conv_unit(x, 128, (3, 3), max_pooling=False, activation='relu', name=name + '_5')
 
     x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
-    fc = Flatten()(x)
-    fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
-    fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
-    fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
 
-    return Model(img, fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(4096, activation='relu', name=name + '_6_dense')(fc)
+        fc = Dense(4096, activation='relu', name=name + '_7_dense')(fc)
+        fc = Dense(1000, activation='softmax', name=name + '_8_dense')(fc)
+        x = fc
+
+    return Model(img, x)

@@ -6,7 +6,7 @@ from unit import filter_unit, channel_unit, xy_unit
 NAME = 'vgg16'
 
 
-def original():
+def original(include_fc=True):
     name = NAME + '_original'
     img_input = Input(shape=[224, 224, 3])
 
@@ -38,16 +38,17 @@ def original():
     x = Conv2D(512, (3, 3), activation='relu', padding='same', name=name + '_13_conv')(x)
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
-    # Classification block
-    x = Flatten(name='flatten')(x)
-    x = Dense(4096, activation='relu', name=name + '_13_dense')(x)
-    x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
-    x = Dense(1000, activation='softmax', name=name + '_15_dense')(x)
+    if include_fc:
+        # Classification block
+        x = Flatten(name='flatten')(x)
+        x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
+        x = Dense(4096, activation='relu', name=name + '_15_dense')(x)
+        x = Dense(1000, activation='softmax', name=name + '_16_dense')(x)
 
     return Model(img_input, x)
 
 
-def filter():
+def filter(include_fc=True):
     name = NAME + '_filter'
     img_input = Input(shape=[224, 224, 3])
 
@@ -79,16 +80,17 @@ def filter():
     x = filter_unit(x, 512, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_13')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
-    # Classification block
-    x = Flatten(name='flatten')(x)
-    x = Dense(4096, activation='relu', name=name + '_13_dense')(x)
-    x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
-    x = Dense(1000, activation='softmax', name=name + '_15_dense')(x)
+    if include_fc:
+        # Classification block
+        x = Flatten(name='flatten')(x)
+        x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
+        x = Dense(4096, activation='relu', name=name + '_15_dense')(x)
+        x = Dense(1000, activation='softmax', name=name + '_16_dense')(x)
 
     return Model(img_input, x)
 
 
-def xy():
+def xy(include_fc=True):
     name = NAME + '_spatial'
     img_input = Input(shape=[224, 224, 3])
 
@@ -120,16 +122,17 @@ def xy():
     x = xy_unit(x, 512, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_13')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
-    # Classification block
-    x = Flatten(name='flatten')(x)
-    x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
-    x = Dense(4096, activation='relu', name=name + '_15_dense')(x)
-    x = Dense(1000, activation='softmax', name=name + '_16_dense')(x)
+    if include_fc:
+        # Classification block
+        x = Flatten(name='flatten')(x)
+        x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
+        x = Dense(4096, activation='relu', name=name + '_15_dense')(x)
+        x = Dense(1000, activation='softmax', name=name + '_16_dense')(x)
 
     return Model(img_input, x)
 
 
-def channel():
+def channel(include_fc=True):
     name = NAME + '_channel'
     img_input = Input(shape=[224, 224, 3])
 
@@ -161,10 +164,11 @@ def channel():
     x = channel_unit(x, 512, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_13')
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
-    # Classification block
-    x = Flatten(name='flatten')(x)
-    x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
-    x = Dense(4096, activation='relu', name=name + '_15_dense')(x)
-    x = Dense(1000, activation='softmax', name=name + '_16_dense')(x)
+    if include_fc:
+        # Classification block
+        x = Flatten(name='flatten')(x)
+        x = Dense(4096, activation='relu', name=name + '_14_dense')(x)
+        x = Dense(4096, activation='relu', name=name + '_15_dense')(x)
+        x = Dense(1000, activation='softmax', name=name + '_16_dense')(x)
 
     return Model(img_input, x)

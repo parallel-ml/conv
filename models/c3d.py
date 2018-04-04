@@ -5,7 +5,7 @@ from keras.models import Model
 NAME = 'c3d'
 
 
-def original():
+def original(include_fc=True):
     name = NAME + '_original'
     img_input = Input([112, 112, 16, 3])
 
@@ -27,9 +27,11 @@ def original():
     x = Conv3D(512, (3, 3, 3), activation='relu', padding='same', name=name + '_8_conv')(x)
     x = MaxPooling3D((2, 2, 2), strides=(2, 2, 2), padding='same')(x)
 
-    fc = Flatten()(x)
-    fc = Dense(4096, activation='relu', name=name + '_9_dense')(fc)
-    fc = Dense(4096, activation='relu', name=name + '_10_dense')(fc)
-    fc = Dense(487, name=name + '_11_dense')(fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(4096, activation='relu', name=name + '_9_dense')(fc)
+        fc = Dense(4096, activation='relu', name=name + '_10_dense')(fc)
+        fc = Dense(487, name=name + '_11_dense')(fc)
+        x = fc
 
-    return Model(img_input, fc)
+    return Model(img_input, x)

@@ -1,0 +1,6 @@
+alexnet_spatial_1_conv: 0.001 s
+alexnet_spatial_2_conv: 0.001 s
+alexnet_spatial_3_conv: 0.001 s
+alexnet_spatial_4_conv: 0.001 s
+alexnet_spatial_5_conv: 0.001 s
+

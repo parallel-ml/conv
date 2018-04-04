@@ -8,7 +8,7 @@ MODE = 'original'
 NAME = 'resnet50'
 
 
-def original():
+def original(include_fc=True):
     name = NAME + '_original'
     img_input = Input([224, 224, 3])
 
@@ -38,13 +38,15 @@ def original():
 
     x = AveragePooling2D((7, 7))(x)
 
-    fc = Flatten()(x)
-    fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+        x = fc
 
-    return Model(img_input, fc)
+    return Model(img_input, x)
 
 
-def filter():
+def filter(include_fc=True):
     global MODE
     MODE = 'filter'
 
@@ -77,13 +79,15 @@ def filter():
 
     x = AveragePooling2D((7, 7))(x)
 
-    fc = Flatten()(x)
-    fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+        x = fc
 
-    return Model(img_input, fc)
+    return Model(img_input, x)
 
 
-def xy():
+def xy(include_fc=True):
     global MODE
     MODE = 'xy'
 
@@ -116,13 +120,15 @@ def xy():
 
     x = AveragePooling2D((7, 7))(x)
 
-    fc = Flatten()(x)
-    fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+        x = fc
 
-    return Model(img_input, fc)
+    return Model(img_input, x)
 
 
-def channel():
+def channel(include_fc=True):
     global MODE
     MODE = 'channel'
 
@@ -155,10 +161,12 @@ def channel():
 
     x = AveragePooling2D((7, 7))(x)
 
-    fc = Flatten()(x)
-    fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+    if include_fc:
+        fc = Flatten()(x)
+        fc = Dense(1000, activation='softmax', name=name + '_18_dense')(fc)
+        x = fc
 
-    return Model(img_input, fc)
+    return Model(img_input, x)
 
 
 def conv(input_tensor, kernel_size, filters, name, strides=(2, 2)):
