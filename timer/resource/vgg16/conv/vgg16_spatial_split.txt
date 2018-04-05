@@ -1,14 +1,13 @@
-vgg16_spatial_1_conv: 0.002 s
-vgg16_spatial_2_conv: 0.011 s
-vgg16_spatial_3_conv: 0.005 s
-vgg16_spatial_4_conv: 0.008 s
-vgg16_spatial_5_conv: 0.004 s
-vgg16_spatial_6_conv: 0.006 s
-vgg16_spatial_7_conv: 0.006 s
-vgg16_spatial_8_conv: 0.004 s
-vgg16_spatial_9_conv: 0.007 s
-vgg16_spatial_10_conv: 0.008 s
-vgg16_spatial_11_conv: 0.003 s
-vgg16_spatial_12_conv: 0.003 s
-vgg16_spatial_13_conv: 0.003 s
-
+vgg16_spatial_1_conv: 0.037 s
+vgg16_spatial_2_conv: 0.146 s
+vgg16_spatial_3_conv: 0.062 s
+vgg16_spatial_4_conv: 0.111 s
+vgg16_spatial_5_conv: 0.053 s
+vgg16_spatial_6_conv: 0.095 s
+vgg16_spatial_7_conv: 0.092 s
+vgg16_spatial_8_conv: 0.062 s
+vgg16_spatial_9_conv: 0.113 s
+vgg16_spatial_10_conv: 0.109 s
+vgg16_spatial_11_conv: 0.076 s
+vgg16_spatial_12_conv: 0.080 s
+vgg16_spatial_13_conv: 0.077 s
