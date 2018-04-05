@@ -1,0 +1,24 @@
+yolo_original_1_conv: 0.009 s
+yolo_original_2_conv: 0.014 s
+yolo_original_3_conv: 0.011 s
+yolo_original_4_conv: 0.004 s
+yolo_original_5_conv: 0.011 s
+yolo_original_6_conv: 0.008 s
+yolo_original_7_conv: 0.004 s
+yolo_original_8_conv: 0.009 s
+yolo_original_9_conv: 0.009 s
+yolo_original_10_conv: 0.003 s
+yolo_original_11_conv: 0.009 s
+yolo_original_12_conv: 0.004 s
+yolo_original_13_conv: 0.012 s
+yolo_original_14_conv: 0.011 s
+yolo_original_15_conv: 0.003 s
+yolo_original_16_conv: 0.015 s
+yolo_original_17_conv: 0.005 s
+yolo_original_18_conv: 0.010 s
+yolo_original_21_conv: 0.003 s
+yolo_original_19_conv: 0.036 s
+yolo_original_20_conv: 0.025 s
+yolo_original_22_conv: 0.032 s
+yolo_original_23_conv: 0.023 s
+

@@ -1,0 +1,16 @@
+alexnet_filter_1_conv_0: 0.003 s
+alexnet_filter_1_conv_1: 0.003 s
+alexnet_filter_1_conv_2: 0.004 s
+alexnet_filter_2_conv_0: 0.002 s
+alexnet_filter_2_conv_1: 0.003 s
+alexnet_filter_2_conv_2: 0.002 s
+alexnet_filter_3_conv_0: 0.001 s
+alexnet_filter_3_conv_1: 0.002 s
+alexnet_filter_3_conv_2: 0.003 s
+alexnet_filter_4_conv_0: 0.004 s
+alexnet_filter_4_conv_1: 0.005 s
+alexnet_filter_4_conv_2: 0.004 s
+alexnet_filter_5_conv_0: 0.005 s
+alexnet_filter_5_conv_1: 0.002 s
+alexnet_filter_5_conv_2: 0.002 s
+

@@ -4,7 +4,7 @@ import sys
 
 
 def test_c3d():
-    path = 'timer/resource/c3d/c3d'
+    path = 'timer/resource/c3d/model/c3d'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = c3d.original()
@@ -12,7 +12,7 @@ def test_c3d():
 
 
 def test_vgg16():
-    path = 'timer/resource/vgg16/vgg16'
+    path = 'timer/resource/vgg16/model/vgg16'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = vgg16.original()
@@ -32,7 +32,7 @@ def test_vgg16():
 
 
 def test_alexnet():
-    path = 'timer/resource/alexnet/alexnet'
+    path = 'timer/resource/alexnet/model/alexnet'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = alexnet.original()
@@ -52,7 +52,7 @@ def test_alexnet():
 
 
 def test_resnet50():
-    path = 'timer/resource/resnet50/resnet50'
+    path = 'timer/resource/resnet50/model/resnet50'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = resnet50.original()
@@ -72,7 +72,7 @@ def test_resnet50():
 
 
 def test_xception():
-    path = 'timer/resource/xception/xception'
+    path = 'timer/resource/xception/model/xception'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = xception.original()
@@ -84,7 +84,7 @@ def test_xception():
 
 
 def test_yolo():
-    path = 'timer/resource/yolo/yolo'
+    path = 'timer/resource/yolo/model/yolo'
 
     sys.stdout = open(path + '.txt', 'w+')
     model = yolo.original()

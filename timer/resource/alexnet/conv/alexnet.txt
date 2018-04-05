@@ -1,0 +1,6 @@
+alexnet_original_1_conv: 0.005 s
+alexnet_original_2_conv: 0.004 s
+alexnet_original_3_conv: 0.002 s
+alexnet_original_4_conv: 0.002 s
+alexnet_original_5_conv: 0.002 s
+

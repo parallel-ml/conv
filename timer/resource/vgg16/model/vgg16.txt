@@ -1,0 +1,17 @@
+vgg16_original_1_conv: 0.015 s
+vgg16_original_2_conv: 0.094 s
+vgg16_original_3_conv: 0.035 s
+vgg16_original_4_conv: 0.060 s
+vgg16_original_5_conv: 0.025 s
+vgg16_original_6_conv: 0.048 s
+vgg16_original_7_conv: 0.047 s
+vgg16_original_8_conv: 0.023 s
+vgg16_original_9_conv: 0.043 s
+vgg16_original_10_conv: 0.043 s
+vgg16_original_11_conv: 0.012 s
+vgg16_original_12_conv: 0.012 s
+vgg16_original_13_conv: 0.012 s
+vgg16_original_14_dense: 0.033 s
+vgg16_original_15_dense: 0.006 s
+vgg16_original_16_dense: 0.002 s
+
