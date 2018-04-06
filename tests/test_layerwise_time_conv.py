@@ -123,7 +123,7 @@ def test_xception_filter():
     print layerwise.timer(model)
 
 
-def test_yolo_orignal():
+def test_yolo_original():
     path = 'timer/resource/yolo/conv/yolo'
 
     sys.stdout = open(path + '.txt', 'w+')
