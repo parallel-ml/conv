@@ -1,4 +1,4 @@
-from utils.queue import Queue
+from system.queue import Queue
 
 
 def test_simple_queue():
