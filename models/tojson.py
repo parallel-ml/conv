@@ -12,6 +12,8 @@ with open('system/resource/model/config.json', 'w+') as f:
 
     configs = dict()
     for layer in model.layers:
-        config = layer.get_config()
-        configs[config['name']] = config
+        layer_config = dict()
+        layer_config['class_name'] = layer.__class__.__name__
+        layer_config['config'] = layer.get_config()
+        configs[layer.get_config()['name']] = layer_config
     json.dump(configs, f)

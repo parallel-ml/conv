@@ -1,6 +1,10 @@
 import time
-from multiprocessing import Lock
-from system.queue import Queue
+from multiprocessing import Lock, Queue
+from system.queue import Queue as queue_wrapper
+import socket
+import yaml
+from keras.models import Sequential
+from keras import layers
 
 
 class Node:
@@ -15,9 +19,10 @@ class Node:
             total_time: Total timing of one data packet from being received
                         to being successfully processed.
             prediction_time: Total timing of model inference.
-            lock: Ensure the node integrity.
             input: Store the data packets from other nodes.
+            ip: Store all IP addresses of available devices.
             debug: If print out verbose information.
+            lock: Ensure the node integrity.
     """
 
     instance = None
@@ -27,7 +32,31 @@ class Node:
         if cls.instance is None:
             cls.instance = cls(queue_size)
 
-            # TODO: extract node information from json file and create a Node.
+            # Get ip address and create model according to ip config file.
+            ip = socket.gethostbyname(socket.gethostname())
+            with open('resource/system/config.json') as f:
+                system_config = yaml.safe_load(f)[ip]
+
+                model = Sequential()
+
+                # The model config is predefined. Extract each layer's config
+                # according to the config from system config.
+                with open('resource/model/config.json') as f2:
+                    model_config = yaml.safe_load(f2)
+                    for layer_name in system_config['model']:
+                        class_name = model_config[layer_name]['class_name']
+                        config = model_config[layer_name]['config']
+                        layer = layers.deserialize({
+                            'class_name': class_name,
+                            'config': config
+                        })
+                        model.add(layer)
+
+                cls.instance.model = model
+
+                for ip in system_config['devices']:
+                    cls.instance.ip.put(ip)
+
         return cls.instance
 
     def __init__(self, queue_size):
@@ -35,13 +64,12 @@ class Node:
         self.total_time = 0.0
         self.utilization_time = 0.0
         self.prediction_time = 0.0
-        self.lock = Lock()
-        self.input = Queue(queue_size)
+        self.input = queue_wrapper(queue_size)
+        self.ip = Queue()
         self.debug = False
+        self.lock = Lock()
 
-    def inference(self):
-        # TODO: create model here.
-
+    def inference(self, X):
         start = time.time()
 
         # TODO: do model inference here.
@@ -52,6 +80,8 @@ class Node:
         self.acquire_lock()
         start = time.time()
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
+
+        input_shape = self.model.input_shape
 
         # TODO: reassemble data packets.
 
