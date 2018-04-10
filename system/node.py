@@ -1,10 +1,12 @@
 import time
 from multiprocessing import Lock, Queue
+from threading import Thread
 from system.queue import Queue as queue_wrapper
 import socket
 import yaml
 from keras.models import Sequential
 from keras import layers
+import numpy as np
 
 
 class Node:
@@ -46,6 +48,7 @@ class Node:
                     for layer_name in system_config['model']:
                         class_name = model_config[layer_name]['class_name']
                         config = model_config[layer_name]['config']
+                        # TODO: Sequential model needs to know input dim.
                         layer = layers.deserialize({
                             'class_name': class_name,
                             'config': config
@@ -71,19 +74,21 @@ class Node:
 
     def inference(self, X):
         start = time.time()
-
-        # TODO: do model inference here.
-
+        X = self.model.predict(np.array([X]))
         self.prediction_time += time.time() - start
+        Thread(target=self.send, args=(X,)).start()
 
     def receive(self, msg, req):
         self.acquire_lock()
         start = time.time()
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
-        input_shape = self.model.input_shape
+        bytestr = req['input']
+        datatype = np.uint8 if req['type'] == 8 else np.float32
 
-        # TODO: reassemble data packets.
+        input_shape = self.model.input_shape
+        X = np.fromstring(bytestr, datatype).reshape(input_shape)
+        self.inference(X)
 
         self.utilization_time += time.time() - start
         self.release_lock()
