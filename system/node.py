@@ -40,7 +40,15 @@ class Node:
             cls.instance = cls(queue_size)
 
             # Get ip address and create model according to ip config file.
-            ip = socket.gethostbyname(socket.gethostname())
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            try:
+                s.connect(('8.8.8.8', 80))
+                ip = s.getsockname()[0]
+            except Exception:
+                ip = '127.0.0.1'
+            finally:
+                s.close()
+
             with open(DIR_PATH + '/resource/system/config.json') as f:
                 system_config = yaml.safe_load(f)[ip]
 
