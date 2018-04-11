@@ -93,6 +93,9 @@ class Node:
         self.graph = tf.get_default_graph()
         self.input_shape = None
 
+        Thread(target=self.inference).start()
+        Thread(target=self.stats).start()
+
     def inference(self):
         self.acquire_lock()
         X = self.input.dequeue()
@@ -101,36 +104,30 @@ class Node:
             start = time.time()
             with self.graph.as_default():
                 X = self.model.predict(np.array([X]))
+                Thread(target=self.send, args=(X,)).start()
             self.prediction_time += time.time() - start
 
         self.release_lock()
-        Thread(target=self.send, args=(X,)).start()
 
     def receive(self, msg, req):
         start = time.time()
-        stats = True if self.total_time == 0.0 else False
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32
         X = np.fromstring(bytestr, datatype).reshape(self.input_shape)
         self.input.enqueue(X)
-
-        self.inference()
-
         self.utilization_time += time.time() - start
-        if stats:
-            Thread(target=self.stats).start()
 
     def send(self, X):
         # TODO: send output to next layer.
         pass
 
     def utilization(self):
-        return self.utilization_time / (time.time() - self.total_time)
+        return np.float32(self.prediction_time) / (time.time() - self.total_time)
 
     def overhead(self):
-        return np.float32(self.utilization_time - self.prediction_time) / self.utilization_time
+        return np.float32(self.utilization_time) / (time.time() - self.total_time)
 
     def acquire_lock(self):
         self.lock.acquire()
