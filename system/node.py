@@ -89,6 +89,7 @@ class Node:
     def inference(self, X):
         start = time.time()
         X = self.model.predict(np.array([X]))
+        self.log('prediction completes')
         self.prediction_time += time.time() - start
         Thread(target=self.send, args=(X,)).start()
 
@@ -97,12 +98,18 @@ class Node:
         start = time.time()
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
+        self.log('node gets data')
+
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32
+
+        self.log('nodes data assembling finishes')
 
         input_shape = self.model.input_shape
         X = np.fromstring(bytestr, datatype).reshape(input_shape)
         self.inference(X)
+
+        self.log('inference finishes')
 
         self.utilization_time += time.time() - start
         self.release_lock()

@@ -133,7 +133,8 @@ def main():
         finally:
             s.close()
 
-        for device in configs[ip]:
+        config = configs[ip]
+        for device in config['devices']:
             init.queue.put(device)
 
     # listen on port 9999 for model inference result

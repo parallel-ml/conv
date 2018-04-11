@@ -7,6 +7,9 @@
       "request" : [ {
         "name" : "input",
         "type" : "bytes"
+      }, {
+        "name" : "type",
+        "type" : "int"
       } ],
       "response" : "null"
     }
