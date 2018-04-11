@@ -1,4 +1,5 @@
 import time
+import os
 from multiprocessing import Lock, Queue
 from threading import Thread
 from system.queue import Queue as queue_wrapper
@@ -6,7 +7,11 @@ import socket
 import yaml
 from keras.models import Sequential
 from keras import layers
+from keras.layers import InputLayer
 import numpy as np
+
+PATH = os.path.abspath(__file__)
+DIR_PATH = os.path.dirname(PATH)
 
 
 class Node:
@@ -36,23 +41,24 @@ class Node:
 
             # Get ip address and create model according to ip config file.
             ip = socket.gethostbyname(socket.gethostname())
-            with open('resource/system/config.json') as f:
+            with open(DIR_PATH + '/resource/system/config.json') as f:
                 system_config = yaml.safe_load(f)[ip]
 
                 model = Sequential()
 
                 # The model config is predefined. Extract each layer's config
                 # according to the config from system config.
-                with open('resource/model/config.json') as f2:
+                with open(DIR_PATH + '/resource/model/config.json') as f2:
                     model_config = yaml.safe_load(f2)
                     for layer_name in system_config['model']:
                         class_name = model_config[layer_name]['class_name']
                         config = model_config[layer_name]['config']
-                        # TODO: Sequential model needs to know input dim.
+                        input_shape = model_config[layer_name]['input_shape']
                         layer = layers.deserialize({
                             'class_name': class_name,
                             'config': config
                         })
+                        model.add(InputLayer(input_shape))
                         model.add(layer)
 
                 cls.instance.model = model

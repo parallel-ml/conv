@@ -2,5 +2,9 @@
   "192.168.1.7": {
     "model": ["alexnet_original_1_conv"],
     "devices": ["192.168.1.6"]
+  },
+  "192.168.1.18": {
+    "model": ["alexnet_original_1_conv"],
+    "devices": ["192.168.1.6"]
   }
 }

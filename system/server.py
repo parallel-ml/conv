@@ -11,8 +11,11 @@ from system.node import Node
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+PATH = os.path.abspath(__file__)
+DIR_PATH = os.path.dirname(PATH)
+
 # read data packet format.
-PROTOCOL = protocol.parse(open('resource/message/image.avpr').read())
+PROTOCOL = protocol.parse(open(DIR_PATH + '/resource/message/image.avpr').read())
 QUEUE_SIZE = 1
 
 
