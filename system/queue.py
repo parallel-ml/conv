@@ -30,6 +30,7 @@ class Queue:
             self.over += 1
 
     def dequeue(self):
+        self.op += 1
         if len(self.queue) > 0:
             return self.queue.popleft()
         self.under += 1

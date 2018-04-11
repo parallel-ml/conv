@@ -84,7 +84,7 @@ class Node:
     def __init__(self, queue_size):
         self.model = None
         self.total_time = 0.0
-        self.utilization_time = 0.0
+        self.prepare_data = 0.0
         self.prediction_time = 0.0
         self.input = queue_wrapper(queue_size)
         self.ip = Queue()
@@ -97,19 +97,21 @@ class Node:
         Thread(target=self.stats).start()
 
     def inference(self):
-        self.acquire_lock()
-        X = self.input.dequeue()
+        while True:
+            self.acquire_lock()
+            X = self.input.dequeue()
 
-        if X is not None:
-            start = time.time()
-            with self.graph.as_default():
-                X = self.model.predict(np.array([X]))
-                Thread(target=self.send, args=(X,)).start()
-            self.prediction_time += time.time() - start
+            if X is not None:
+                start = time.time()
+                with self.graph.as_default():
+                    X = self.model.predict(np.array([X]))
+                    Thread(target=self.send, args=(X,)).start()
+                self.prediction_time += time.time() - start
 
-        self.release_lock()
+            self.release_lock()
 
     def receive(self, msg, req):
+        print 'gets data'
         start = time.time()
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
@@ -117,7 +119,7 @@ class Node:
         datatype = np.uint8 if req['type'] == 8 else np.float32
         X = np.fromstring(bytestr, datatype).reshape(self.input_shape)
         self.input.enqueue(X)
-        self.utilization_time += time.time() - start
+        self.prepare_data += time.time() - start
 
     def send(self, X):
         # TODO: send output to next layer.
@@ -127,7 +129,7 @@ class Node:
         return np.float32(self.prediction_time) / (time.time() - self.total_time)
 
     def overhead(self):
-        return np.float32(self.utilization_time) / (time.time() - self.total_time)
+        return np.float32(self.prepare_data) / (time.time() - self.total_time)
 
     def acquire_lock(self):
         self.lock.acquire()
@@ -140,6 +142,7 @@ class Node:
             print 'overhead: {:.3f}'.format(self.overhead())
             print 'utilization: {:.3f}'.format(self.utilization())
             print 'overflow: {:.3f}'.format(self.input.overflow)
+            print 'underflow: {:.3f}'.format(self.input.underflow)
             time.sleep(1)
 
     def log(self, step, data=''):
