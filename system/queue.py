@@ -53,11 +53,11 @@ class Queue:
 
     @property
     def overflow(self):
-        return np.float32(1.0 * self.over) / self.op
+        return np.float32(self.over) / self.op
 
     @property
     def underflow(self):
-        return np.float32(1.0 * self.under) / self.op
+        return np.float32(self.under) / self.op
 
     def log(self):
         print 'overflow:  {:.1f} %'.format(self.overflow * 100)

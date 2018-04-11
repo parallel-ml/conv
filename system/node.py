@@ -97,10 +97,11 @@ class Node:
         self.acquire_lock()
         X = self.input.dequeue()
 
-        start = time.time()
-        with self.graph.as_default():
-            X = self.model.predict(np.array([X]))
-        self.prediction_time += time.time() - start
+        if X is not None:
+            start = time.time()
+            with self.graph.as_default():
+                X = self.model.predict(np.array([X]))
+            self.prediction_time += time.time() - start
 
         self.release_lock()
         Thread(target=self.send, args=(X,)).start()
