@@ -1,10 +1,25 @@
 {
-  "192.168.1.18": {
-    "model": ["alexnet_original_1_conv"],
-    "devices": ["192.168.1.13"]
-  },
   "192.168.1.13": {
-    "model": ["alexnet_original_1_conv"],
-    "devices": ["192.168.1.18"]
+    "model": [
+      "alexnet_original_1_conv",
+      "max_pooling2d_1",
+      "alexnet_original_2_conv",
+      "max_pooling2d_2",
+      "alexnet_original_3_conv",
+      "max_pooling2d_3",
+      "alexnet_original_4_conv",
+      "alexnet_original_5_conv"
+    ],
+    "devices": [
+      "192.168.1.16"
+    ]
+  },
+  "192.168.1.16": {
+    "model": [
+      "alexnet_original_1_conv"
+    ],
+    "devices": [
+      "192.168.1.13"
+    ]
   }
 }

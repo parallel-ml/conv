@@ -2,6 +2,7 @@
     Customized wrapper for Python deque data structure.
 """
 from collections import deque
+import numpy as np
 
 
 class Queue:
@@ -52,11 +53,11 @@ class Queue:
 
     @property
     def overflow(self):
-        return 1.0 * self.over / self.op
+        return np.float32(1.0 * self.over) / self.op
 
     @property
     def underflow(self):
-        return 1.0 * self.under / self.op
+        return np.float32(1.0 * self.under) / self.op
 
     def log(self):
         print 'overflow:  {:.1f} %'.format(self.overflow * 100)

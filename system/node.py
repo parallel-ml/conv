@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras import layers
 from keras.layers import InputLayer
 import numpy as np
+import tensorflow as tf
 
 PATH = os.path.abspath(__file__)
 DIR_PATH = os.path.dirname(PATH)
@@ -30,6 +31,8 @@ class Node:
             ip: Store all IP addresses of available devices.
             debug: If print out verbose information.
             lock: Ensure the node integrity.
+            graph: Default graph with Tensorflow backend.
+            input_shape: Input shape for model on this node.
     """
 
     instance = None
@@ -69,7 +72,9 @@ class Node:
                         model.add(InputLayer(input_shape))
                         model.add(layer)
 
+                cls.instance.input_shape = model.input_shape[1:]
                 cls.instance.model = model
+                cls.log(cls.instance, 'model finishes', model.summary())
 
                 for ip in system_config['devices']:
                     cls.instance.ip.put(ip)
@@ -85,34 +90,36 @@ class Node:
         self.ip = Queue()
         self.debug = False
         self.lock = Lock()
+        self.graph = tf.get_default_graph()
+        self.input_shape = None
 
-    def inference(self, X):
+    def inference(self):
+        self.acquire_lock()
+        X = self.input.dequeue()
+
         start = time.time()
-        X = self.model.predict(np.array([X]))
-        self.log('prediction completes')
+        with self.graph.as_default():
+            X = self.model.predict(np.array([X]))
         self.prediction_time += time.time() - start
+
+        self.release_lock()
         Thread(target=self.send, args=(X,)).start()
 
     def receive(self, msg, req):
-        self.acquire_lock()
         start = time.time()
+        stats = True if self.total_time == 0.0 else False
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
-
-        self.log('node gets data')
 
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32
+        X = np.fromstring(bytestr, datatype).reshape(self.input_shape)
+        self.input.enqueue(X)
 
-        self.log('nodes data assembling finishes')
-
-        input_shape = self.model.input_shape
-        X = np.fromstring(bytestr, datatype).reshape(input_shape)
-        self.inference(X)
-
-        self.log('inference finishes')
+        self.inference()
 
         self.utilization_time += time.time() - start
-        self.release_lock()
+        if stats:
+            Thread(target=self.stats).start()
 
     def send(self, X):
         # TODO: send output to next layer.
@@ -122,13 +129,20 @@ class Node:
         return self.utilization_time / (time.time() - self.total_time)
 
     def overhead(self):
-        return (self.utilization_time - self.prediction_time) / self.utilization_time
+        return np.float32(self.utilization_time - self.prediction_time) / self.utilization_time
 
     def acquire_lock(self):
         self.lock.acquire()
 
     def release_lock(self):
         self.lock.release()
+
+    def stats(self):
+        while True:
+            print 'overhead: {:.3f}'.format(self.overhead())
+            print 'utilization: {:.3f}'.format(self.utilization())
+            print 'overflow: {:.3f}'.format(self.input.overflow)
+            time.sleep(1)
 
     def log(self, step, data=''):
         """
