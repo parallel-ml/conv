@@ -44,6 +44,7 @@ def send_request(bytestr):
 
     data = dict()
     data['input'] = bytestr
+    data['type'] = 8
     requestor.request('forward', data)
 
     client.close()
