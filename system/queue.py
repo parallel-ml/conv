@@ -18,20 +18,21 @@ class Queue:
     """
     def __init__(self, size):
         self.max_size = size
-        self.op = 0
+        self.enqueue_op = 0
+        self.dequeue_op = 0
         self.over = 0
         self.under = 0
         self.queue = deque()
 
     def enqueue(self, data):
-        self.op += 1
+        self.enqueue_op += 1
         if len(self.queue) < self.max_size:
             self.queue.append(data)
         else:
             self.over += 1
 
     def dequeue(self):
-        self.op += 1
+        self.dequeue_op += 1
         self.under += 1 if len(self.queue) == 0 else 0
         while len(self.queue) == 0:
             time.sleep(0.1)
@@ -44,7 +45,7 @@ class Queue:
             Arguments:
                 data: a list of data elements.
         """
-        self.op += len(data)
+        self.enqueue_op += len(data)
         self.over += len(data) + len(self.queue) - self.max_size
         if len(data) > self.max_size:
             self.queue = deque(data[-self.max_size:])
@@ -56,11 +57,11 @@ class Queue:
 
     @property
     def overflow(self):
-        return np.float32(self.over) / self.op
+        return np.float32(self.over) / self.enqueue_op
 
     @property
     def underflow(self):
-        return np.float32(self.under) / self.op
+        return np.float32(self.under) / self.dequeue_op
 
     def log(self):
         print 'overflow:  {:.1f} %'.format(self.overflow * 100)
