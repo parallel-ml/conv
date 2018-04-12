@@ -3,6 +3,7 @@
 """
 from collections import deque
 import numpy as np
+import time
 
 
 class Queue:
@@ -31,9 +32,10 @@ class Queue:
 
     def dequeue(self):
         self.op += 1
-        if len(self.queue) > 0:
-            return self.queue.popleft()
-        self.under += 1
+        self.under += 1 if len(self.queue) == 0 else 0
+        while len(self.queue) == 0:
+            time.sleep(0.1)
+        return self.queue.popleft()
 
     def force_enqueue(self, data):
         """

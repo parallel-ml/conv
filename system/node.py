@@ -97,6 +97,10 @@ class Node:
         Thread(target=self.stats).start()
 
     def inference(self):
+        # wait for the first packet
+        while self.total_time == 0.0:
+            time.sleep(0.1)
+
         while True:
             self.acquire_lock()
             X = self.input.dequeue()
@@ -111,7 +115,6 @@ class Node:
             self.release_lock()
 
     def receive(self, msg, req):
-        print 'gets data'
         start = time.time()
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
