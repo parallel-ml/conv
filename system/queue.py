@@ -38,12 +38,16 @@ class Queue:
         result += '+                                      +\n'
         total = sum(self.table.values())
         for key, value in self.table.items():
+            if key > 10:
+                break
             result += '+{:>19d}: {:6.3f}           +\n'.format(key, value * 1.0 / total)
         result += '+                                      +\n'
-        result = '++++++++++++++++++++++++++++++++++++++++\n'
+        result += '++++++++++++++++++++++++++++++++++++++++\n'
         return result
 
     def stats(self):
+        while len(self.queue) == 0:
+            time.sleep(0.1)
         while True:
             self.table[len(self.queue)] += 1
             time.sleep(0.001)
