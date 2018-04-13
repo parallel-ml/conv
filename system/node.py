@@ -104,7 +104,6 @@ class Node:
 
             if X is not None:
                 start = time.time()
-                time.sleep(1)
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))
                     Thread(target=self.send, args=(output,)).start()
