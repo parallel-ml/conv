@@ -16,13 +16,17 @@ class Queue:
             over: # enqueue that will cause queue exceeds its max size.
             under: # dequeue on an empty queue.
     """
-    def __init__(self):
+    def __init__(self, size=10):
+        self.size = size
         self.queue = deque()
-        self.table = defaultdict(int)
+        self.table = dict()
+        for i in range(size + 1):
+            self.table[i] = 0
         Thread(target=self.stats).start()
 
     def enqueue(self, data):
-        self.queue.append(data)
+        if len(self.queue) < self.size:
+            self.queue.append(data)
 
     def dequeue(self):
         while len(self.queue) == 0:
