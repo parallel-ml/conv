@@ -100,3 +100,18 @@ def original(include_fc=True):
         x = fc
 
     return Model(img, x)
+
+
+def fc1():
+    """ First separated fully connected layer. """
+    block_input = Input(shape=(6272,))
+    layer = Dense(2048, activation='relu')(block_input)
+    return Model(block_input, layer)
+
+
+def fc2():
+    """ Second fully connected layer. """
+    block_input = Input(shape=(4096,))
+    layer = Dense(4096, activation='relu')(block_input)
+    layer = Dense(1000, activation='softmax')(layer)
+    return Model(block_input, layer)

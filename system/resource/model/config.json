@@ -1,4 +1,97 @@
 {
+  "dense_3": {
+    "class_name": "Dense",
+    "config": {
+      "kernel_initializer": {
+        "class_name": "VarianceScaling",
+        "config": {
+          "distribution": "uniform",
+          "scale": 1.0,
+          "seed": null,
+          "mode": "fan_avg"
+        }
+      },
+      "name": "dense_3",
+      "kernel_constraint": null,
+      "bias_regularizer": null,
+      "bias_constraint": null,
+      "activation": "softmax",
+      "trainable": true,
+      "kernel_regularizer": null,
+      "bias_initializer": {
+        "class_name": "Zeros",
+        "config": {}
+      },
+      "units": 1000,
+      "use_bias": true,
+      "activity_regularizer": null
+    },
+    "input_shape": [
+      4096
+    ]
+  },
+  "dense_2": {
+    "class_name": "Dense",
+    "config": {
+      "kernel_initializer": {
+        "class_name": "VarianceScaling",
+        "config": {
+          "distribution": "uniform",
+          "scale": 1.0,
+          "seed": null,
+          "mode": "fan_avg"
+        }
+      },
+      "name": "dense_2",
+      "kernel_constraint": null,
+      "bias_regularizer": null,
+      "bias_constraint": null,
+      "activation": "relu",
+      "trainable": true,
+      "kernel_regularizer": null,
+      "bias_initializer": {
+        "class_name": "Zeros",
+        "config": {}
+      },
+      "units": 4096,
+      "use_bias": true,
+      "activity_regularizer": null
+    },
+    "input_shape": [
+      4096
+    ]
+  },
+  "dense_1": {
+    "class_name": "Dense",
+    "config": {
+      "kernel_initializer": {
+        "class_name": "VarianceScaling",
+        "config": {
+          "distribution": "uniform",
+          "scale": 1.0,
+          "seed": null,
+          "mode": "fan_avg"
+        }
+      },
+      "name": "dense_1",
+      "kernel_constraint": null,
+      "bias_regularizer": null,
+      "bias_constraint": null,
+      "activation": "relu",
+      "trainable": true,
+      "kernel_regularizer": null,
+      "bias_initializer": {
+        "class_name": "Zeros",
+        "config": {}
+      },
+      "units": 2048,
+      "use_bias": true,
+      "activity_regularizer": null
+    },
+    "input_shape": [
+      6272
+    ]
+  },
   "max_pooling2d_1": {
     "class_name": "MaxPooling2D",
     "config": {
@@ -251,6 +344,36 @@
       13,
       13,
       192
+    ]
+  },
+  "input_2": {
+    "class_name": "InputLayer",
+    "config": {
+      "dtype": "float32",
+      "batch_input_shape": [
+        null,
+        6272
+      ],
+      "name": "input_2",
+      "sparse": false
+    },
+    "input_shape": [
+      6272
+    ]
+  },
+  "input_3": {
+    "class_name": "InputLayer",
+    "config": {
+      "dtype": "float32",
+      "batch_input_shape": [
+        null,
+        4096
+      ],
+      "name": "input_3",
+      "sparse": false
+    },
+    "input_shape": [
+      4096
     ]
   },
   "input_1": {
