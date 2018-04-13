@@ -37,9 +37,9 @@ class Node:
     instance = None
 
     @classmethod
-    def create(cls, queue_size):
+    def create(cls):
         if cls.instance is None:
-            cls.instance = cls(queue_size)
+            cls.instance = cls()
 
             # Get ip address and create model according to ip config file.
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -80,12 +80,12 @@ class Node:
 
         return cls.instance
 
-    def __init__(self, queue_size):
+    def __init__(self):
         self.model = None
         self.total_time = 0.0
         self.prepare_data = 0.0
         self.prediction_time = 0.0
-        self.input = queue_wrapper(queue_size)
+        self.input = queue_wrapper()
         self.ip = Queue()
         self.debug = False
         self.graph = tf.get_default_graph()
@@ -137,10 +137,9 @@ class Node:
             print '+                                      +'
             print '+{:>19s}: {:6.3f}           +'.format('overhead', self.overhead)
             print '+{:>19s}: {:6.3f}           +'.format('utilization', self.utilization)
-            print '+{:>19s}: {:6.3f}           +'.format('overflow', self.input.overflow)
-            print '+{:>19s}: {:6.3f}           +'.format('underflow', self.input.underflow)
             print '+                                      +'
             print '++++++++++++++++++++++++++++++++++++++++'
+            self.input.log()
             time.sleep(1)
 
     def log(self, step, data=''):

@@ -16,7 +16,6 @@ DIR_PATH = os.path.dirname(PATH)
 
 # read data packet format.
 PROTOCOL = protocol.parse(open(DIR_PATH + '/resource/message/image.avpr').read())
-QUEUE_SIZE = 1
 
 
 class Responder(ipc.Responder):
@@ -48,7 +47,7 @@ class Responder(ipc.Responder):
                 AvroException: if the data does not have correct syntac defined in Schema
         """
 
-        node = Node.create(QUEUE_SIZE)
+        node = Node.create()
 
         try:
             node.receive(msg, req)
@@ -80,7 +79,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main(cmd):
-    node = Node.create(QUEUE_SIZE)
+    node = Node.create()
     node.debug = cmd.debug
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
