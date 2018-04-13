@@ -24,7 +24,6 @@ class Queue:
         self.over = 0
         self.under = 0
         self.queue = deque()
-        Thread(target=self.log).start()
 
     def enqueue(self, data):
         if len(self.queue) < self.max_size:
@@ -52,24 +51,25 @@ class Queue:
 
     @property
     def overflow(self):
-        self.enqueue_op += 1
-        if len(self.queue) == self.max_size:
-            self.over += 1
         return np.float32(self.over) / self.enqueue_op
 
     @property
     def underflow(self):
-        self.dequeue_op += 1
-        if len(self.queue) == 0:
-            self.under += 1
         return np.float32(self.under) / self.dequeue_op
 
     def log(self):
-        count = 10
+        print 'overflow:  {:.1f} %'.format(self.overflow * 100)
+        print 'underflow: {:.1f} %'.format(self.underflow * 100)
+
+    def stats(self):
+        count = 1000
         while True:
             if count == 0:
-                count, self.enqueue_op, self.dequeue_op, self.over, self.under = 10, 0, 0, 0, 0
-            print 'overflow:  {:.1f} %'.format(self.overflow * 100)
-            print 'underflow: {:.1f} %'.format(self.underflow * 100)
+                count, self.dequeue_op, self.enqueue_op, self.under, self.over = 1000, 0, 0, 0, 0
+            self.dequeue_op += 1
+            self.enqueue_op += 1
+            self.over += 1 if len(self.queue) == self.max_size else 0
+            self.under += 1 if len(self.queue) == 0 else 0
             count -= 1
-            time.sleep(0.1)
+            time.sleep(0.001)
+
