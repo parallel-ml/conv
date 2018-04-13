@@ -4,6 +4,7 @@
 from collections import deque
 import numpy as np
 import time
+from threading import Thread
 
 
 class Queue:
@@ -23,17 +24,13 @@ class Queue:
         self.over = 0
         self.under = 0
         self.queue = deque()
+        Thread(target=self.log).start()
 
     def enqueue(self, data):
-        self.enqueue_op += 1
         if len(self.queue) < self.max_size:
             self.queue.append(data)
-        else:
-            self.over += 1
 
     def dequeue(self):
-        self.dequeue_op += 1
-        self.under += 1 if len(self.queue) == 0 else 0
         while len(self.queue) == 0:
             time.sleep(0.1)
         return self.queue.popleft()
@@ -45,8 +42,6 @@ class Queue:
             Arguments:
                 data: a list of data elements.
         """
-        self.enqueue_op += len(data)
-        self.over += len(data) + len(self.queue) - self.max_size
         if len(data) > self.max_size:
             self.queue = deque(data[-self.max_size:])
         else:
@@ -57,12 +52,19 @@ class Queue:
 
     @property
     def overflow(self):
+        self.enqueue_op += 1
+        if len(self.queue) == self.max_size:
+            self.over += 1
         return np.float32(self.over) / self.enqueue_op
 
     @property
     def underflow(self):
+        self.dequeue_op += 1
+        if len(self.queue) == 0:
+            self.under += 1
         return np.float32(self.under) / self.dequeue_op
 
     def log(self):
-        print 'overflow:  {:.1f} %'.format(self.overflow * 100)
-        print 'underflow: {:.1f} %'.format(self.underflow * 100)
+        while True:
+            print 'overflow:  {:.1f} %'.format(self.overflow * 100)
+            print 'underflow: {:.1f} %'.format(self.underflow * 100)

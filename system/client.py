@@ -63,7 +63,7 @@ def master():
         ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
         frame = frame.astype(dtype=np.uint8)
         Thread(target=send_request, args=(frame.tobytes(),)).start()
-        time.sleep(0.03)
+        time.sleep(0.001)
 
 
 class Responder(ipc.Responder):
