@@ -65,6 +65,11 @@ class Queue:
         return np.float32(self.under) / self.dequeue_op
 
     def log(self):
+        count = 10
         while True:
+            if count == 0:
+                count, self.enqueue_op, self.dequeue_op, self.over, self.under = 10, 0, 0, 0, 0
             print 'overflow:  {:.1f} %'.format(self.overflow * 100)
             print 'underflow: {:.1f} %'.format(self.underflow * 100)
+            count -= 1
+            time.sleep(0.1)
