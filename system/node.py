@@ -139,7 +139,7 @@ class Node:
             print '+{:>19s}: {:6.3f}           +'.format('utilization', self.utilization)
             print '+                                      +'
             print '++++++++++++++++++++++++++++++++++++++++'
-            self.input.log()
+            print self.input.log()
             time.sleep(1)
 
     def log(self, step, data=''):
