@@ -30,7 +30,6 @@ class Node:
             input: Store the data packets from other nodes.
             ip: Store all IP addresses of available devices.
             debug: If print out verbose information.
-            lock: Ensure the node integrity.
             graph: Default graph with Tensorflow backend.
             input_shape: Input shape for model on this node.
     """
@@ -89,7 +88,6 @@ class Node:
         self.input = queue_wrapper(queue_size)
         self.ip = Queue()
         self.debug = False
-        self.lock = Lock()
         self.graph = tf.get_default_graph()
         self.input_shape = None
 
@@ -102,17 +100,15 @@ class Node:
             time.sleep(0.1)
 
         while True:
-            self.acquire_lock()
             X = self.input.dequeue()
 
             if X is not None:
                 start = time.time()
-                with self.graph.as_default():
-                    X = self.model.predict(np.array([X]))
-                    Thread(target=self.send, args=(X,)).start()
+                time.sleep(1)
+                # with self.graph.as_default():
+                #     output = self.model.predict(np.array([X]))
+                #     Thread(target=self.send, args=(output,)).start()
                 self.prediction_time += time.time() - start
-
-            self.release_lock()
 
     def receive(self, msg, req):
         start = time.time()
@@ -128,24 +124,24 @@ class Node:
         # TODO: send output to next layer.
         pass
 
+    @property
     def utilization(self):
         return np.float32(self.prediction_time) / (time.time() - self.total_time)
 
+    @property
     def overhead(self):
         return np.float32(self.prepare_data) / (time.time() - self.total_time)
 
-    def acquire_lock(self):
-        self.lock.acquire()
-
-    def release_lock(self):
-        self.lock.release()
-
     def stats(self):
         while True:
-            print 'overhead: {:.3f}'.format(self.overhead())
-            print 'utilization: {:.3f}'.format(self.utilization())
-            print 'overflow: {:.3f}'.format(self.input.overflow)
-            print 'underflow: {:.3f}'.format(self.input.underflow)
+            print '++++++++++++++++++++++++++++++++++++++++'
+            print '+                                      +'
+            print '+{:>19s}: {:6.3f}           +'.format('overhead', self.overhead)
+            print '+{:>19s}: {:6.3f}           +'.format('utilization', self.utilization)
+            print '+{:>19s}: {:6.3f}           +'.format('overflow', self.input.overflow)
+            print '+{:>19s}: {:6.3f}           +'.format('underflow', self.input.underflow)
+            print '+                                      +'
+            print '++++++++++++++++++++++++++++++++++++++++'
             time.sleep(1)
 
     def log(self, step, data=''):
