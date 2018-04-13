@@ -107,7 +107,7 @@ class Node:
                 time.sleep(1)
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))
-                #     Thread(target=self.send, args=(output,)).start()
+                    Thread(target=self.send, args=(output,)).start()
                 self.prediction_time += time.time() - start
 
     def receive(self, msg, req):
