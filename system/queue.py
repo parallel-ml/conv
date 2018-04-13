@@ -25,6 +25,8 @@ class Queue:
         self.under = 0
         self.queue = deque()
 
+        Thread(target=self.stats).start()
+
     def enqueue(self, data):
         if len(self.queue) < self.max_size:
             self.queue.append(data)
