@@ -1,6 +1,6 @@
 import time
 import os
-from multiprocessing import Lock, Queue
+from multiprocessing import Queue
 from threading import Thread
 from system.queue import Queue as queue_wrapper
 import socket
@@ -11,8 +11,14 @@ from keras.layers import InputLayer
 import numpy as np
 import tensorflow as tf
 
+import avro.ipc as ipc
+import avro.protocol as protocol
+
 PATH = os.path.abspath(__file__)
 DIR_PATH = os.path.dirname(PATH)
+
+# data packet format definition
+PROTOCOL = protocol.parse(open(DIR_PATH + '/resource/message/image.avpr').read())
 
 
 class Node:
@@ -78,6 +84,9 @@ class Node:
                 for ip in system_config['devices']:
                     cls.instance.ip.put(ip)
 
+                cls.instance.merge = system_config['merge']
+                cls.instance.input_shape[-1] = cls.instance.input_shape[-1] / cls.instance.merge
+
         return cls.instance
 
     def __init__(self):
@@ -90,6 +99,7 @@ class Node:
         self.debug = False
         self.graph = tf.get_default_graph()
         self.input_shape = None
+        self.merge = 0
 
         Thread(target=self.inference).start()
         Thread(target=self.stats).start()
@@ -100,7 +110,8 @@ class Node:
             time.sleep(0.1)
 
         while True:
-            X = self.input.dequeue()
+            seq = self.input.dequeue(self.merge)
+            X = np.concatenate(seq)
 
             if X is not None:
                 start = time.time()
@@ -120,8 +131,18 @@ class Node:
         self.prepare_data += time.time() - start
 
     def send(self, X):
-        # TODO: send output to next layer.
-        pass
+        ip = self.ip.get()
+
+        client = ipc.HTTPTransceiver(ip, 12345)
+        requestor = ipc.Requestor(PROTOCOL, client)
+
+        data = dict()
+        data['input'] = X.tobytes()
+        data['type'] = 32
+        requestor.request('forward', data)
+
+        client.close()
+        self.ip.put(ip)
 
     @property
     def utilization(self):

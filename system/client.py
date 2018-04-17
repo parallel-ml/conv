@@ -60,7 +60,7 @@ def master():
     init = Initializer.create_init()
     while True:
         # current frame
-        ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
+        ret, frame = 'unknown', np.random.rand(2048) * 255
         frame = frame.astype(dtype=np.uint8)
         Thread(target=send_request, args=(frame.tobytes(),)).start()
         time.sleep(0.03)
@@ -88,7 +88,6 @@ class Responder(ipc.Responder):
         if msg.name == 'forward':
             init = Initializer.create_init()
             try:
-                init.timer()
                 return
             except Exception, e:
                 print 'Error', e.message
@@ -138,10 +137,9 @@ def main():
         for device in config['devices']:
             init.queue.put(device)
 
-    # listen on port 9999 for model inference result
-    # server = ThreadedHTTPServer(('0.0.0.0', 9999), Handler)
-    # server.allow_reuse_address = True
-    # Thread(target=server.serve_forever, args=()).start()
+    server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
+    server.allow_reuse_address = True
+    Thread(target=server.serve_forever, args=()).start()
 
     master()
 
