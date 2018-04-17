@@ -88,7 +88,6 @@ class Responder(ipc.Responder):
         if msg.name == 'forward':
             init = Initializer.create_init()
             try:
-                init.timer()
                 return
             except Exception, e:
                 print 'Error', e.message
@@ -138,10 +137,9 @@ def main():
         for device in config['devices']:
             init.queue.put(device)
 
-    # listen on port 9999 for model inference result
-    # server = ThreadedHTTPServer(('0.0.0.0', 9999), Handler)
-    # server.allow_reuse_address = True
-    # Thread(target=server.serve_forever, args=()).start()
+    server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
+    server.allow_reuse_address = True
+    Thread(target=server.serve_forever, args=()).start()
 
     master()
 
