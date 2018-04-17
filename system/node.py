@@ -84,6 +84,9 @@ class Node:
                 for ip in system_config['devices']:
                     cls.instance.ip.put(ip)
 
+                cls.instance.merge = system_config['merge']
+                cls.instance.input_shape[-1] = cls.instance.input_shape[-1] / cls.instance.merge
+
         return cls.instance
 
     def __init__(self):
@@ -96,6 +99,7 @@ class Node:
         self.debug = False
         self.graph = tf.get_default_graph()
         self.input_shape = None
+        self.merge = 0
 
         Thread(target=self.inference).start()
         Thread(target=self.stats).start()
@@ -106,7 +110,8 @@ class Node:
             time.sleep(0.1)
 
         while True:
-            X = self.input.dequeue()
+            seq = self.input.dequeue(self.merge)
+            X = np.concatenate(seq)
 
             if X is not None:
                 start = time.time()

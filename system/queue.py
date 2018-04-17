@@ -28,10 +28,10 @@ class Queue:
         if len(self.queue) < self.size:
             self.queue.append(data)
 
-    def dequeue(self):
-        while len(self.queue) == 0:
+    def dequeue(self, size=0):
+        while len(self.queue) < size:
             time.sleep(0.1)
-        return self.queue.popleft()
+        return [self.queue.popleft() for _ in range(size)]
 
     def log(self):
         result = '++++++++++++++++++++++++++++++++++++++++\n'
