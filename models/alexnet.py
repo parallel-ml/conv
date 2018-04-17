@@ -91,6 +91,7 @@ def original(include_fc=True):
     x = conv_unit(x, 128, (3, 3), max_pooling=False, activation='relu', name=name + '_5')
 
     x = MaxPooling2D(strides=(2, 2), pool_size=(2, 2))(x)
+    x = Flatten()(x)
 
     if include_fc:
         fc = Flatten()(x)

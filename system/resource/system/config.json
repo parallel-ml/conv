@@ -1,21 +1,59 @@
 {
   "192.168.1.18": {
+    "model": [],
+    "devices": [
+      "192.168.1.13"
+    ],
+    "merge": 2,
+    "split": 1
+  },
+  "192.168.1.13": {
+    "model": [
+      "alexnet_original_1_conv",
+      "max_pooling2d_1",
+      "alexnet_original_2_conv",
+      "max_pooling2d_2",
+      "alexnet_original_3_conv",
+      "alexnet_original_4_conv",
+      "alexnet_original_5_conv",
+      "max_pooling2d_3",
+      "flatten_1"
+    ],
+    "devices": [
+      "192.168.1.14", "192.168.1.15"
+    ],
+    "merge": 1,
+    "split": 2
+  },
+  "192.168.1.14": {
+    "model": [
+      "dense_1"
+    ],
+    "devices": [
+      "192.168.1.16"
+    ],
+    "merge": 1,
+    "split": 1
+  },
+  "192.168.1.15": {
+    "model": [
+      "dense_1"
+    ],
+    "devices": [
+      "192.168.1.16"
+    ],
+    "merge": 1,
+    "split": 1
+  },
+  "192.168.1.16": {
     "model": [
       "dense_2",
       "dense_3"
     ],
     "devices": [
-      "192.168.1.13"
-    ],
-    "merge": 2
-  },
-  "192.168.1.13": {
-    "model": [
-      "alexnet_original_1_conv"
-    ],
-    "devices": [
       "192.168.1.18"
     ],
-    "merge": 1
+    "merge": 2,
+    "split": 1
   }
 }

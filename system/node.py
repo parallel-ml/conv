@@ -38,6 +38,8 @@ class Node:
             debug: If print out verbose information.
             graph: Default graph with Tensorflow backend.
             input_shape: Input shape for model on this node.
+            merge: Number of previous layers merged into this layer.
+            split: Number of next layers to process current data.
     """
 
     instance = None
@@ -84,6 +86,7 @@ class Node:
                     cls.instance.ip.put(ip)
 
                 cls.instance.merge = system_config['merge']
+                cls.instance.split = system_config['split']
                 shape = list(model.input_shape[1:])
                 shape[-1] = shape[-1] / cls.instance.merge
                 cls.instance.input_shape = tuple(shape)
@@ -101,6 +104,7 @@ class Node:
         self.graph = tf.get_default_graph()
         self.input_shape = None
         self.merge = 0
+        self.split = 0
 
         Thread(target=self.inference).start()
         Thread(target=self.stats).start()
@@ -118,7 +122,8 @@ class Node:
                 start = time.time()
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))
-                    Thread(target=self.send, args=(output,)).start()
+                    for _ in range(self.split):
+                        Thread(target=self.send, args=(output,)).start()
                 self.prediction_time += time.time() - start
 
     def receive(self, msg, req):

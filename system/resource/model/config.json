@@ -92,6 +92,18 @@
       6272
     ]
   },
+  "flatten_1": {
+    "class_name": "Flatten",
+    "config": {
+      "trainable": true,
+      "name": "flatten_1"
+    },
+    "input_shape": [
+      6,
+      6,
+      128
+    ]
+  },
   "max_pooling2d_1": {
     "class_name": "MaxPooling2D",
     "config": {
