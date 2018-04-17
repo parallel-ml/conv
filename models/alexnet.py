@@ -105,7 +105,7 @@ def original(include_fc=True):
 
 def fc1():
     """ First separated fully connected layer. """
-    block_input = Input(shape=(6272,))
+    block_input = Input(shape=(4608,))
     layer = Dense(2048, activation='relu')(block_input)
     return Model(block_input, layer)
 
