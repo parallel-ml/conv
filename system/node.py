@@ -77,7 +77,6 @@ class Node:
                         model.add(InputLayer(input_shape))
                         model.add(layer)
 
-                cls.instance.input_shape = model.input_shape[1:]
                 cls.instance.model = model
                 cls.log(cls.instance, 'model finishes', model.summary())
 
@@ -85,7 +84,9 @@ class Node:
                     cls.instance.ip.put(ip)
 
                 cls.instance.merge = system_config['merge']
-                cls.instance.input_shape[-1] = cls.instance.input_shape[-1] / cls.instance.merge
+                shape = list(model.input_shape[1:])
+                shape[-1] = shape[-1] / cls.instance.merge
+                cls.instance.input_shape = tuple(shape)
 
         return cls.instance
 
