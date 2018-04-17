@@ -4,6 +4,7 @@
 from collections import deque, defaultdict
 import time
 from threading import Thread
+import numpy as np
 
 
 class Queue:
@@ -38,9 +39,7 @@ class Queue:
         result += '+                                      +\n'
         total = sum(self.table.values())
         for key, value in self.table.items():
-            if key > 10:
-                break
-            result += '+{:>19d}: {:6.3f}           +\n'.format(key, value * 1.0 / total)
+            result += '+{:>19d}: {:6.3f}           +\n'.format(key, np.float32(value) / total)
         result += '+                                      +\n'
         result += '++++++++++++++++++++++++++++++++++++++++\n'
         return result
