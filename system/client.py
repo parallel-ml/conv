@@ -14,8 +14,6 @@ import avro.ipc as ipc
 import avro.protocol as protocol
 import avro.schema as schema
 import numpy as np
-import yaml
-import socket
 
 from initial import Initializer
 
@@ -120,22 +118,6 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 def main():
     init = Initializer.create_init()
-    # read ip resources from config file
-    with open(DIR_PATH + '/resource/system/config.json') as f:
-        configs = yaml.safe_load(f)
-
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            s.connect(('8.8.8.8', 80))
-            ip = s.getsockname()[0]
-        except Exception:
-            ip = '127.0.0.1'
-        finally:
-            s.close()
-
-        config = configs[ip]
-        for device in config['devices']:
-            init.queue.put(device)
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True

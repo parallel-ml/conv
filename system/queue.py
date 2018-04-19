@@ -35,8 +35,7 @@ class Queue:
         return [self.queue.popleft() for _ in range(size)]
 
     def log(self):
-        result = '++++++++++++++++++++++++++++++++++++++++\n'
-        result += '+                                      +\n'
+        result = '+                                      +\n'
         total = sum(self.table.values())
         for key, value in self.table.items():
             result += '+{:>19d}: {:6.3f}           +\n'.format(key, np.float32(value) / total)

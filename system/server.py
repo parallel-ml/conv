@@ -100,7 +100,6 @@ def control():
         if signal == 'q':
             break
 
-    sys.stdout = open(DIR_PATH + '/resource/system/stats.txt', 'w+')
     node.stats()
     os._exit(1)
 

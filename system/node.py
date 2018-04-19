@@ -1,5 +1,6 @@
 import time
 import os
+import sys
 from multiprocessing import Queue
 from threading import Thread
 from system.queue import Queue as queue_wrapper
@@ -61,6 +62,7 @@ class Node:
 
             with open(DIR_PATH + '/resource/system/config.json') as f:
                 system_config = yaml.safe_load(f)[ip]
+                cls.instance.id = ip
 
                 model = Sequential()
 
@@ -100,6 +102,7 @@ class Node:
         self.prediction_time = 0.0
         self.input = queue_wrapper()
         self.ip = Queue()
+        self.id = ''
         self.debug = False
         self.graph = tf.get_default_graph()
         self.input_shape = None
@@ -158,13 +161,15 @@ class Node:
         return np.float32(self.prepare_data) / (time.time() - self.total_time)
 
     def stats(self):
-        print '++++++++++++++++++++++++++++++++++++++++'
-        print '+                                      +'
-        print '+{:>19s}: {:6.3f}           +'.format('overhead', self.overhead)
-        print '+{:>19s}: {:6.3f}           +'.format('utilization', self.utilization)
-        print '+                                      +'
-        print '++++++++++++++++++++++++++++++++++++++++'
-        print self.input.log()
+        with open(DIR_PATH + '/resource/system/stats.txt', 'w+') as f:
+            result = '++++++++++++++++++++++++++++++++++++++++\n'
+            result += '+                                      +\n'
+            result += '+{:^38s}+\n'.format('SERVER: ' + self.id)
+            result += '+                                      +\n'
+            result += '+{:>19s}: {:6.3f}           +\n'.format('overhead', self.overhead)
+            result += '+{:>19s}: {:6.3f}           +\n'.format('utilization', self.utilization)
+            result += self.input.log()
+            f.write(result)
 
     def log(self, step, data=''):
         """
