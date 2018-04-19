@@ -9,6 +9,9 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from threading import Thread
 import os
+import sys
+import termios
+import tty
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -33,7 +36,7 @@ def send_request(bytestr):
             bytestr: The encoded byte string for image.
             mode: Specify next layer option.
     """
-    init = Initializer.create_init()
+    init = Initializer.create()
     queue = init.queue
 
     addr = queue.get()
@@ -55,7 +58,7 @@ def master():
         gets one frame at each time. It appends a frame to deque every time
         and pop the least recent one if the length > maximum.
     """
-    init = Initializer.create_init()
+    init = Initializer.create()
     while True:
         # current frame
         ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
@@ -84,8 +87,9 @@ class Responder(ipc.Responder):
                 AvroException: if the data does not have correct syntac defined in Schema
         """
         if msg.name == 'forward':
-            init = Initializer.create_init()
+            init = Initializer.create()
             try:
+                init.receive()
                 return
             except Exception, e:
                 print 'Error', e.message
@@ -116,8 +120,32 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """ Handle requests in separate thread. """
 
 
+def key():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
+
+
+def control():
+    init = Initializer.create()
+    while True:
+        signal = key()
+        if signal == 'q':
+            break
+
+    init.stats()
+    os._exit(1)
+
+
 def main():
-    init = Initializer.create_init()
+    init = Initializer.create()
+
+    Thread(target=control).start()
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True

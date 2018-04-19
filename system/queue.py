@@ -38,7 +38,7 @@ class Queue:
         result = '+                                      +\n'
         total = sum(self.table.values())
         for key, value in self.table.items():
-            result += '+{:>19d}: {:6.3f}           +\n'.format(key, np.float32(value) / total)
+            result += '+{:>16d}: {:<9.3f}           +\n'.format(key, np.float32(value) / total)
         result += '+                                      +\n'
         result += '++++++++++++++++++++++++++++++++++++++++\n'
         return result

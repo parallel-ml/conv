@@ -20,9 +20,10 @@ class Initializer:
     instance = None
 
     @classmethod
-    def create_init(cls):
+    def create(cls):
         """ Utilize singleton design pattern to create single instance. """
         if cls.instance is None:
+            cls.instance = Initializer()
             # read ip resources from config file
             with open(DIR_PATH + '/resource/system/config.json') as f:
                 configs = yaml.safe_load(f)
@@ -40,8 +41,6 @@ class Initializer:
                 cls.instance.id = ip
                 for device in config['devices']:
                     cls.instance.queue.put(device)
-
-            cls.instance = Initializer()
         return cls.instance
 
     def __init__(self):
@@ -55,12 +54,15 @@ class Initializer:
         self.count += 1
 
     def stats(self):
-        result = '++++++++++++++++++++++++++++++++++++++++'
-        result += '{:^38s}'.format('CLIENT: ' + self.id)
-        result += '+                                      +'
-        result += '+{:>19s}: {:6.3f}           +'.format('frame rate', self.frame_rate)
-        result += '+                                      +'
-        result += '++++++++++++++++++++++++++++++++++++++++'
+        with open(DIR_PATH + '/resource/system/stats.txt', 'w+') as f:
+            result = '++++++++++++++++++++++++++++++++++++++++\n'
+            result += '+                                      +\n'
+            result += '+{:^38s}+\n'.format('CLIENT: ' + self.id)
+            result += '+                                      +\n'
+            result += '+{:>19s}: {:6.3f}           +\n'.format('frame rate', self.frame_rate)
+            result += '+                                      +\n'
+            result += '++++++++++++++++++++++++++++++++++++++++\n'
+            f.write(result)
 
     @property
     def frame_rate(self):
