@@ -89,6 +89,7 @@ class Node:
 
                 cls.instance.merge = system_config['merge']
                 cls.instance.split = system_config['split']
+                cls.instance.op = system_config['op']
                 shape = list(model.input_shape[1:])
                 shape[-1] = shape[-1] / cls.instance.merge
                 cls.instance.input_shape = tuple(shape)
@@ -108,6 +109,7 @@ class Node:
         self.input_shape = None
         self.merge = 0
         self.split = 0
+        self.op = ''
 
         Thread(target=self.inference).start()
 
@@ -118,7 +120,13 @@ class Node:
 
         while True:
             seq = self.input.dequeue(self.merge)
-            X = np.concatenate(seq)
+
+            if self.op == 'cat':
+                X = np.concatenate(seq)
+            elif self.op == 'add':
+                X = np.add(seq[0], seq[1])
+            else:
+                X = seq
 
             if X is not None:
                 start = time.time()

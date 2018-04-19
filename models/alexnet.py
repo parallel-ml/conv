@@ -1,4 +1,4 @@
-from keras.layers import Flatten, Dense, Input
+from keras.layers import Flatten, Dense, Input, Add
 from keras.layers.convolutional import MaxPooling2D
 from keras.models import Model
 from unit import filter_unit, xy_unit, channel_unit, conv_unit
@@ -112,7 +112,13 @@ def fc1():
 
 def fc2():
     """ Second fully connected layer. """
-    block_input = Input(shape=(4096,))
-    layer = Dense(4096, activation='relu')(block_input)
-    layer = Dense(1000, activation='softmax')(layer)
-    return Model(block_input, layer)
+    img = Input(shape=(4096,))
+
+    x1 = Dense(2048, activation='relu')(img)
+    x2 = Dense(2048, activation='relu')(img)
+    x1 = Dense(4096, activation='relu')(x1)
+    x2 = Dense(4096, activation='relu')(x2)
+    x = Add()([x1, x2])
+    x = Dense(1000, activation='softmax')(x)
+
+    return Model(img, x)

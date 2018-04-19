@@ -15,19 +15,19 @@
       "kernel_constraint": null,
       "bias_regularizer": null,
       "bias_constraint": null,
-      "activation": "softmax",
+      "activation": "relu",
       "trainable": true,
       "kernel_regularizer": null,
       "bias_initializer": {
         "class_name": "Zeros",
         "config": {}
       },
-      "units": 1000,
+      "units": 4096,
       "use_bias": true,
       "activity_regularizer": null
     },
     "input_shape": [
-      4096
+      2048
     ]
   },
   "dense_2": {
@@ -53,7 +53,7 @@
         "class_name": "Zeros",
         "config": {}
       },
-      "units": 4096,
+      "units": 2048,
       "use_bias": true,
       "activity_regularizer": null
     },
@@ -89,7 +89,7 @@
       "activity_regularizer": null
     },
     "input_shape": [
-      4608
+      4096
     ]
   },
   "flatten_1": {
@@ -102,6 +102,68 @@
       6,
       6,
       128
+    ]
+  },
+  "dense_5": {
+    "class_name": "Dense",
+    "config": {
+      "kernel_initializer": {
+        "class_name": "VarianceScaling",
+        "config": {
+          "distribution": "uniform",
+          "scale": 1.0,
+          "seed": null,
+          "mode": "fan_avg"
+        }
+      },
+      "name": "dense_5",
+      "kernel_constraint": null,
+      "bias_regularizer": null,
+      "bias_constraint": null,
+      "activation": "softmax",
+      "trainable": true,
+      "kernel_regularizer": null,
+      "bias_initializer": {
+        "class_name": "Zeros",
+        "config": {}
+      },
+      "units": 1000,
+      "use_bias": true,
+      "activity_regularizer": null
+    },
+    "input_shape": [
+      4096
+    ]
+  },
+  "dense_4": {
+    "class_name": "Dense",
+    "config": {
+      "kernel_initializer": {
+        "class_name": "VarianceScaling",
+        "config": {
+          "distribution": "uniform",
+          "scale": 1.0,
+          "seed": null,
+          "mode": "fan_avg"
+        }
+      },
+      "name": "dense_4",
+      "kernel_constraint": null,
+      "bias_regularizer": null,
+      "bias_constraint": null,
+      "activation": "relu",
+      "trainable": true,
+      "kernel_regularizer": null,
+      "bias_initializer": {
+        "class_name": "Zeros",
+        "config": {}
+      },
+      "units": 4096,
+      "use_bias": true,
+      "activity_regularizer": null
+    },
+    "input_shape": [
+      2048
     ]
   },
   "max_pooling2d_1": {
@@ -311,6 +373,19 @@
       128
     ]
   },
+  "add_1": {
+    "class_name": "Add",
+    "config": {
+      "trainable": true,
+      "name": "add_1"
+    },
+    "input_shape": [
+      [
+        null,
+        4096
+      ]
+    ]
+  },
   "alexnet_original_5_conv": {
     "class_name": "Conv2D",
     "config": {
@@ -364,24 +439,9 @@
       "dtype": "float32",
       "batch_input_shape": [
         null,
-        4608
-      ],
-      "name": "input_2",
-      "sparse": false
-    },
-    "input_shape": [
-      4608
-    ]
-  },
-  "input_3": {
-    "class_name": "InputLayer",
-    "config": {
-      "dtype": "float32",
-      "batch_input_shape": [
-        null,
         4096
       ],
-      "name": "input_3",
+      "name": "input_2",
       "sparse": false
     },
     "input_shape": [

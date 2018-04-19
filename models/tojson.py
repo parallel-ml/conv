@@ -30,8 +30,6 @@ def main():
         config = dict()
         model = alexnet.original(include_fc=False)
         save(model, f, config)
-        model = alexnet.fc1()
-        save(model, f, config)
         model = alexnet.fc2()
         save(model, f, config)
         json.dump(config, f)
