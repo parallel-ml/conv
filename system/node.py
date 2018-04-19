@@ -107,7 +107,6 @@ class Node:
         self.split = 0
 
         Thread(target=self.inference).start()
-        Thread(target=self.stats).start()
 
     def inference(self):
         # wait for the first packet
@@ -159,15 +158,13 @@ class Node:
         return np.float32(self.prepare_data) / (time.time() - self.total_time)
 
     def stats(self):
-        while True:
-            print '++++++++++++++++++++++++++++++++++++++++'
-            print '+                                      +'
-            print '+{:>19s}: {:6.3f}           +'.format('overhead', self.overhead)
-            print '+{:>19s}: {:6.3f}           +'.format('utilization', self.utilization)
-            print '+                                      +'
-            print '++++++++++++++++++++++++++++++++++++++++'
-            print self.input.log()
-            time.sleep(1)
+        print '++++++++++++++++++++++++++++++++++++++++'
+        print '+                                      +'
+        print '+{:>19s}: {:6.3f}           +'.format('overhead', self.overhead)
+        print '+{:>19s}: {:6.3f}           +'.format('utilization', self.utilization)
+        print '+                                      +'
+        print '++++++++++++++++++++++++++++++++++++++++'
+        print self.input.log()
 
     def log(self, step, data=''):
         """

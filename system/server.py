@@ -3,6 +3,9 @@
 """
 import argparse
 import os
+import sys
+import termios
+import tty
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 import avro.ipc as ipc
@@ -78,6 +81,17 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """ Handle requests in separate thread. """
 
 
+def key():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
+
+
 def main(cmd):
     node = Node.create()
     node.debug = cmd.debug
@@ -85,6 +99,13 @@ def main(cmd):
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True
     server.serve_forever()
+
+    while True:
+        signal = key()
+        if signal == 'q':
+            break
+
+    os._exit(1)
 
 
 if __name__ == '__main__':
