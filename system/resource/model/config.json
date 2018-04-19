@@ -58,7 +58,7 @@
       "activity_regularizer": null
     },
     "input_shape": [
-      4096
+      4608
     ]
   },
   "dense_1": {
@@ -89,7 +89,7 @@
       "activity_regularizer": null
     },
     "input_shape": [
-      4096
+      4608
     ]
   },
   "flatten_1": {
@@ -439,13 +439,13 @@
       "dtype": "float32",
       "batch_input_shape": [
         null,
-        4096
+        4608
       ],
       "name": "input_2",
       "sparse": false
     },
     "input_shape": [
-      4096
+      4608
     ]
   },
   "input_1": {

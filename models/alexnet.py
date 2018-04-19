@@ -112,7 +112,7 @@ def fc1():
 
 def fc2():
     """ Second fully connected layer. """
-    img = Input(shape=(4096,))
+    img = Input(shape=(4608,))
 
     x1 = Dense(2048, activation='relu')(img)
     x2 = Dense(2048, activation='relu')(img)
