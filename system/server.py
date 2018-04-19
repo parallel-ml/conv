@@ -6,6 +6,7 @@ import os
 import sys
 import termios
 import tty
+from threading import Thread
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 import avro.ipc as ipc
@@ -29,7 +30,7 @@ class Responder(ipc.Responder):
 
     def invoke(self, msg, req):
         """
-            This functino is invoked by do_POST to handle the request. Invoke handles
+            This function is invoked by do_POST to handle the request. Invoke handles
             the request and get response for the request. This is the key of each node.
             All models forwarding and output redirect are done here. Because the invoke
             method of initializer only needs to receive the data packet, it does not do
@@ -92,20 +93,27 @@ def key():
     return ch
 
 
-def main(cmd):
+def control():
     node = Node.create()
-    node.debug = cmd.debug
-
-    server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
-    server.allow_reuse_address = True
-    server.serve_forever()
-
     while True:
         signal = key()
         if signal == 'q':
             break
 
+    sys.stdout = open(DIR_PATH + '/resource/system/stats.txt', 'w+')
+    node.stats()
     os._exit(1)
+
+
+def main(cmd):
+    node = Node.create()
+    node.debug = cmd.debug
+
+    Thread(target=control).start()
+
+    server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
+    server.allow_reuse_address = True
+    server.serve_forever()
 
 
 if __name__ == '__main__':
