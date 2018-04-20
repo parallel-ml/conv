@@ -1,6 +1,5 @@
 import time
 import os
-import sys
 from multiprocessing import Queue
 from threading import Thread
 from system.queue import Queue as queue_wrapper
@@ -81,6 +80,8 @@ class Node:
                         model.add(InputLayer(input_shape))
                         model.add(layer)
 
+                        print model_config[layer_name]['input_shape']
+
                 cls.instance.model = model
                 cls.log(cls.instance, 'model finishes', model.summary())
 
@@ -91,7 +92,7 @@ class Node:
                 cls.instance.split = system_config['split']
                 cls.instance.op = system_config['op']
                 shape = list(model.input_shape[1:])
-                shape[-1] = shape[-1] / cls.instance.merge
+                shape[-1] = shape[-1] / cls.instance.merge if cls.instance.op == 'cat' else shape[-1]
                 cls.instance.input_shape = tuple(shape)
 
         return cls.instance
@@ -126,7 +127,7 @@ class Node:
             elif self.op == 'add':
                 X = np.add(seq[0], seq[1])
             else:
-                X = seq
+                X = seq[0]
 
             if X is not None:
                 start = time.time()
@@ -142,6 +143,7 @@ class Node:
 
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32
+        print self.input_shape
         X = np.fromstring(bytestr, datatype).reshape(self.input_shape)
         self.input.enqueue(X)
         self.prepare_data += time.time() - start
