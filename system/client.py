@@ -39,7 +39,8 @@ def send_request(bytestr):
     init = Initializer.create()
     queue = init.queue
 
-    addr = queue.get()
+    addr = queue.popleft()
+    queue.append(addr)
     client = ipc.HTTPTransceiver(addr, 12345)
     requestor = ipc.Requestor(PROTOCOL, client)
 
@@ -49,7 +50,6 @@ def send_request(bytestr):
     requestor.request('forward', data)
 
     client.close()
-    queue.put(addr)
 
 
 def master():

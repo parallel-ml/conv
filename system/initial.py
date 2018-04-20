@@ -1,4 +1,4 @@
-from multiprocessing import Queue
+from collections import deque
 import time
 import yaml
 import socket
@@ -40,11 +40,11 @@ class Initializer:
                 config = configs[ip]
                 cls.instance.id = ip
                 for device in config['devices']:
-                    cls.instance.queue.put(device)
+                    cls.instance.queue.append(device)
         return cls.instance
 
     def __init__(self):
-        self.queue = Queue()
+        self.queue = deque([])
         self.start = 0.0
         self.count = 0
         self.id = ''
