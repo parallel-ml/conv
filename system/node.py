@@ -180,6 +180,8 @@ class Node:
             result += '+                                      +\n'
             result += '+{:^38s}+\n'.format('SERVER: ' + self.id)
             result += '+                                      +\n'
+            result += '+{:>19s}: {:6.3f}           +\n'.format('frame rate', self.frame_rate)
+            result += '+                                      +\n'
             result += '+{:>19s}: {:6.3f}           +\n'.format('overhead', self.overhead)
             result += '+{:>19s}: {:6.3f}           +\n'.format('utilization', self.utilization)
             result += self.input.log()
