@@ -40,6 +40,7 @@ class Node:
             input_shape: Input shape for model on this node.
             merge: Number of previous layers merged into this layer.
             split: Number of next layers to process current data.
+            op: Operation for merging the data, could be no operation.
     """
 
     instance = None
@@ -80,8 +81,6 @@ class Node:
                         model.add(InputLayer(input_shape))
                         model.add(layer)
 
-                        print model_config[layer_name]['input_shape']
-
                 cls.instance.model = model
                 cls.log(cls.instance, 'model finishes', model.summary())
 
@@ -111,6 +110,7 @@ class Node:
         self.merge = 0
         self.split = 0
         self.op = ''
+        self.frame_count = 0
 
         Thread(target=self.inference).start()
 
@@ -139,6 +139,7 @@ class Node:
 
     def receive(self, msg, req):
         start = time.time()
+        self.frame_count += 1
         self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
         bytestr = req['input']
@@ -168,6 +169,10 @@ class Node:
     @property
     def overhead(self):
         return np.float32(self.prepare_data) / (time.time() - self.total_time)
+
+    @property
+    def frame_rate(self):
+        return np.float(self.frame_count) / (time.time() - self.total_time)
 
     def stats(self):
         with open(DIR_PATH + '/resource/system/stats.txt', 'w+') as f:
