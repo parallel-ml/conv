@@ -1,6 +1,6 @@
 import time
 import os
-from collections import deque
+from multiprocessing import Queue
 from threading import Thread
 from system.queue import Queue as queue_wrapper
 import socket
@@ -86,7 +86,7 @@ class Node:
                 cls.log(cls.instance, 'model finishes', model.summary())
 
                 for ip in system_config['devices']:
-                    cls.instance.ip.append(ip)
+                    cls.instance.ip.put(ip)
 
                 cls.instance.merge = system_config['merge']
                 cls.instance.split = system_config['split']
@@ -103,7 +103,7 @@ class Node:
         self.prepare_data = 0.0
         self.prediction_time = 0.0
         self.input = queue_wrapper()
-        self.ip = deque([])
+        self.ip = Queue()
         self.id = ''
         self.debug = False
         self.graph = tf.get_default_graph()
@@ -148,8 +148,7 @@ class Node:
         self.prepare_data += time.time() - start
 
     def send(self, X):
-        ip = self.ip.popleft()
-        self.ip.append(ip)
+        ip = self.ip.get()
 
         client = ipc.HTTPTransceiver(ip, 12345)
         requestor = ipc.Requestor(PROTOCOL, client)
@@ -160,6 +159,7 @@ class Node:
         requestor.request('forward', data)
 
         client.close()
+        self.ip.put(ip)
 
     @property
     def utilization(self):

@@ -1,7 +1,7 @@
 """
     Customized wrapper for Python deque data structure.
 """
-from collections import deque, defaultdict
+from collections import deque
 import time
 from threading import Thread
 import numpy as np
