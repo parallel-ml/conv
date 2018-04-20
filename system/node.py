@@ -143,7 +143,6 @@ class Node:
 
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32
-        print self.input_shape
         X = np.fromstring(bytestr, datatype).reshape(self.input_shape)
         self.input.enqueue(X)
         self.prepare_data += time.time() - start
