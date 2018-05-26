@@ -46,7 +46,9 @@ def send_request(bytestr):
     data = dict()
     data['input'] = bytestr
     data['type'] = 8
+    start = time.time()
     requestor.request('forward', data)
+    print time.time() - start
 
     client.close()
     queue.put(addr)
