@@ -46,9 +46,7 @@ def send_request(bytestr):
     data = dict()
     data['input'] = bytestr
     data['type'] = 8
-    start = time.time()
     requestor.request('forward', data)
-    print time.time() - start
 
     client.close()
     queue.put(addr)
@@ -122,33 +120,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """ Handle requests in separate thread. """
 
 
-def key():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
-
-
-def control():
-    init = Initializer.create()
-    while True:
-        signal = key()
-        if signal == 'q':
-            break
-
-    init.stats()
-    os._exit(1)
-
-
 def main():
-    init = Initializer.create()
-
-    Thread(target=control).start()
-
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True
     Thread(target=server.serve_forever, args=()).start()

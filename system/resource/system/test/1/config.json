@@ -1,0 +1,13 @@
+{
+  "n1": {
+    "model": [
+      "dense_1"
+    ],
+    "devices": [
+      "n1"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": ""
+  }
+}

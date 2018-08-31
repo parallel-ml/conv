@@ -1,0 +1,33 @@
+{
+  "dense_1": {
+    "class_name": "Dense",
+    "config": {
+      "kernel_initializer": {
+        "class_name": "VarianceScaling",
+        "config": {
+          "distribution": "uniform",
+          "scale": 1.0,
+          "seed": null,
+          "mode": "fan_avg"
+        }
+      },
+      "name": "dense_1",
+      "kernel_constraint": null,
+      "bias_regularizer": null,
+      "bias_constraint": null,
+      "activation": "relu",
+      "trainable": true,
+      "kernel_regularizer": null,
+      "bias_initializer": {
+        "class_name": "Zeros",
+        "config": {}
+      },
+      "units": 2048,
+      "use_bias": true,
+      "activity_regularizer": null
+    },
+    "input_shape": [
+      4608
+    ]
+  }
+}

@@ -82,33 +82,9 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """ Handle requests in separate thread. """
 
 
-def key():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
-
-
-def control():
-    node = Node.create()
-    while True:
-        signal = key()
-        if signal == 'q':
-            break
-
-    node.stats()
-    os._exit(1)
-
-
 def main(cmd):
     node = Node.create()
     node.debug = cmd.debug
-
-    Thread(target=control).start()
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True

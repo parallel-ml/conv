@@ -10,6 +10,7 @@ from keras import layers
 from keras.layers import InputLayer
 import numpy as np
 import tensorflow as tf
+import ConfigParser
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -19,6 +20,9 @@ DIR_PATH = os.path.dirname(PATH)
 
 # data packet format definition
 PROTOCOL = protocol.parse(open(DIR_PATH + '/resource/message/image.avpr').read())
+
+# home dir
+HOME = os.environ['HOME']
 
 
 class Node:
@@ -60,16 +64,24 @@ class Node:
             finally:
                 s.close()
 
-            with open(DIR_PATH + '/resource/system/config.json') as f:
-                system_config = yaml.safe_load(f)[ip]
-                cls.instance.id = ip
+            node_config = ConfigParser.ConfigParser()
+            node_config.read(HOME + '/node.cfg')
+            sys_model_name = node_config.get('Node Config', 'model', 0)
+            sys_node_count = node_config.get('Node Config', 'system', 0)
+            node_id = node_config.get('IP Node', ip, 0)
+
+            with open(DIR_PATH + '/resource/system/' + sys_model_name + '/' + sys_node_count + '/config.json') as f:
+                system_config = yaml.safe_load(f)[node_id]
+                cls.instance.id = node_id
 
                 model = Sequential()
 
                 # The model config is predefined. Extract each layer's config
                 # according to the config from system config.
-                with open(DIR_PATH + '/resource/model/config.json') as f2:
+                with open(DIR_PATH + '/resource/model/' + sys_model_name
+                          + '/' + sys_node_count + '/config.json') as f2:
                     model_config = yaml.safe_load(f2)
+                    print model_config
                     for layer_name in system_config['model']:
                         class_name = model_config[layer_name]['class_name']
                         config = model_config[layer_name]['config']
@@ -84,7 +96,8 @@ class Node:
                 cls.instance.model = model
                 cls.log(cls.instance, 'model finishes', model.summary())
 
-                for ip in system_config['devices']:
+                for n_id in system_config['devices']:
+                    ip = node_config.get('Node IP', n_id, 0)
                     cls.instance.ip.put(ip)
 
                 cls.instance.merge = system_config['merge']
