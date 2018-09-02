@@ -175,20 +175,11 @@ class Node:
         client.close()
         self.ip.put(ip)
 
-    @property
-    def utilization(self):
-        return np.float32(self.prediction_time) / (time.time() - self.total_time)
-
-    @property
-    def overhead(self):
-        return np.float32(self.prepare_data) / (time.time() - self.total_time)
-
-    @property
-    def frame_rate(self):
-        return np.float(self.frame_count) / (time.time() - self.total_time)
+    def terminate(self):
+        self.stats()
 
     def stats(self):
-        with open(DIR_PATH + '/resource/system/stats.txt', 'w+') as f:
+        with open(HOME + '/stats', 'w+') as f:
             result = '++++++++++++++++++++++++++++++++++++++++\n'
             result += '+                                      +\n'
             result += '+{:^38s}+\n'.format('SERVER: ' + self.id)
@@ -215,3 +206,15 @@ class Node:
                 print '+{:^68.68}+'.format(data[k:k + 68])
             print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
             print
+
+    @property
+    def utilization(self):
+        return np.float32(self.prediction_time) / (time.time() - self.total_time)
+
+    @property
+    def overhead(self):
+        return np.float32(self.prepare_data) / (time.time() - self.total_time)
+
+    @property
+    def frame_rate(self):
+        return np.float(self.frame_count) / (time.time() - self.total_time)

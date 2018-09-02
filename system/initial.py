@@ -65,8 +65,11 @@ class Initializer:
         self.start = time.time() if self.start == 0.0 else self.start
         self.count += 1
 
+    def terminate(self):
+        self.stats()
+
     def stats(self):
-        with open(DIR_PATH + '/resource/system/stats.txt', 'w+') as f:
+        with open(HOME + '/stats', 'w+') as f:
             result = '++++++++++++++++++++++++++++++++++++++++\n'
             result += '+                                      +\n'
             result += '+{:^38s}+\n'.format('CLIENT: ' + self.id)

@@ -1,7 +1,7 @@
 {
   "n1": {
     "model": [
-      "dense_1"
+      "alexnet_original_1_conv"
     ],
     "devices": [
       "n1"

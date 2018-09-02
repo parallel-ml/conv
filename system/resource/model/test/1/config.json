@@ -1,7 +1,8 @@
 {
-  "dense_1": {
-    "class_name": "Dense",
+    "alexnet_original_1_conv": {
+    "class_name": "Conv2D",
     "config": {
+      "padding": "same",
       "kernel_initializer": {
         "class_name": "VarianceScaling",
         "config": {
@@ -11,23 +12,38 @@
           "mode": "fan_avg"
         }
       },
-      "name": "dense_1",
-      "kernel_constraint": null,
+      "name": "alexnet_original_1_conv",
       "bias_regularizer": null,
+      "filters": 48,
       "bias_constraint": null,
       "activation": "relu",
       "trainable": true,
+      "data_format": "channels_last",
+      "kernel_constraint": null,
+      "strides": [
+        4,
+        4
+      ],
+      "dilation_rate": [
+        1,
+        1
+      ],
       "kernel_regularizer": null,
       "bias_initializer": {
         "class_name": "Zeros",
         "config": {}
       },
-      "units": 2048,
       "use_bias": true,
-      "activity_regularizer": null
+      "activity_regularizer": null,
+      "kernel_size": [
+        11,
+        11
+      ]
     },
     "input_shape": [
-      4608
+      220,
+      220,
+      3
     ]
   }
 }

@@ -3,10 +3,7 @@
 """
 import argparse
 import os
-import sys
-import termios
-import tty
-from threading import Thread
+import signal
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 import avro.ipc as ipc
@@ -83,12 +80,20 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main(cmd):
+    signal.signal(signal.SIGTERM, terminate)
+
     node = Node.create()
     node.debug = cmd.debug
 
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True
     server.serve_forever()
+
+
+def terminate(signum, stack):
+    node = Node.create()
+    node.terminate()
+    os._exit(1)
 
 
 if __name__ == '__main__':

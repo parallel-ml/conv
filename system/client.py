@@ -9,9 +9,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 from threading import Thread
 import os
-import sys
-import termios
-import tty
+import signal
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -121,11 +119,19 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 def main():
+    signal.signal(signal.SIGTERM, terminate)
+
     server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
     server.allow_reuse_address = True
     Thread(target=server.serve_forever, args=()).start()
 
     master()
+
+
+def terminate(signum, stack):
+    init = Initializer.create()
+    init.terminate()
+    os._exit(1)
 
 
 if __name__ == '__main__':
