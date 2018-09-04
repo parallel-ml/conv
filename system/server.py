@@ -4,6 +4,7 @@
 import argparse
 import os
 import signal
+import threading
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 import avro.ipc as ipc
@@ -93,7 +94,9 @@ def main(cmd):
 def terminate(signum, stack):
     node = Node.create()
     node.terminate()
-    os._exit(1)
+    for thread in threading.enumerate():
+        if thread != threading.current_thread():
+            thread.join()
 
 
 if __name__ == '__main__':

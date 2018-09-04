@@ -45,6 +45,7 @@ class Node:
             merge: Number of previous layers merged into this layer.
             split: Number of next layers to process current data.
             op: Operation for merging the data, could be no operation.
+            run: Variable to control thread.
     """
 
     instance = None
@@ -124,6 +125,7 @@ class Node:
         self.split = 0
         self.op = ''
         self.frame_count = 0
+        self.run = True
 
         Thread(target=self.inference).start()
 
@@ -132,7 +134,7 @@ class Node:
         while self.total_time == 0.0:
             time.sleep(0.1)
 
-        while True:
+        while self.run:
             seq = self.input.dequeue(self.merge)
 
             if self.op == 'cat':
@@ -176,6 +178,7 @@ class Node:
         self.ip.put(ip)
 
     def terminate(self):
+        self.run = False
         self.stats()
 
     def stats(self):

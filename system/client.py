@@ -7,6 +7,7 @@
 import time
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
+import threading
 from threading import Thread
 import os
 import signal
@@ -131,7 +132,9 @@ def main():
 def terminate(signum, stack):
     init = Initializer.create()
     init.terminate()
-    os._exit(1)
+    for thread in threading.enumerate():
+        if thread != threading.current_thread():
+            thread.join()
 
 
 if __name__ == '__main__':
