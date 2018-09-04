@@ -3,6 +3,7 @@ import os
 from multiprocessing import Queue
 from threading import Thread
 from system.queue import Queue as queue_wrapper
+from collections import deque
 import socket
 import yaml
 from keras.models import Sequential
@@ -45,6 +46,7 @@ class Node:
             merge: Number of previous layers merged into this layer.
             split: Number of next layers to process current data.
             op: Operation for merging the data, could be no operation.
+            threads: Collections of currently running threads for later house keeping.
             run: Variable to control thread.
     """
 
@@ -125,6 +127,7 @@ class Node:
         self.split = 0
         self.op = ''
         self.frame_count = 0
+        self.threads = deque([])
         self.run = True
 
         Thread(target=self.inference).start()
@@ -135,6 +138,13 @@ class Node:
             time.sleep(0.1)
 
         while self.run:
+            while self.threads:
+                if self.threads[0].is_alive():
+                    break
+                thread = self.threads.popleft()
+                thread.join()
+
+            # get data from the queue
             seq = self.input.dequeue(self.merge)
 
             if self.op == 'cat':
@@ -149,7 +159,9 @@ class Node:
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))
                     for _ in range(self.split):
-                        Thread(target=self.send, args=(output,)).start()
+                        thread = Thread(target=self.send, args=(output,))
+                        thread.start()
+                        self.threads.append(thread)
                 self.prediction_time += time.time() - start
 
     def receive(self, msg, req):
