@@ -11,6 +11,7 @@ import threading
 from threading import Thread
 import os
 import signal
+from collections import deque
 
 import avro.ipc as ipc
 import avro.protocol as protocol
@@ -58,11 +59,21 @@ def master():
         and pop the least recent one if the length > maximum.
     """
     init = Initializer.create()
+    threads = deque([])
+
     while True:
+        while threads:
+            if not threads[0].is_alive():
+                break
+            thread = threads.popleft()
+            thread.join()
+
         # current frame
         ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
         frame = frame.astype(dtype=np.uint8)
-        Thread(target=send_request, args=(frame.tobytes(),)).start()
+        thread = Thread(target=send_request, args=(frame.tobytes(),))
+        thread.start()
+        threads.append(thread)
         time.sleep(0.03)
 
 

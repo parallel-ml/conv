@@ -139,7 +139,7 @@ class Node:
 
         while self.run:
             while self.threads:
-                if self.threads[0].is_alive():
+                if not self.threads[0].is_alive():
                     break
                 thread = self.threads.popleft()
                 thread.join()
