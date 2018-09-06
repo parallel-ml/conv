@@ -74,7 +74,7 @@ def master():
         thread = Thread(target=send_request, args=(frame.tobytes(),))
         thread.start()
         threads.append(thread)
-        time.sleep(0.03)
+        time.sleep(0.01)
 
 
 class Responder(ipc.Responder):
