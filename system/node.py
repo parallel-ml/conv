@@ -138,11 +138,11 @@ class Node:
             time.sleep(0.1)
 
         while self.run:
-            while self.threads:
-                if not self.threads[0].is_alive():
-                    break
-                thread = self.threads.popleft()
-                thread.join()
+            # while self.threads:
+            #     if not self.threads[0].is_alive():
+            #         break
+            #     thread = self.threads.popleft()
+            #     thread.join()
 
             # get data from the queue
             seq = self.input.dequeue(self.merge)
@@ -161,7 +161,7 @@ class Node:
                     for _ in range(self.split):
                         thread = Thread(target=self.send, args=(output,))
                         thread.start()
-                        self.threads.append(thread)
+                        # self.threads.append(thread)
                 self.prediction_time += time.time() - start
 
     def receive(self, msg, req):

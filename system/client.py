@@ -59,21 +59,21 @@ def master():
         and pop the least recent one if the length > maximum.
     """
     init = Initializer.create()
-    threads = deque([])
+    # threads = deque([])
 
     while True:
-        while threads:
-            if not threads[0].is_alive():
-                break
-            thread = threads.popleft()
-            thread.join()
+        # while threads:
+        #     if not threads[0].is_alive():
+        #         break
+        #     thread = threads.popleft()
+        #     thread.join()
 
         # current frame
         ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
         frame = frame.astype(dtype=np.uint8)
         thread = Thread(target=send_request, args=(frame.tobytes(),))
         thread.start()
-        threads.append(thread)
+        # threads.append(thread)
         time.sleep(0.01)
 
 
