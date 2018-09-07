@@ -31,7 +31,7 @@ class Queue:
 
     def dequeue(self, size=0):
         while len(self.queue) < size:
-            time.sleep(0.1)
+            time.sleep(0.001)
         return [self.queue.popleft() for _ in range(size)]
 
     def log(self):
