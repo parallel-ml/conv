@@ -27,7 +27,7 @@ DIR_PATH = os.path.dirname(PATH)
 PROTOCOL = protocol.parse(open(DIR_PATH + '/resource/message/image.avpr').read())
 
 
-def send_request(bytestr):
+def send_request(frame):
     """
         This function sends data to next layer. It will pop an available
         next layer device IP address defined at IP table, and send data
@@ -44,7 +44,7 @@ def send_request(bytestr):
     requestor = ipc.Requestor(PROTOCOL, client)
 
     data = dict()
-    data['input'] = bytestr
+    data['input'] = frame.astype(np.uint8).tobytes()
     data['type'] = 8
     requestor.request('forward', data)
 
@@ -70,8 +70,7 @@ def master():
 
         # current frame
         ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
-        frame = frame.astype(dtype=np.uint8)
-        thread = Thread(target=send_request, args=(frame.tobytes(),))
+        thread = Thread(target=send_request, args=(frame,))
         thread.start()
         # threads.append(thread)
         time.sleep(0.01)
