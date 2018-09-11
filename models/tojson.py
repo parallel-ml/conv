@@ -3,8 +3,10 @@
 """
 import json
 import alexnet
+import os
 
-PATH = 'system/resource/model/config.json'
+
+PWD = os.environ['PWD']
 
 
 def save(model, f, config):
@@ -26,11 +28,31 @@ def save(model, f, config):
 
 
 def main():
-    with open('system/resource/model/config.json', 'w+') as f:
+    path = 'system/resource/model/alexnet/1/config.json'
+    with open(path, 'w+') as f:
         config = dict()
         model = alexnet.original(include_fc=False)
         save(model, f, config)
-        model = alexnet.fc2()
+        json.dump(config, f)
+
+    path = 'system/resource/model/alexnet_filter/1/config.json'
+    with open(path, 'w+') as f:
+        config = dict()
+        model = alexnet.filter(include_fc=False)
+        save(model, f, config)
+        json.dump(config, f)
+
+    path = 'system/resource/model/alexnet_xy/1/config.json'
+    with open(path, 'w+') as f:
+        config = dict()
+        model = alexnet.xy(include_fc=False)
+        save(model, f, config)
+        json.dump(config, f)
+
+    path = 'system/resource/model/alexnet_channel/1/config.json'
+    with open(path, 'w+') as f:
+        config = dict()
+        model = alexnet.channel(include_fc=False)
         save(model, f, config)
         json.dump(config, f)
 

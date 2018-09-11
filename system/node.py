@@ -96,7 +96,7 @@ class Node:
                         model.add(InputLayer(input_shape))
                         model.add(layer)
 
-                cls.instance.model = model
+                cls.instance.model = model if len(model.layers) != 0 else None
                 cls.log(cls.instance, 'model finishes', model.summary())
 
                 for n_id in system_config['devices']:
@@ -154,7 +154,7 @@ class Node:
             else:
                 X = seq[0]
 
-            if X is not None:
+            if X and self.model:
                 start = time.time()
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))

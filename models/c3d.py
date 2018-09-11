@@ -1,7 +1,6 @@
 from keras.layers import Conv3D, MaxPooling3D, Input, Flatten, Dense
 from keras.models import Model
 
-
 NAME = 'c3d'
 
 

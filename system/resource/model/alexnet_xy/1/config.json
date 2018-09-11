@@ -1,0 +1,827 @@
+{
+    "alexnet_spatial_3_conv": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "valid",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_spatial_3_conv",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "relu",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            6,
+            6,
+            128
+        ]
+    },
+    "lambda_6": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAAFAAAACAAAABMAAABzSwAAAGcAAIgAAERdQABcBAB9AQB9AgB9AwB9BAB8AABkAABkAACF\nAgB8AQB8AgCFAgB8AwB8BACFAgBkAABkAACFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAUAAAB0\nAQAAAHh0AgAAAGxidAIAAAByYnQCAAAAdWJ0AgAAAGRiKAEAAAB0CAAAAGJvdW5kYXJ5KAAAAABz\nCwAAAHV0aWxzL3h5LnB5dAgAAAA8bGFtYmRhPmcAAABzAgAAAAAB\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            79,
+                            0,
+                            79
+                        ],
+                        [
+                            72,
+                            151,
+                            0,
+                            79
+                        ],
+                        [
+                            144,
+                            227,
+                            0,
+                            79
+                        ],
+                        [
+                            0,
+                            79,
+                            72,
+                            151
+                        ],
+                        [
+                            72,
+                            151,
+                            72,
+                            151
+                        ],
+                        [
+                            144,
+                            227,
+                            72,
+                            151
+                        ],
+                        [
+                            0,
+                            79,
+                            144,
+                            227
+                        ],
+                        [
+                            72,
+                            151,
+                            144,
+                            227
+                        ],
+                        [
+                            144,
+                            227,
+                            144,
+                            227
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_6",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            227,
+            227,
+            3
+        ]
+    },
+    "lambda_7": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAAFAAAACAAAABMAAABzSwAAAGcAAIgAAERdQABcBAB9AQB9AgB9AwB9BAB8AABkAABkAACF\nAgB8AQB8AgCFAgB8AwB8BACFAgBkAABkAACFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAUAAAB0\nAQAAAHh0AgAAAGxidAIAAAByYnQCAAAAdWJ0AgAAAGRiKAEAAAB0CAAAAGJvdW5kYXJ5KAAAAABz\nCwAAAHV0aWxzL3h5LnB5dAgAAAA8bGFtYmRhPmcAAABzAgAAAAAB\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            13,
+                            0,
+                            13
+                        ],
+                        [
+                            9,
+                            22,
+                            0,
+                            13
+                        ],
+                        [
+                            18,
+                            31,
+                            0,
+                            13
+                        ],
+                        [
+                            0,
+                            13,
+                            9,
+                            22
+                        ],
+                        [
+                            9,
+                            22,
+                            9,
+                            22
+                        ],
+                        [
+                            18,
+                            31,
+                            9,
+                            22
+                        ],
+                        [
+                            0,
+                            13,
+                            18,
+                            31
+                        ],
+                        [
+                            9,
+                            22,
+                            18,
+                            31
+                        ],
+                        [
+                            18,
+                            31,
+                            18,
+                            31
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_7",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            31,
+            31,
+            48
+        ]
+    },
+    "alexnet_spatial_4_conv": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "valid",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_spatial_4_conv",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "relu",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            6,
+            6,
+            192
+        ]
+    },
+    "max_pooling2d_8": {
+        "class_name": "MaxPooling2D",
+        "config": {
+            "name": "max_pooling2d_8",
+            "trainable": true,
+            "data_format": "channels_last",
+            "pool_size": [
+                2,
+                2
+            ],
+            "padding": "valid",
+            "strides": [
+                2,
+                2
+            ]
+        },
+        "input_shape": [
+            27,
+            27,
+            128
+        ]
+    },
+    "alexnet_spatial_5_conv": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "valid",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_spatial_5_conv",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "relu",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            6,
+            6,
+            192
+        ]
+    },
+    "max_pooling2d_7": {
+        "class_name": "MaxPooling2D",
+        "config": {
+            "name": "max_pooling2d_7",
+            "trainable": true,
+            "data_format": "channels_last",
+            "pool_size": [
+                2,
+                2
+            ],
+            "padding": "valid",
+            "strides": [
+                2,
+                2
+            ]
+        },
+        "input_shape": [
+            55,
+            55,
+            48
+        ]
+    },
+    "lambda_8": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAAFAAAACAAAABMAAABzSwAAAGcAAIgAAERdQABcBAB9AQB9AgB9AwB9BAB8AABkAABkAACF\nAgB8AQB8AgCFAgB8AwB8BACFAgBkAABkAACFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAUAAAB0\nAQAAAHh0AgAAAGxidAIAAAByYnQCAAAAdWJ0AgAAAGRiKAEAAAB0CAAAAGJvdW5kYXJ5KAAAAABz\nCwAAAHV0aWxzL3h5LnB5dAgAAAA8bGFtYmRhPmcAAABzAgAAAAAB\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            6,
+                            0,
+                            6
+                        ],
+                        [
+                            4,
+                            10,
+                            0,
+                            6
+                        ],
+                        [
+                            8,
+                            15,
+                            0,
+                            6
+                        ],
+                        [
+                            0,
+                            6,
+                            4,
+                            10
+                        ],
+                        [
+                            4,
+                            10,
+                            4,
+                            10
+                        ],
+                        [
+                            8,
+                            15,
+                            4,
+                            10
+                        ],
+                        [
+                            0,
+                            6,
+                            8,
+                            15
+                        ],
+                        [
+                            4,
+                            10,
+                            8,
+                            15
+                        ],
+                        [
+                            8,
+                            15,
+                            8,
+                            15
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_8",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            15,
+            15,
+            128
+        ]
+    },
+    "lambda_9": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAAFAAAACAAAABMAAABzSwAAAGcAAIgAAERdQABcBAB9AQB9AgB9AwB9BAB8AABkAABkAACF\nAgB8AQB8AgCFAgB8AwB8BACFAgBkAABkAACFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAUAAAB0\nAQAAAHh0AgAAAGxidAIAAAByYnQCAAAAdWJ0AgAAAGRiKAEAAAB0CAAAAGJvdW5kYXJ5KAAAAABz\nCwAAAHV0aWxzL3h5LnB5dAgAAAA8bGFtYmRhPmcAAABzAgAAAAAB\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            6,
+                            0,
+                            6
+                        ],
+                        [
+                            4,
+                            10,
+                            0,
+                            6
+                        ],
+                        [
+                            8,
+                            15,
+                            0,
+                            6
+                        ],
+                        [
+                            0,
+                            6,
+                            4,
+                            10
+                        ],
+                        [
+                            4,
+                            10,
+                            4,
+                            10
+                        ],
+                        [
+                            8,
+                            15,
+                            4,
+                            10
+                        ],
+                        [
+                            0,
+                            6,
+                            8,
+                            15
+                        ],
+                        [
+                            4,
+                            10,
+                            8,
+                            15
+                        ],
+                        [
+                            8,
+                            15,
+                            8,
+                            15
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_9",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            15,
+            15,
+            192
+        ]
+    },
+    "zero_padding2d_5": {
+        "class_name": "ZeroPadding2D",
+        "config": {
+            "padding": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "trainable": true,
+            "name": "zero_padding2d_5",
+            "data_format": "channels_last"
+        },
+        "input_shape": [
+            13,
+            13,
+            192
+        ]
+    },
+    "alexnet_spatial_1_conv": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "valid",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_spatial_1_conv",
+            "bias_regularizer": null,
+            "filters": 48,
+            "bias_constraint": null,
+            "activation": "relu",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                4,
+                4
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                11,
+                11
+            ]
+        },
+        "input_shape": [
+            79,
+            79,
+            3
+        ]
+    },
+    "zero_padding2d_3": {
+        "class_name": "ZeroPadding2D",
+        "config": {
+            "padding": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "trainable": true,
+            "name": "zero_padding2d_3",
+            "data_format": "channels_last"
+        },
+        "input_shape": [
+            13,
+            13,
+            128
+        ]
+    },
+    "input_3": {
+        "class_name": "InputLayer",
+        "config": {
+            "dtype": "float32",
+            "batch_input_shape": [
+                null,
+                220,
+                220,
+                3
+            ],
+            "name": "input_3",
+            "sparse": false
+        },
+        "input_shape": [
+            220,
+            220,
+            3
+        ]
+    },
+    "zero_padding2d_1": {
+        "class_name": "ZeroPadding2D",
+        "config": {
+            "padding": [
+                [
+                    3,
+                    4
+                ],
+                [
+                    3,
+                    4
+                ]
+            ],
+            "trainable": true,
+            "name": "zero_padding2d_1",
+            "data_format": "channels_last"
+        },
+        "input_shape": [
+            220,
+            220,
+            3
+        ]
+    },
+    "lambda_10": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAAFAAAACAAAABMAAABzSwAAAGcAAIgAAERdQABcBAB9AQB9AgB9AwB9BAB8AABkAABkAACF\nAgB8AQB8AgCFAgB8AwB8BACFAgBkAABkAACFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAUAAAB0\nAQAAAHh0AgAAAGxidAIAAAByYnQCAAAAdWJ0AgAAAGRiKAEAAAB0CAAAAGJvdW5kYXJ5KAAAAABz\nCwAAAHV0aWxzL3h5LnB5dAgAAAA8bGFtYmRhPmcAAABzAgAAAAAB\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            6,
+                            0,
+                            6
+                        ],
+                        [
+                            4,
+                            10,
+                            0,
+                            6
+                        ],
+                        [
+                            8,
+                            15,
+                            0,
+                            6
+                        ],
+                        [
+                            0,
+                            6,
+                            4,
+                            10
+                        ],
+                        [
+                            4,
+                            10,
+                            4,
+                            10
+                        ],
+                        [
+                            8,
+                            15,
+                            4,
+                            10
+                        ],
+                        [
+                            0,
+                            6,
+                            8,
+                            15
+                        ],
+                        [
+                            4,
+                            10,
+                            8,
+                            15
+                        ],
+                        [
+                            8,
+                            15,
+                            8,
+                            15
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_10",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            15,
+            15,
+            192
+        ]
+    },
+    "max_pooling2d_9": {
+        "class_name": "MaxPooling2D",
+        "config": {
+            "name": "max_pooling2d_9",
+            "trainable": true,
+            "data_format": "channels_last",
+            "pool_size": [
+                2,
+                2
+            ],
+            "padding": "valid",
+            "strides": [
+                2,
+                2
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            128
+        ]
+    },
+    "zero_padding2d_4": {
+        "class_name": "ZeroPadding2D",
+        "config": {
+            "padding": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "trainable": true,
+            "name": "zero_padding2d_4",
+            "data_format": "channels_last"
+        },
+        "input_shape": [
+            13,
+            13,
+            192
+        ]
+    },
+    "alexnet_spatial_2_conv": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "valid",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_spatial_2_conv",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "relu",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                5,
+                5
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            48
+        ]
+    },
+    "zero_padding2d_2": {
+        "class_name": "ZeroPadding2D",
+        "config": {
+            "padding": [
+                [
+                    2,
+                    2
+                ],
+                [
+                    2,
+                    2
+                ]
+            ],
+            "trainable": true,
+            "name": "zero_padding2d_2",
+            "data_format": "channels_last"
+        },
+        "input_shape": [
+            27,
+            27,
+            48
+        ]
+    }
+}
