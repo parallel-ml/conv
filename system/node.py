@@ -106,7 +106,7 @@ class Node:
                 cls.instance.merge = system_config['merge']
                 cls.instance.split = system_config['split']
                 cls.instance.op = system_config['op']
-                
+
                 if cls.instance.model:
                     shape = list(model.input_shape[1:])
                     shape[-1] = shape[-1] / cls.instance.merge if cls.instance.op == 'cat' else shape[-1]
