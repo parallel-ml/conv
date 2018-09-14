@@ -54,6 +54,7 @@ class Initializer:
                     ip = node_config.get('Node IP', n_id, 0)
                     cls.instance.queue.put(ip)
                 cls.instance.split = int(config['split'])
+                cls.instance.input_shape = ([int(entry) for entry in config['input_shape'].split(' ')])
         return cls.instance
 
     def __init__(self):
@@ -61,7 +62,8 @@ class Initializer:
         self.start = 0.0
         self.count = 0
         self.id = ''
-        self.split = 1
+        self.split = 0
+        self.input_shape = None
 
     def receive(self):
         self.start = time.time() if self.start == 0.0 else self.start

@@ -45,7 +45,7 @@ def send_request(frame):
 
     data = dict()
     tmp = [str(entry) for entry in frame.shape]
-    data['shape'] = ''.join(tmp)
+    data['shape'] = ' '.join(tmp)
     data['input'] = frame.astype(np.uint8).tobytes()
     data['type'] = 8
     requestor.request('forward', data)
@@ -64,7 +64,7 @@ def master():
 
     while True:
         # current frame
-        ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
+        ret, frame = 'unknown', np.random.rand(init.input_shape) * 255
         for _ in range(init.split):
             Thread(target=send_request, args=(frame,)).start()
         time.sleep(0.03)
