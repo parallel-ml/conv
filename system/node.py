@@ -149,7 +149,7 @@ class Node:
             else:
                 X = seq[0]
 
-            if X and self.model:
+            if X is not None and self.model is not None:
                 start = time.time()
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))
