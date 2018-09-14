@@ -10,6 +10,9 @@
       }, {
         "name" : "type",
         "type" : "int"
+      }, {
+        "name" : "shape",
+        "type" : "string"
       } ],
       "response" : "null"
     }

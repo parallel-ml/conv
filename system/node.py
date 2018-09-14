@@ -140,12 +140,6 @@ class Node:
             time.sleep(0.1)
 
         while self.run:
-            # while self.threads:
-            #     if not self.threads[0].is_alive():
-            #         break
-            #     thread = self.threads.popleft()
-            #     thread.join()
-
             # get data from the queue
             seq = self.input.dequeue(self.merge)
 
@@ -173,7 +167,14 @@ class Node:
 
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32
-        X = np.fromstring(bytestr, datatype).reshape(self.input_shape)
+
+        # adapt to merge layer
+        if not self.input_shape:
+            shape = tuple([int(entry) for entry in req['shape'].split(' ')])
+        else:
+            shape = self.input_shape
+
+        X = np.fromstring(bytestr, datatype).reshape(shape)
         self.input.enqueue(X)
         self.prepare_data += time.time() - start
 
@@ -184,6 +185,8 @@ class Node:
         requestor = ipc.Requestor(PROTOCOL, client)
 
         data = dict()
+        tmp = [str(entry) for entry in X.shape]
+        data['shape'] = ''.join(tmp)
         data['input'] = X.tobytes()
         data['type'] = 32
         requestor.request('forward', data)

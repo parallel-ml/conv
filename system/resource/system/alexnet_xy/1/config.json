@@ -42,7 +42,9 @@
     "op": ""
   },
   "n5": {
-    "model": [],
+    "model": [
+      "concatenate_1"
+    ],
     "devices": [
       "n1"
     ],

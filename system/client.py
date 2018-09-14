@@ -44,6 +44,8 @@ def send_request(frame):
     requestor = ipc.Requestor(PROTOCOL, client)
 
     data = dict()
+    tmp = [str(entry) for entry in frame.shape]
+    data['shape'] = ''.join(tmp)
     data['input'] = frame.astype(np.uint8).tobytes()
     data['type'] = 8
     requestor.request('forward', data)
@@ -59,20 +61,12 @@ def master():
         and pop the least recent one if the length > maximum.
     """
     init = Initializer.create()
-    # threads = deque([])
 
     while True:
-        # while threads:
-        #     if not threads[0].is_alive():
-        #         break
-        #     thread = threads.popleft()
-        #     thread.join()
-
         # current frame
         ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
         thread = Thread(target=send_request, args=(frame,))
         thread.start()
-        # threads.append(thread)
         time.sleep(0.03)
 
 
