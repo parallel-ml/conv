@@ -145,7 +145,7 @@ class Node:
             if self.op == 'cat':
                 X = np.concatenate(seq)
             elif self.op == 'add':
-                X = np.add(seq[0], seq[1])
+                X = np.sum(seq, axis=0)
             else:
                 X = seq[0]
 

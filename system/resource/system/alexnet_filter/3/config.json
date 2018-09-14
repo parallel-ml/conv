@@ -2,21 +2,52 @@
    "n1": {
     "model": [],
     "devices": [
-      "n2"
+      "n2", "n3", "n4"
+    ],
+    "merge": 1,
+    "split": 3,
+    "op": ""
+  },
+  "n2": {
+    "model": [
+      "alexnet_filter_1_conv_0"
+    ],
+    "devices": [
+      "n5"
     ],
     "merge": 1,
     "split": 1,
     "op": ""
   },
-  "n2": {
+  "n3": {
     "model": [
-      "alexnet_original_1_conv"
+      "alexnet_filter_1_conv_1"
     ],
     "devices": [
-      "n1"
+      "n5"
     ],
     "merge": 1,
     "split": 1,
     "op": ""
+  },
+  "n4": {
+    "model": [
+      "alexnet_filter_1_conv_2"
+    ],
+    "devices": [
+      "n5"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": ""
+  },
+  "n5": {
+    "model": [],
+    "devices": [
+      "n1"
+    ],
+    "merge": 3,
+    "split": 1,
+    "op": "add"
   }
 }

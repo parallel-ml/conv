@@ -1,1 +1,1142 @@
-{"alexnet_filter_2_conv_0": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_2_conv_0", "bias_regularizer": null, "filters": 128, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [5, 5]}, "input_shape": [27, 27, 16]}, "alexnet_filter_2_conv_1": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_2_conv_1", "bias_regularizer": null, "filters": 128, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [5, 5]}, "input_shape": [27, 27, 16]}, "alexnet_filter_2_conv_2": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_2_conv_2", "bias_regularizer": null, "filters": 128, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": true, "activity_regularizer": null, "kernel_size": [5, 5]}, "input_shape": [27, 27, 16]}, "add_1": {"class_name": "Add", "config": {"trainable": true, "name": "add_1"}, "input_shape": [[null, 55, 55, 48], [null, 55, 55, 48]]}, "add_3": {"class_name": "Add", "config": {"trainable": true, "name": "add_3"}, "input_shape": [[null, 13, 13, 192], [null, 13, 13, 192]]}, "add_2": {"class_name": "Add", "config": {"trainable": true, "name": "add_2"}, "input_shape": [[null, 27, 27, 128], [null, 27, 27, 128]]}, "add_5": {"class_name": "Add", "config": {"trainable": true, "name": "add_5"}, "input_shape": [[null, 13, 13, 128], [null, 13, 13, 128]]}, "add_4": {"class_name": "Add", "config": {"trainable": true, "name": "add_4"}, "input_shape": [[null, 13, 13, 192], [null, 13, 13, 192]]}, "activation_1": {"class_name": "Activation", "config": {"activation": "relu", "trainable": true, "name": "activation_1"}, "input_shape": [55, 55, 48]}, "activation_3": {"class_name": "Activation", "config": {"activation": "relu", "trainable": true, "name": "activation_3"}, "input_shape": [13, 13, 192]}, "activation_2": {"class_name": "Activation", "config": {"activation": "relu", "trainable": true, "name": "activation_2"}, "input_shape": [27, 27, 128]}, "alexnet_filter_5_conv_1": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_5_conv_1", "bias_regularizer": null, "filters": 128, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 64]}, "activation_4": {"class_name": "Activation", "config": {"activation": "relu", "trainable": true, "name": "activation_4"}, "input_shape": [13, 13, 192]}, "alexnet_filter_5_conv_2": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_5_conv_2", "bias_regularizer": null, "filters": 128, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": true, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 64]}, "input_2": {"class_name": "InputLayer", "config": {"dtype": "float32", "batch_input_shape": [null, 220, 220, 3], "name": "input_2", "sparse": false}, "input_shape": [220, 220, 3]}, "max_pooling2d_5": {"class_name": "MaxPooling2D", "config": {"name": "max_pooling2d_5", "trainable": true, "data_format": "channels_last", "pool_size": [2, 2], "padding": "valid", "strides": [2, 2]}, "input_shape": [27, 27, 128]}, "max_pooling2d_4": {"class_name": "MaxPooling2D", "config": {"name": "max_pooling2d_4", "trainable": true, "data_format": "channels_last", "pool_size": [2, 2], "padding": "valid", "strides": [2, 2]}, "input_shape": [55, 55, 48]}, "max_pooling2d_6": {"class_name": "MaxPooling2D", "config": {"name": "max_pooling2d_6", "trainable": true, "data_format": "channels_last", "pool_size": [2, 2], "padding": "valid", "strides": [2, 2]}, "input_shape": [13, 13, 128]}, "activation_5": {"class_name": "Activation", "config": {"activation": "relu", "trainable": true, "name": "activation_5"}, "input_shape": [13, 13, 128]}, "alexnet_filter_5_conv_0": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_5_conv_0", "bias_regularizer": null, "filters": 128, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 64]}, "lambda_4": {"class_name": "Lambda", "config": {"function": ["YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n", null, [[[0, 64], [64, 128], [128, 192]]]], "name": "lambda_4", "trainable": true, "function_type": "lambda", "arguments": {}, "output_shape": null, "output_shape_type": "raw"}, "input_shape": [13, 13, 192]}, "lambda_5": {"class_name": "Lambda", "config": {"function": ["YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n", null, [[[0, 64], [64, 128], [128, 192]]]], "name": "lambda_5", "trainable": true, "function_type": "lambda", "arguments": {}, "output_shape": null, "output_shape_type": "raw"}, "input_shape": [13, 13, 192]}, "lambda_1": {"class_name": "Lambda", "config": {"function": ["YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n", null, [[[0, 1], [1, 2], [2, 3]]]], "name": "lambda_1", "trainable": true, "function_type": "lambda", "arguments": {}, "output_shape": null, "output_shape_type": "raw"}, "input_shape": [220, 220, 3]}, "lambda_2": {"class_name": "Lambda", "config": {"function": ["YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n", null, [[[0, 16], [16, 32], [32, 48]]]], "name": "lambda_2", "trainable": true, "function_type": "lambda", "arguments": {}, "output_shape": null, "output_shape_type": "raw"}, "input_shape": [27, 27, 48]}, "lambda_3": {"class_name": "Lambda", "config": {"function": ["YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n", null, [[[0, 42], [42, 84], [84, 128]]]], "name": "lambda_3", "trainable": true, "function_type": "lambda", "arguments": {}, "output_shape": null, "output_shape_type": "raw"}, "input_shape": [13, 13, 128]}, "alexnet_filter_1_conv_1": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_1_conv_1", "bias_regularizer": null, "filters": 48, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [4, 4], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [11, 11]}, "input_shape": [220, 220, 1]}, "alexnet_filter_1_conv_0": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_1_conv_0", "bias_regularizer": null, "filters": 48, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [4, 4], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [11, 11]}, "input_shape": [220, 220, 1]}, "alexnet_filter_1_conv_2": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_1_conv_2", "bias_regularizer": null, "filters": 48, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [4, 4], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": true, "activity_regularizer": null, "kernel_size": [11, 11]}, "input_shape": [220, 220, 1]}, "alexnet_filter_3_conv_2": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_3_conv_2", "bias_regularizer": null, "filters": 192, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": true, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 44]}, "alexnet_filter_3_conv_1": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_3_conv_1", "bias_regularizer": null, "filters": 192, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 42]}, "alexnet_filter_3_conv_0": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_3_conv_0", "bias_regularizer": null, "filters": 192, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 42]}, "alexnet_filter_4_conv_2": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_4_conv_2", "bias_regularizer": null, "filters": 192, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": true, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 64]}, "alexnet_filter_4_conv_0": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_4_conv_0", "bias_regularizer": null, "filters": 192, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 64]}, "alexnet_filter_4_conv_1": {"class_name": "Conv2D", "config": {"padding": "same", "kernel_initializer": {"class_name": "VarianceScaling", "config": {"distribution": "uniform", "scale": 1.0, "seed": null, "mode": "fan_avg"}}, "name": "alexnet_filter_4_conv_1", "bias_regularizer": null, "filters": 192, "bias_constraint": null, "activation": "linear", "trainable": true, "data_format": "channels_last", "kernel_constraint": null, "strides": [1, 1], "dilation_rate": [1, 1], "kernel_regularizer": null, "bias_initializer": {"class_name": "Zeros", "config": {}}, "use_bias": false, "activity_regularizer": null, "kernel_size": [3, 3]}, "input_shape": [13, 13, 64]}}
+{
+    "alexnet_filter_2_conv_0": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_2_conv_0",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                5,
+                5
+            ]
+        },
+        "input_shape": [
+            27,
+            27,
+            16
+        ]
+    },
+    "alexnet_filter_2_conv_1": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_2_conv_1",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                5,
+                5
+            ]
+        },
+        "input_shape": [
+            27,
+            27,
+            16
+        ]
+    },
+    "alexnet_filter_2_conv_2": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_2_conv_2",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                5,
+                5
+            ]
+        },
+        "input_shape": [
+            27,
+            27,
+            16
+        ]
+    },
+    "add_1": {
+        "class_name": "Add",
+        "config": {
+            "trainable": true,
+            "name": "add_1"
+        },
+        "input_shape": [
+            [
+                null,
+                55,
+                55,
+                48
+            ],
+            [
+                null,
+                55,
+                55,
+                48
+            ]
+        ]
+    },
+    "add_3": {
+        "class_name": "Add",
+        "config": {
+            "trainable": true,
+            "name": "add_3"
+        },
+        "input_shape": [
+            [
+                null,
+                13,
+                13,
+                192
+            ],
+            [
+                null,
+                13,
+                13,
+                192
+            ]
+        ]
+    },
+    "add_2": {
+        "class_name": "Add",
+        "config": {
+            "trainable": true,
+            "name": "add_2"
+        },
+        "input_shape": [
+            [
+                null,
+                27,
+                27,
+                128
+            ],
+            [
+                null,
+                27,
+                27,
+                128
+            ]
+        ]
+    },
+    "add_5": {
+        "class_name": "Add",
+        "config": {
+            "trainable": true,
+            "name": "add_5"
+        },
+        "input_shape": [
+            [
+                null,
+                13,
+                13,
+                128
+            ],
+            [
+                null,
+                13,
+                13,
+                128
+            ]
+        ]
+    },
+    "add_4": {
+        "class_name": "Add",
+        "config": {
+            "trainable": true,
+            "name": "add_4"
+        },
+        "input_shape": [
+            [
+                null,
+                13,
+                13,
+                192
+            ],
+            [
+                null,
+                13,
+                13,
+                192
+            ]
+        ]
+    },
+    "activation_1": {
+        "class_name": "Activation",
+        "config": {
+            "activation": "relu",
+            "trainable": true,
+            "name": "activation_1"
+        },
+        "input_shape": [
+            55,
+            55,
+            48
+        ]
+    },
+    "activation_3": {
+        "class_name": "Activation",
+        "config": {
+            "activation": "relu",
+            "trainable": true,
+            "name": "activation_3"
+        },
+        "input_shape": [
+            13,
+            13,
+            192
+        ]
+    },
+    "activation_2": {
+        "class_name": "Activation",
+        "config": {
+            "activation": "relu",
+            "trainable": true,
+            "name": "activation_2"
+        },
+        "input_shape": [
+            27,
+            27,
+            128
+        ]
+    },
+    "alexnet_filter_5_conv_1": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_5_conv_1",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            64
+        ]
+    },
+    "activation_4": {
+        "class_name": "Activation",
+        "config": {
+            "activation": "relu",
+            "trainable": true,
+            "name": "activation_4"
+        },
+        "input_shape": [
+            13,
+            13,
+            192
+        ]
+    },
+    "alexnet_filter_5_conv_2": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_5_conv_2",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            64
+        ]
+    },
+    "input_2": {
+        "class_name": "InputLayer",
+        "config": {
+            "dtype": "float32",
+            "batch_input_shape": [
+                null,
+                220,
+                220,
+                3
+            ],
+            "name": "input_2",
+            "sparse": false
+        },
+        "input_shape": [
+            220,
+            220,
+            3
+        ]
+    },
+    "max_pooling2d_5": {
+        "class_name": "MaxPooling2D",
+        "config": {
+            "name": "max_pooling2d_5",
+            "trainable": true,
+            "data_format": "channels_last",
+            "pool_size": [
+                2,
+                2
+            ],
+            "padding": "valid",
+            "strides": [
+                2,
+                2
+            ]
+        },
+        "input_shape": [
+            27,
+            27,
+            128
+        ]
+    },
+    "max_pooling2d_4": {
+        "class_name": "MaxPooling2D",
+        "config": {
+            "name": "max_pooling2d_4",
+            "trainable": true,
+            "data_format": "channels_last",
+            "pool_size": [
+                2,
+                2
+            ],
+            "padding": "valid",
+            "strides": [
+                2,
+                2
+            ]
+        },
+        "input_shape": [
+            55,
+            55,
+            48
+        ]
+    },
+    "max_pooling2d_6": {
+        "class_name": "MaxPooling2D",
+        "config": {
+            "name": "max_pooling2d_6",
+            "trainable": true,
+            "data_format": "channels_last",
+            "pool_size": [
+                2,
+                2
+            ],
+            "padding": "valid",
+            "strides": [
+                2,
+                2
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            128
+        ]
+    },
+    "activation_5": {
+        "class_name": "Activation",
+        "config": {
+            "activation": "relu",
+            "trainable": true,
+            "name": "activation_5"
+        },
+        "input_shape": [
+            13,
+            13,
+            128
+        ]
+    },
+    "alexnet_filter_5_conv_0": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_5_conv_0",
+            "bias_regularizer": null,
+            "filters": 128,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            64
+        ]
+    },
+    "lambda_4": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            64
+                        ],
+                        [
+                            64,
+                            128
+                        ],
+                        [
+                            128,
+                            192
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_4",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            13,
+            13,
+            192
+        ]
+    },
+    "lambda_5": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            64
+                        ],
+                        [
+                            64,
+                            128
+                        ],
+                        [
+                            128,
+                            192
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_5",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            13,
+            13,
+            192
+        ]
+    },
+    "lambda_1": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        [
+                            1,
+                            2
+                        ],
+                        [
+                            2,
+                            3
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_1",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            220,
+            220,
+            3
+        ]
+    },
+    "lambda_2": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            16
+                        ],
+                        [
+                            16,
+                            32
+                        ],
+                        [
+                            32,
+                            48
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_2",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            27,
+            27,
+            48
+        ]
+    },
+    "lambda_3": {
+        "class_name": "Lambda",
+        "config": {
+            "function": [
+                "YwEAAAADAAAACAAAABMAAABzRQAAAGcAAIgAAERdOgBcAgB9AQB9AgB8AABkAABkAACFAgBkAABk\nAACFAgBkAABkAACFAgB8AQB8AgCFAgBmBAAZXgIAcQcAUygBAAAATigAAAAAKAMAAAB0AQAAAHh0\nAgAAAGxidAIAAAByYigBAAAAdAgAAABib3VuZGFyeSgAAAAAcw8AAAB1dGlscy9maWx0ZXIucHl0\nCAAAADxsYW1iZGE+FwAAAHQAAAAA\n",
+                null,
+                [
+                    [
+                        [
+                            0,
+                            42
+                        ],
+                        [
+                            42,
+                            84
+                        ],
+                        [
+                            84,
+                            128
+                        ]
+                    ]
+                ]
+            ],
+            "name": "lambda_3",
+            "trainable": true,
+            "function_type": "lambda",
+            "arguments": {},
+            "output_shape": null,
+            "output_shape_type": "raw"
+        },
+        "input_shape": [
+            13,
+            13,
+            128
+        ]
+    },
+    "alexnet_filter_1_conv_1": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_1_conv_1",
+            "bias_regularizer": null,
+            "filters": 48,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                4,
+                4
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                11,
+                11
+            ]
+        },
+        "input_shape": [
+            220,
+            220,
+            1
+        ]
+    },
+    "alexnet_filter_1_conv_0": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_1_conv_0",
+            "bias_regularizer": null,
+            "filters": 48,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                4,
+                4
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                11,
+                11
+            ]
+        },
+        "input_shape": [
+            220,
+            220,
+            1
+        ]
+    },
+    "alexnet_filter_1_conv_2": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_1_conv_2",
+            "bias_regularizer": null,
+            "filters": 48,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                4,
+                4
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                11,
+                11
+            ]
+        },
+        "input_shape": [
+            220,
+            220,
+            1
+        ]
+    },
+    "alexnet_filter_3_conv_2": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_3_conv_2",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            44
+        ]
+    },
+    "alexnet_filter_3_conv_1": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_3_conv_1",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            42
+        ]
+    },
+    "alexnet_filter_3_conv_0": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_3_conv_0",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            42
+        ]
+    },
+    "alexnet_filter_4_conv_2": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_4_conv_2",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": true,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            64
+        ]
+    },
+    "alexnet_filter_4_conv_0": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_4_conv_0",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            64
+        ]
+    },
+    "alexnet_filter_4_conv_1": {
+        "class_name": "Conv2D",
+        "config": {
+            "padding": "same",
+            "kernel_initializer": {
+                "class_name": "VarianceScaling",
+                "config": {
+                    "distribution": "uniform",
+                    "scale": 1.0,
+                    "seed": null,
+                    "mode": "fan_avg"
+                }
+            },
+            "name": "alexnet_filter_4_conv_1",
+            "bias_regularizer": null,
+            "filters": 192,
+            "bias_constraint": null,
+            "activation": "linear",
+            "trainable": true,
+            "data_format": "channels_last",
+            "kernel_constraint": null,
+            "strides": [
+                1,
+                1
+            ],
+            "dilation_rate": [
+                1,
+                1
+            ],
+            "kernel_regularizer": null,
+            "bias_initializer": {
+                "class_name": "Zeros",
+                "config": {}
+            },
+            "use_bias": false,
+            "activity_regularizer": null,
+            "kernel_size": [
+                3,
+                3
+            ]
+        },
+        "input_shape": [
+            13,
+            13,
+            64
+        ]
+    }
+}
