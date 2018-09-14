@@ -65,8 +65,8 @@ def master():
     while True:
         # current frame
         ret, frame = 'unknown', np.random.rand(220, 220, 3) * 255
-        thread = Thread(target=send_request, args=(frame,))
-        thread.start()
+        for _ in range(init.split):
+            Thread(target=send_request, args=(frame,)).start()
         time.sleep(0.03)
 
 
