@@ -64,7 +64,7 @@ def master():
 
     while True:
         # current frame
-        ret, frame = 'unknown', np.random.rand(init.input_shape) * 255
+        ret, frame = 'unknown', np.random.random_sample(init.input_shape) * 255
         for _ in range(init.split):
             Thread(target=send_request, args=(frame,)).start()
         time.sleep(0.03)
