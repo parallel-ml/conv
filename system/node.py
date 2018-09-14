@@ -184,7 +184,7 @@ class Node:
         requestor = ipc.Requestor(PROTOCOL, client)
 
         data = dict()
-        tmp = [str(entry) for entry in X.shape]
+        tmp = [str(entry) for entry in np.shape(X[0])]
         data['shape'] = ''.join(tmp)
         data['input'] = X.tobytes()
         data['type'] = 32
