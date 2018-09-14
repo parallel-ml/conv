@@ -2,7 +2,7 @@
    "n1": {
     "model": [],
     "devices": [
-      "n2"
+      "n2", "n3", "n4"
     ],
     "merge": 1,
     "split": 1,

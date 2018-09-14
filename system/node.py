@@ -84,7 +84,6 @@ class Node:
                 with open(DIR_PATH + '/resource/model/' + sys_model_name
                           + '/' + sys_node_count + '/config.json') as f2:
                     model_config = yaml.safe_load(f2)
-                    print model_config
                     for layer_name in system_config['model']:
                         class_name = model_config[layer_name]['class_name']
                         config = model_config[layer_name]['config']
