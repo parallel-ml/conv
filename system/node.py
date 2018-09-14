@@ -154,10 +154,10 @@ class Node:
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))
                     for _ in range(self.split):
-                        thread = Thread(target=self.send, args=(output,))
-                        thread.start()
-                        # self.threads.append(thread)
+                        Thread(target=self.send, args=(output,)).start()
                 self.prediction_time += time.time() - start
+            elif X is not None:
+                Thread(target=self.send, args=(X,)).start()
 
     def receive(self, msg, req):
         start = time.time()
