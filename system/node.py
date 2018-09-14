@@ -185,7 +185,7 @@ class Node:
 
         data = dict()
         tmp = [str(entry) for entry in np.shape(X[0])]
-        data['shape'] = ''.join(tmp)
+        data['shape'] = ' '.join(tmp)
         data['input'] = X.tobytes()
         data['type'] = 32
         requestor.request('forward', data)
