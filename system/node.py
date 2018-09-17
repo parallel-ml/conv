@@ -143,7 +143,7 @@ class Node:
             seq = self.input.dequeue(self.merge)
 
             if self.op == 'cat':
-                X = np.concatenate(seq)
+                X = np.concatenate(seq, axis=-1)
             elif self.op == 'add':
                 X = np.sum(seq, axis=0)
             else:
