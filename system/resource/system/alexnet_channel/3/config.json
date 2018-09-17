@@ -7,11 +7,11 @@
     "merge": 1,
     "split": 3,
     "op": "",
-    "input_shape": "13 13 128"
+    "input_shape": "13 13 192"
   },
   "n2": {
     "model": [
-      "alexnet_channel_3_conv_0"
+      "alexnet_channel_4_conv_0"
     ],
     "devices": [
       "n5"
@@ -22,7 +22,7 @@
   },
   "n3": {
     "model": [
-      "alexnet_channel_3_conv_1"
+      "alexnet_channel_4_conv_1"
     ],
     "devices": [
       "n5"
@@ -33,7 +33,7 @@
   },
   "n4": {
     "model": [
-      "alexnet_channel_3_conv_2"
+      "alexnet_channel_4_conv_2"
     ],
     "devices": [
       "n5"
