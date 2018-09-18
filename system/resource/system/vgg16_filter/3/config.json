@@ -1,0 +1,54 @@
+{
+   "n1": {
+    "model": [],
+    "devices": [
+      "n2", "n3", "n4"
+    ],
+    "merge": 1,
+    "split": 3,
+    "op": "",
+    "input_shape": "220 220 3"
+  },
+  "n2": {
+    "model": [
+      "vgg16_filter_1_conv_0"
+    ],
+    "devices": [
+      "n5"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": ""
+  },
+  "n3": {
+    "model": [
+      "vgg16_filter_1_conv_1"
+    ],
+    "devices": [
+      "n5"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": ""
+  },
+  "n4": {
+    "model": [
+      "vgg16_filter_1_conv_2"
+    ],
+    "devices": [
+      "n5"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": ""
+  },
+  "n5": {
+    "model": [],
+    "devices": [
+      "n1"
+    ],
+    "merge": 3,
+    "split": 1,
+    "op": "add"
+  }
+}

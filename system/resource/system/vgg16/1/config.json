@@ -1,0 +1,23 @@
+{
+   "n1": {
+    "model": [],
+    "devices": [
+      "n2"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": "",
+    "input_shape": "220 220 3"
+  },
+  "n2": {
+    "model": [
+      "vgg16_original_conv_1"
+    ],
+    "devices": [
+      "n1"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": ""
+  }
+}
