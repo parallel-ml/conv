@@ -8,7 +8,7 @@ NAME = 'vgg16'
 
 def original(include_fc=True):
     name = NAME + '_original'
-    img_input = Input(shape=[224, 224, 3])
+    img_input = Input(shape=[220, 220, 3])
 
     # Block 1
     x = Conv2D(64, (3, 3), activation='relu', padding='same', name=name + '_1_conv')(img_input)
@@ -50,7 +50,7 @@ def original(include_fc=True):
 
 def filter(include_fc=True):
     name = NAME + '_filter'
-    img_input = Input(shape=[224, 224, 3])
+    img_input = Input(shape=[220, 220, 3])
 
     # Block 1
     x = filter_unit(img_input, 64, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_1')
@@ -92,7 +92,7 @@ def filter(include_fc=True):
 
 def xy(include_fc=True):
     name = NAME + '_spatial'
-    img_input = Input(shape=[224, 224, 3])
+    img_input = Input(shape=[220, 220, 3])
 
     # Block 1
     x = xy_unit(img_input, 64, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_1')
@@ -134,7 +134,7 @@ def xy(include_fc=True):
 
 def channel(include_fc=True):
     name = NAME + '_channel'
-    img_input = Input(shape=[224, 224, 3])
+    img_input = Input(shape=[220, 220, 3])
 
     # Block 1
     x = channel_unit(img_input, 64, (3, 3), max_pooling=False, padding='same', activation='relu', name=name + '_1')

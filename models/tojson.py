@@ -2,7 +2,7 @@
     Write layer-wise configuration to json file store under system module.
 """
 import json
-import alexnet
+import alexnet, vgg16
 import os
 
 
@@ -28,31 +28,31 @@ def save(model, f, config):
 
 
 def main():
-    path = 'system/resource/model/alexnet/1/config.json'
+    path = 'system/resource/model/vgg16/1/config.json'
     with open(path, 'w+') as f:
         config = dict()
-        model = alexnet.original(include_fc=False)
+        model = vgg16.original(include_fc=False)
         save(model, f, config)
         json.dump(config, f)
 
-    path = 'system/resource/model/alexnet_filter/1/config.json'
+    path = 'system/resource/model/vgg16_filter/3/config.json'
     with open(path, 'w+') as f:
         config = dict()
-        model = alexnet.filter(include_fc=False)
+        model = vgg16.filter(include_fc=False)
         save(model, f, config)
         json.dump(config, f)
 
-    path = 'system/resource/model/alexnet_xy/1/config.json'
+    path = 'system/resource/model/vgg16_xy/3/config.json'
     with open(path, 'w+') as f:
         config = dict()
-        model = alexnet.xy(include_fc=False)
+        model = vgg16.xy(include_fc=False)
         save(model, f, config)
         json.dump(config, f)
 
-    path = 'system/resource/model/alexnet_channel/1/config.json'
+    path = 'system/resource/model/vgg16_channel/3/config.json'
     with open(path, 'w+') as f:
         config = dict()
-        model = alexnet.channel(include_fc=False)
+        model = vgg16.channel(include_fc=False)
         save(model, f, config)
         json.dump(config, f)
 
