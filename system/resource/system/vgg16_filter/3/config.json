@@ -11,7 +11,7 @@
   },
   "n2": {
     "model": [
-      "vgg16_filter_1_conv_0"
+      "vgg16_filter_2_conv_0"
     ],
     "devices": [
       "n5"
@@ -22,7 +22,7 @@
   },
   "n3": {
     "model": [
-      "vgg16_filter_1_conv_1"
+      "vgg16_filter_2_conv_1"
     ],
     "devices": [
       "n5"
@@ -33,7 +33,7 @@
   },
   "n4": {
     "model": [
-      "vgg16_filter_1_conv_2"
+      "vgg16_filter_2_conv_2"
     ],
     "devices": [
       "n5"
