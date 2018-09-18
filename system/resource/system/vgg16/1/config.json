@@ -11,7 +11,7 @@
   },
   "n2": {
     "model": [
-      "vgg16_original_conv_1"
+      "vgg16_original_1_conv"
     ],
     "devices": [
       "n1"
