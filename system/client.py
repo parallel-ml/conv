@@ -67,7 +67,7 @@ def master():
         ret, frame = 'unknown', np.random.random_sample(init.input_shape) * 255
         for _ in range(init.split):
             Thread(target=send_request, args=(frame,)).start()
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 
 class Responder(ipc.Responder):
