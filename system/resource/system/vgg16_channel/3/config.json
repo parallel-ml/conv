@@ -7,11 +7,11 @@
     "merge": 1,
     "split": 3,
     "op": "",
-    "input_shape": "220 220 64"
+    "input_shape": "110 110 64"
   },
   "n2": {
     "model": [
-      "vgg16_channel_2_conv_0"
+      "vgg16_channel_3_conv_0"
     ],
     "devices": [
       "n5"
@@ -22,7 +22,7 @@
   },
   "n3": {
     "model": [
-      "vgg16_channel_2_conv_1"
+      "vgg16_channel_3_conv_1"
     ],
     "devices": [
       "n5"
@@ -33,7 +33,7 @@
   },
   "n4": {
     "model": [
-      "vgg16_channel_2_conv_2"
+      "vgg16_channel_3_conv_2"
     ],
     "devices": [
       "n5"
