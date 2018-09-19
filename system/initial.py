@@ -41,12 +41,14 @@ class Initializer:
             node_config.read(HOME + '/node.cfg')
             sys_model_name = node_config.get('Node Config', 'model', 0)
             sys_node_count = node_config.get('Node Config', 'system', 0)
+            sys_block = node_config.get('Node Config', 'block', 0)
             node_id = node_config.get('IP Node', ip, 0)
 
             cls.instance.id = node_id
 
             # read ip resources from config file
-            with open(DIR_PATH + '/resource/system/' + sys_model_name + '/' + sys_node_count + '/config.json') as f:
+            with open(DIR_PATH + '/resource/system/' + sys_model_name + '/' + sys_node_count
+                      + '/' + sys_block + '/config.json') as f:
                 configs = yaml.safe_load(f)
                 config = configs[node_id]
 
@@ -55,6 +57,7 @@ class Initializer:
                     cls.instance.queue.put(ip)
                 cls.instance.split = int(config['split'])
                 cls.instance.input_shape = ([int(entry) for entry in config['input_shape'].split(' ')])
+                cls.instance.interval = float(config['interval'])
         return cls.instance
 
     def __init__(self):
@@ -64,6 +67,7 @@ class Initializer:
         self.id = ''
         self.split = 0
         self.input_shape = None
+        self.interval = 0.0
 
     def receive(self):
         self.start = time.time() if self.start == 0.0 else self.start

@@ -71,9 +71,11 @@ class Node:
             node_config.read(HOME + '/node.cfg')
             sys_model_name = node_config.get('Node Config', 'model', 0)
             sys_node_count = node_config.get('Node Config', 'system', 0)
+            sys_block = node_config.get('Node Config', 'block', 0)
             node_id = node_config.get('IP Node', ip, 0)
 
-            with open(DIR_PATH + '/resource/system/' + sys_model_name + '/' + sys_node_count + '/config.json') as f:
+            with open(DIR_PATH + '/resource/system/' + sys_model_name + '/'
+                      + sys_node_count + '/' + sys_block + '/config.json') as f:
                 system_config = yaml.safe_load(f)[node_id]
                 cls.instance.id = node_id
 
