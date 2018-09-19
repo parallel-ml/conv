@@ -7,11 +7,11 @@
     "merge": 1,
     "split": 1,
     "op": "",
-    "input_shape": "110 110 64"
+    "input_shape": "110 110 12"
   },
   "n2": {
     "model": [
-      "vgg16_original_3_conv"
+      "vgg16_original_4_conv"
     ],
     "devices": [
       "n1"
