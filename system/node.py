@@ -145,6 +145,7 @@ class Node:
             time.sleep(0.1)
 
         while self.run:
+            start = time.time()
             # get data from the queue
             seq = self.input.dequeue(self.merge)
 
@@ -158,19 +159,17 @@ class Node:
                 X = seq[0]
 
             if X is not None and self.model is not None:
-                start = time.time()
                 with self.graph.as_default():
                     output = self.model.predict(np.array([X]))
                     for _ in range(self.split):
                         Thread(target=self.send, args=(output,)).start()
-                self.prediction_time += time.time() - start
-            elif X is not None:
-                Thread(target=self.send, args=(X,)).start()
+
+            self.frame_count += 1
+            self.total_time = time.time() if self.total_time == 0.0 else self.total_time
+            self.prediction_time += time.time() - start
 
     def receive(self, msg, req):
         start = time.time()
-        self.frame_count += 1
-        self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32

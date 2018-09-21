@@ -68,68 +68,11 @@ def master():
         for _ in range(init.split):
             Thread(target=send_request, args=(frame,)).start()
         time.sleep(init.interval)
-
-
-class Responder(ipc.Responder):
-    def __init__(self):
-        ipc.Responder.__init__(self, PROTOCOL)
-
-    def invoke(self, msg, req):
-        """
-            This functino is invoked by do_POST to handle the request. Invoke handles
-            the request and get response for the request. This is the key of each node.
-            All models forwarding and output redirect are done here. Because the invoke
-            method of initializer only needs to receive the data packet, it does not do
-            anything in the function and return None.
-            Args:
-                msg: Meta data.
-                req: Contains data packet.
-            Returns:
-                None
-            Raises:
-                AvroException: if the data does not have correct syntac defined in Schema
-        """
-        if msg.name == 'forward':
-            init = Initializer.create()
-            try:
-                init.receive()
-                return
-            except Exception, e:
-                print 'Error', e.message
-        else:
-            raise schema.AvroException('unexpected message:', msg.getname())
-
-
-class Handler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        """
-            Handle request from other devices.
-            do_POST is automatically called by ThreadedHTTPServer. It creates a new
-            responder for each request. The responder generates response and write
-            response to data sent back.
-        """
-        self.responder = Responder()
-        call_request_reader = ipc.FramedReader(self.rfile)
-        call_request = call_request_reader.read_framed_message()
-        resp_body = self.responder.respond(call_request)
-        self.send_response(200)
-        self.send_header('Content-Type', 'avro/binary')
-        self.end_headers()
-        resp_writer = ipc.FramedWriter(self.wfile)
-        resp_writer.write_framed_message(resp_body)
-
-
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """ Handle requests in separate thread. """
+        init.send()
 
 
 def main():
     signal.signal(signal.SIGTERM, terminate)
-
-    server = ThreadedHTTPServer(('0.0.0.0', 12345), Handler)
-    server.allow_reuse_address = True
-    Thread(target=server.serve_forever, args=()).start()
-
     master()
 
 

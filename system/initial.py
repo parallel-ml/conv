@@ -69,7 +69,7 @@ class Initializer:
         self.input_shape = None
         self.interval = 0.0
 
-    def receive(self):
+    def send(self):
         self.start = time.time() if self.start == 0.0 else self.start
         self.count += 1
 
