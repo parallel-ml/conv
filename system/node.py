@@ -165,11 +165,11 @@ class Node:
                         Thread(target=self.send, args=(output,)).start()
 
             self.frame_count += 1
-            self.total_time = time.time() if self.total_time == 0.0 else self.total_time
             self.prediction_time += time.time() - start
 
     def receive(self, msg, req):
         start = time.time()
+        self.total_time = time.time() if self.total_time == 0.0 else self.total_time
 
         bytestr = req['input']
         datatype = np.uint8 if req['type'] == 8 else np.float32

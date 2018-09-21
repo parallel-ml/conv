@@ -51,7 +51,7 @@
       "n1"
     ],
     "merge": 9,
-    "split": 1,
+    "split": 0,
     "op": "cat",
     "sample_output_shape": "13 13 192"
   }
