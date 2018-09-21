@@ -10,7 +10,7 @@
     "split": 9,
     "op": "",
     "input_shape": "79 79 3",
-    "interval": "0.05"
+    "interval": "0.03"
   },
   "n2": {
     "model": [
