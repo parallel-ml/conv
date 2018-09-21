@@ -1,0 +1,25 @@
+{
+  "n1": {
+    "model": [
+    ],
+    "devices": [
+      "n2"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": "",
+    "input_shape": "13 13 192",
+    "interval": "0.03"
+  },
+  "n2": {
+    "model": [
+      "alexnet_original_4_conv"
+    ],
+    "devices": [
+      "n1"
+    ],
+    "merge": 1,
+    "split": 1,
+    "op": ""
+  }
+}

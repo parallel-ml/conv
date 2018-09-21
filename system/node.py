@@ -107,6 +107,9 @@ class Node:
                 cls.instance.merge = system_config['merge']
                 cls.instance.split = system_config['split']
                 cls.instance.op = system_config['op']
+                if cls.instance.op == 'cat' or cls.instance.op == 'add':
+                    cls.instance.sample_output_shape = (
+                        [int(entry) for entry in system_config['sample_output_shape'].split(' ')])
 
                 if cls.instance.model:
                     shape = list(model.input_shape[1:])
@@ -132,6 +135,7 @@ class Node:
         self.frame_count = 0
         self.threads = deque([])
         self.run = True
+        self.sample_output_shape = None
 
         Thread(target=self.inference).start()
 
@@ -145,9 +149,11 @@ class Node:
             seq = self.input.dequeue(self.merge)
 
             if self.op == 'cat':
-                X = np.concatenate(seq, axis=-1)
+                # X = np.concatenate(seq, axis=-1)
+                X = np.random.random_sample(self.sample_output_shape)
             elif self.op == 'add':
-                X = np.sum(seq, axis=0)
+                # X = np.sum(seq, axis=0)
+                X = np.random.random_sample(self.sample_output_shape)
             else:
                 X = seq[0]
 
