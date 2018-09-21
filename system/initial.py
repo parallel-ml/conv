@@ -68,6 +68,7 @@ class Initializer:
         self.split = 0
         self.input_shape = None
         self.interval = 0.0
+        self.run = True
 
     def send(self):
         self.start = time.time() if self.start == 0.0 else self.start
@@ -75,6 +76,7 @@ class Initializer:
 
     def terminate(self):
         self.stats()
+        self.run = False
 
     def stats(self):
         with open(HOME + '/stats', 'w+') as f:

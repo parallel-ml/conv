@@ -62,7 +62,7 @@ def master():
     """
     init = Initializer.create()
 
-    while True:
+    while init.run:
         # current frame
         ret, frame = 'unknown', np.random.random_sample(init.input_shape) * 255
         for _ in range(init.split):
