@@ -1,12 +1,12 @@
- c3d_original_1_conv: 0.143 s
- c3d_original_2_conv: 0.462 s
- c3d_original_3_conv: 0.170 s
- c3d_original_4_conv: 0.335 s
- c3d_original_5_conv: 0.071 s
+ c3d_original_1_conv: 5.580 s
+ c3d_original_2_conv: 17.993 s
+ c3d_original_3_conv: 5.396 s
+ c3d_original_4_conv: 9.079 s
+ c3d_original_5_conv: 1.846 s
  c3d_original_6_conv: 0.140 s
- c3d_original_7_conv: 0.020 s
- c3d_original_8_conv: 0.020 s
-c3d_original_9_dense: 0.011 s
-c3d_original_10_dense: 0.006 s
-c3d_original_11_dense: 0.001 s
+ c3d_original_7_conv: 0.479 s
+ c3d_original_8_conv: 0.450 s
+c3d_original_9_dense: 0.211 s
+c3d_original_10_dense: 0.109 s
+c3d_original_11_dense: 0.027 s
 
